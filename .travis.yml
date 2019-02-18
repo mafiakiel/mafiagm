@@ -1,0 +1,7 @@
+language: elm
+
+cache: npm
+
+script:
+  - npm run lint
+  - npm run build

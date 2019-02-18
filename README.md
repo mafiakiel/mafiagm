@@ -18,6 +18,12 @@ Format Elm code
 npm run format
 ```
 
+Check that all Elm files are formatted correctly
+
+```
+npm run lint
+```
+
 Run production build
 
 ```
