@@ -1,5 +1,11 @@
 # Mafia Game Master Tool
 
+Install local Elm toolchain
+
+```
+npm install
+```
+
 Start development server
 
 ```
@@ -10,4 +16,10 @@ Format Elm code
 
 ```
 npm run format
+```
+
+Run production build
+
+```
+npm run build
 ```
