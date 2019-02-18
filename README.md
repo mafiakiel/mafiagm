@@ -1,4 +1,6 @@
-# Mafia Game Master Tool [![Build Status](https://travis-ci.com/mafiakiel/mafiagm.svg?branch=master)](https://travis-ci.com/mafiakiel/mafiagm)
+# Mafia Game Master Tool
+
+[![Build Status](https://travis-ci.com/mafiakiel/mafiagm.svg?branch=master)](https://travis-ci.com/mafiakiel/mafiagm) [![Netlify Status](https://api.netlify.com/api/v1/badges/ca368bcb-9e27-4294-850d-31923d27f1f6/deploy-status)](https://app.netlify.com/sites/mafiagm/deploys)
 
 Install local Elm toolchain
 
