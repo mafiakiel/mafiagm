@@ -1,0 +1,12 @@
+{
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "[elm]": {
+    "editor.formatOnSaveTimeout": 3000
+  },
+  "files.exclude": {
+    "**/node_modules": true
+  },
+  "elm.compiler": ".\\node_modules\\.bin\\elm",
+  "elm.formatCommand": ".\\node_modules\\.bin\\elm-format"
+}
