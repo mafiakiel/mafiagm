@@ -7,9 +7,10 @@ import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Table as Table
-import FontAwesome exposing (icon, plus, redo, undo)
+import FontAwesome exposing (icon, plus, redo, trash, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (href, id, rel)
+import List exposing (map)
 import Model exposing (Model, State)
 import Msg exposing (Action(..), Msg(..))
 import UndoList exposing (UndoList)
@@ -44,9 +45,13 @@ playerList state =
         actionSetNewPlayerName name =
             Action <| SetNewPlayerName name
 
+        actionRemovePlayer id =
+            Action <| RemovePlayer id
+
         playerToTableRow player =
             Table.tr []
                 [ Table.td [] [ text player.name ]
+                , Table.td [] [ Button.button [ Button.onClick <| actionRemovePlayer player.id, Button.danger, Button.small ] [ icon trash ] ]
                 ]
     in
     div [ id "players" ]
@@ -57,7 +62,7 @@ playerList state =
                 Table.simpleThead
                     [--Table.th [] [text "Name"]
                     ]
-            , tbody = Table.tbody [] (List.map playerToTableRow state.players)
+            , tbody = Table.tbody [] (map playerToTableRow state.players)
             }
         , InputGroup.config
             (InputGroup.text [ Input.placeholder "Name", Input.value state.newPlayerName, Input.onInput actionSetNewPlayerName ])
