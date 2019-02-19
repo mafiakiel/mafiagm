@@ -1,7 +1,9 @@
 module Model exposing (Model, State, init)
 
+import Random
 import Msg exposing (Msg)
 import UndoList exposing (UndoList)
+import Uuid exposing (Uuid)
 
 
 type alias Model =
@@ -10,18 +12,18 @@ type alias Model =
 
 type alias State =
     { players : List Player
-    , newPlayerName : String
+    , newPlayerName : String, seed : Random.Seed
     }
 
 
 type alias Player =
-    { name : String
+    { id: Uuid, name : String
     }
 
 
 initState : State
 initState =
-    { players = [], newPlayerName = "" }
+    { players = [], newPlayerName = "", seed = Random.initialSeed 0 }
 
 
 init : ( Model, Cmd Msg )

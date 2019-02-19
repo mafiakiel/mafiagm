@@ -1,8 +1,10 @@
 module Update exposing (update)
 
+import  Random
 import Model exposing (Model, State)
 import Msg exposing (Action(..), Msg(..))
 import UndoList exposing (UndoList)
+import Uuid exposing (uuidGenerator)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -20,9 +22,13 @@ update msg model =
 
 updateState : Action -> State -> State
 updateState action state =
+    let
+        (uuid, seed) = Random.step uuidGenerator state.seed
+    in
+    
     case action of
         SetNewPlayerName name ->
             { state | newPlayerName = name }
 
         AddPlayer ->
-            { state | players = state.players ++ [ { name = state.newPlayerName } ], newPlayerName = "" }
+            { state | players = state.players ++ [ { id=uuid, name = state.newPlayerName } ], newPlayerName = "", seed = seed }
