@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "concurrently \"elm reactor\" \"opn http://localhost:8000/src/Main.elm\"",
-    "format": "elm-format src/",
+    "format": "elm-format src/ --yes",
     "lint": "elm-format --validate src/",
     "build": "elm make src/Main.elm --output=dist/index.html"
   },
