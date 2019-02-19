@@ -2,13 +2,17 @@ module View exposing (view)
 
 import Bootstrap.Button as Button
 import Bootstrap.CDN as CDN
+import Bootstrap.Form.Input as Input
+import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
-import FontAwesome exposing (icon, redo, undo)
+import Bootstrap.Table as Table
+import FontAwesome exposing (icon, plus, redo, trash, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (href, id, rel)
+import List exposing (map)
 import Model exposing (Model, State)
-import Msg exposing (Msg(..))
+import Msg exposing (Action(..), Msg(..))
 import UndoList exposing (UndoList)
 
 
@@ -37,7 +41,35 @@ header model =
 
 playerList : State -> Html Msg
 playerList state =
-    div [ id "players" ] [ text "Liste der Spieler" ]
+    let
+        actionSetNewPlayerName name =
+            Action <| SetNewPlayerName name
+
+        actionRemovePlayer id =
+            Action <| RemovePlayer id
+
+        playerToTableRow player =
+            Table.tr []
+                [ Table.td [] [ text player.name ]
+                , Table.td [] [ Button.button [ Button.onClick <| actionRemovePlayer player.id, Button.danger, Button.small ] [ icon trash ] ]
+                ]
+    in
+    div [ id "players" ]
+        [ h2 [] [ text "Spieler" ]
+        , Table.table
+            { options = []
+            , thead =
+                Table.simpleThead
+                    [--Table.th [] [text "Name"]
+                    ]
+            , tbody = Table.tbody [] (map playerToTableRow state.players)
+            }
+        , InputGroup.config
+            (InputGroup.text [ Input.placeholder "Name", Input.value state.newPlayerName, Input.onInput actionSetNewPlayerName ])
+            |> InputGroup.successors
+                [ InputGroup.button [ Button.success, Button.onClick <| Action AddPlayer, Button.disabled <| state.newPlayerName == "" ] [ icon plus ] ]
+            |> InputGroup.view
+        ]
 
 
 phaseContent : State -> Html Msg

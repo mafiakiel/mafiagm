@@ -1,7 +1,9 @@
-module Model exposing (Model, State, init)
+module Model exposing (Flags, Model, State, init)
 
 import Msg exposing (Msg)
+import Random
 import UndoList exposing (UndoList)
+import Uuid exposing (Uuid)
 
 
 type alias Model =
@@ -9,9 +11,27 @@ type alias Model =
 
 
 type alias State =
-    Int
+    { players : List Player
+    , newPlayerName : String
+    , seed : Random.Seed
+    }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( UndoList.fresh 0, Cmd.none )
+type alias Player =
+    { id : Uuid
+    , name : String
+    }
+
+
+type alias Flags =
+    { seed : Int }
+
+
+initState : Flags -> State
+initState flags =
+    { players = [], newPlayerName = "", seed = Random.initialSeed flags.seed }
+
+
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    ( UndoList.fresh <| initState flags, Cmd.none )
