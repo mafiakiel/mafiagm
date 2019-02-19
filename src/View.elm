@@ -14,15 +14,13 @@ import UndoList exposing (UndoList)
 
 view : Model -> Html Msg
 view model =
-    Grid.containerFluid [ id "container" ]
+    div [ id "container" ]
         [ CDN.stylesheet
         , fontAwesome
-        , Grid.row []
-            [ Grid.col [] [ header model ]
-            ]
-        , Grid.row []
-            [ Grid.col [ Col.xs4 ] [ playerList model.present ]
-            , Grid.col [] [ phaseContent model.present ]
+        , header model
+        , div [ id "content" ]
+            [ playerList model.present
+            , phaseContent model.present
             ]
         ]
 
@@ -44,7 +42,7 @@ playerList state =
 
 phaseContent : State -> Html Msg
 phaseContent state =
-    div [ id "content" ] [ text "Phasenspezifischer Inhalt" ]
+    div [ id "phase-viewport" ] [ text "Phasenspezifischer Inhalt" ]
 
 
 fontAwesome : Html msg
