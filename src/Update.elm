@@ -1,23 +1,18 @@
-module Update exposing (Msg(..), update)
+module Update exposing (update)
 
 import Model exposing (Model)
+import Msg exposing (Msg(..))
 import UndoList exposing (UndoList)
 
 
-type Msg
-    = Undo
-    | Redo
-    | Increment
-
-
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Undo ->
-            UndoList.undo model
+            ( UndoList.undo model, Cmd.none )
 
         Redo ->
-            UndoList.redo model
+            ( UndoList.redo model, Cmd.none )
 
         Increment ->
-            UndoList.new (model.present + 1) model
+            ( UndoList.new (model.present + 1) model, Cmd.none )

@@ -1,5 +1,6 @@
-module Model exposing (Model, State, initialModel)
+module Model exposing (Model, State, init)
 
+import Msg exposing (Msg)
 import UndoList exposing (UndoList)
 
 
@@ -11,6 +12,6 @@ type alias State =
     Int
 
 
-initialModel : Model
-initialModel =
-    UndoList.fresh 0
+init : ( Model, Cmd Msg )
+init =
+    ( UndoList.fresh 0, Cmd.none )

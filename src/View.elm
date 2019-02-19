@@ -8,8 +8,8 @@ import FontAwesome exposing (icon, redo, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (href, id, rel)
 import Model exposing (Model, State)
+import Msg exposing (Msg(..))
 import UndoList exposing (UndoList)
-import Update exposing (Msg(..))
 
 
 view : Model -> Html Msg
