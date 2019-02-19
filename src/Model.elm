@@ -9,9 +9,21 @@ type alias Model =
 
 
 type alias State =
-    Int
+    { players : List Player
+    , newPlayerName : String
+    }
+
+
+type alias Player =
+    { name : String
+    }
+
+
+initState : State
+initState =
+    { players = [], newPlayerName = "" }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( UndoList.fresh 0, Cmd.none )
+    ( UndoList.fresh initState, Cmd.none )
