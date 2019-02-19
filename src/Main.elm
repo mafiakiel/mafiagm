@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser
-import Model exposing (Model, Flags, init)
+import Model exposing (Flags, Model, init)
 import Msg exposing (Msg)
 import Update exposing (update)
 import View exposing (view)

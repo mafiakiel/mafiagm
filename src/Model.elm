@@ -1,4 +1,4 @@
-module Model exposing (Model, State, Flags, init)
+module Model exposing (Flags, Model, State, init)
 
 import Msg exposing (Msg)
 import Random
@@ -22,7 +22,10 @@ type alias Player =
     , name : String
     }
 
-type alias Flags = {seed: Int}
+
+type alias Flags =
+    { seed : Int }
+
 
 initState : Flags -> State
 initState flags =
