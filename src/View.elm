@@ -7,11 +7,11 @@ import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Table as Table
-import FontAwesome exposing (icon, plus, redo, trash, undo)
+import FontAwesome exposing (angleRight, icon, plus, redo, trash, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (href, id, rel)
 import List exposing (map)
-import Types exposing (Action(..), Model, Msg(..), State)
+import Types exposing (Action(..), Model, Msg(..), Phase(..), State, Step(..))
 import UndoList exposing (UndoList)
 
 
@@ -30,11 +30,19 @@ view model =
 
 header : Model -> Html Msg
 header model =
+    let
+        (Phase currentPhase) =
+            model.present.currentPhase
+
+        (Step currentStep) =
+            model.present.currentStep
+    in
     div [ id "header" ]
-        [ h1 [] [ text "Name der Phase" ]
-        , h2 [] [ text "Beschreibung der Phase" ]
+        [ h1 [] [ text currentPhase.name ]
+        , h2 [] [ text currentStep.name ]
         , Button.button [ Button.onClick Undo, Button.disabled <| not <| UndoList.hasPast model ] [ icon undo ]
         , Button.button [ Button.onClick Redo, Button.disabled <| not <| UndoList.hasFuture model ] [ icon redo ]
+        , Button.button [ Button.onClick <| Action StepForward, Button.primary ] [ text "Weiter ", icon angleRight ]
         ]
 
 
@@ -73,7 +81,11 @@ playerList state =
 
 phaseContent : State -> Html Msg
 phaseContent state =
-    div [ id "phase-viewport" ] [ text "Phasenspezifischer Inhalt" ]
+    let
+        (Step currentStep) =
+            state.currentStep
+    in
+    div [ id "phase-viewport" ] [ currentStep.view state ]
 
 
 fontAwesome : Html msg

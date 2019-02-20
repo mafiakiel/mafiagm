@@ -1,6 +1,6 @@
-module Types exposing (Action(..), Flags, Model, Msg(..), Player, State)
+module Types exposing (Action(..), Flags, Model, Msg(..), Phase(..), Player, State, Step(..))
 
--- All types are defined here in a central file because Elm doesn't allow circular file dependencies.
+-- All types are defined here in a central place because Elm doesn't allow circular file dependencies.
 
 import Html exposing (Html)
 import Random
@@ -20,6 +20,8 @@ type alias State =
     { players : List Player
     , newPlayerName : String
     , seed : Random.Seed
+    , currentPhase : Phase
+    , currentStep : Step
     }
 
 
@@ -29,8 +31,27 @@ type alias Player =
     }
 
 
+type Phase
+    = Phase
+        { name : String
+        , steps : State -> List Step
+        , nextPhase : State -> Phase
+        }
+
+
+type Step
+    = Step
+        { name : String
+        , view : State -> Html Msg
+        }
+
+
 type alias Flags =
     { seed : Int }
+
+
+type alias UpdateState =
+    Action -> State -> State
 
 
 
@@ -41,6 +62,7 @@ type Action
     = SetNewPlayerName String
     | AddPlayer
     | RemovePlayer Uuid
+    | StepForward
 
 
 type Msg
