@@ -1,8 +1,8 @@
 module Main exposing (main)
 
 import Browser
-import Model exposing (Flags, Model, init)
-import Msg exposing (Msg)
+import Model exposing (init)
+import Types exposing (Flags, Model, Msg)
 import Update exposing (update)
 import View exposing (view)
 

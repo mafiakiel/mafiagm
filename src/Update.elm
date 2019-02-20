@@ -1,9 +1,8 @@
 module Update exposing (update)
 
 import List exposing (filter)
-import Model exposing (Model, State)
-import Msg exposing (Action(..), Msg(..))
 import Random
+import Types exposing (Action(..), Model, Msg(..), State)
 import UndoList exposing (UndoList)
 import Uuid exposing (uuidGenerator)
 

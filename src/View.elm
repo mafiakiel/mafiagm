@@ -11,8 +11,7 @@ import FontAwesome exposing (icon, plus, redo, trash, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (href, id, rel)
 import List exposing (map)
-import Model exposing (Model, State)
-import Msg exposing (Action(..), Msg(..))
+import Types exposing (Action(..), Model, Msg(..), State)
 import UndoList exposing (UndoList)
 
 
