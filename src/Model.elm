@@ -1,35 +1,35 @@
-module Model exposing (Flags, Model, State, init)
+module Model exposing (init, stepAt)
 
-import Msg exposing (Msg)
+import Html exposing (Html, text)
+import List.Extra exposing (getAt)
+import Phases.Configuration exposing (configuration, rules)
 import Random
+import Types exposing (Action, Flags, Model, Msg, State, Step(..))
 import UndoList exposing (UndoList)
 import Uuid exposing (Uuid)
 
 
-type alias Model =
-    UndoList State
+stepError : Step
+stepError =
+    Step
+        { name = "Error"
+        , view = \_ -> text "Step not found"
+        }
 
 
-type alias State =
-    { players : List Player
-    , newPlayerName : String
-    , seed : Random.Seed
-    }
+stepAt : Int -> List Step -> Step
+stepAt index steps =
+    case getAt index steps of
+        Just step ->
+            step
 
-
-type alias Player =
-    { id : Uuid
-    , name : String
-    }
-
-
-type alias Flags =
-    { seed : Int }
+        Nothing ->
+            stepError
 
 
 initState : Flags -> State
 initState flags =
-    { players = [], newPlayerName = "", seed = Random.initialSeed flags.seed }
+    { players = [], newPlayerName = "", seed = Random.initialSeed flags.seed, currentPhase = configuration, currentStep = rules }
 
 
 init : Flags -> ( Model, Cmd Msg )
