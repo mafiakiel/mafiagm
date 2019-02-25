@@ -46,12 +46,54 @@ type Step
         }
 
 
+type Party
+    = Villagers
+    | Mafia
+    | Vampires
+    | TheEvil
+    | Zombies
+
+
+type Role
+    = None
+    | GuardianAngel
+    | Gardener
+    | Detective
+    | Inspector
+    | Politician
+    | Drunkard
+    | Cupid
+    | Kidnapper
+    | Judge
+    | Scapegoat
+    | Vegan
+    | SecretAgent
+    | CrackWhore
+    | Pathologist
+    | Witch
+    | CrimeSceneCleaner
+    | WildHilda
+    | Statistician
+    | Spy
+    | PrivateDetective
+    | Muter
+    | Shoemaker
+    | Pope
+    | Monk
+    | MonkInLove
+    | Dracula
+    | Devil
+    | Nerd
+    | Doctor
+    | Infested
+    | Orphan
+    | Satanist
+    | Copier
+    | Noips
+
+
 type alias Flags =
     { seed : Int }
-
-
-type alias UpdateState =
-    Action -> State -> State
 
 
 
