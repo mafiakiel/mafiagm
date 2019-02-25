@@ -2,7 +2,7 @@ module Model exposing (init, stepAt)
 
 import Html exposing (Html, text)
 import List.Extra exposing (getAt)
-import Phases.Configuration exposing (configurationPhase, rules)
+import Phases.Configuration exposing (configuration, rules)
 import Random
 import Types exposing (Action, Flags, Model, Msg, State, Step(..))
 import UndoList exposing (UndoList)
@@ -29,7 +29,7 @@ stepAt index steps =
 
 initState : Flags -> State
 initState flags =
-    { players = [], newPlayerName = "", seed = Random.initialSeed flags.seed, currentPhase = configurationPhase, currentStep = rules }
+    { players = [], newPlayerName = "", seed = Random.initialSeed flags.seed, currentPhase = configuration, currentStep = rules }
 
 
 init : Flags -> ( Model, Cmd Msg )

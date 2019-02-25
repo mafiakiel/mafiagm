@@ -1,12 +1,12 @@
-module Phases.Configuration exposing (configurationPhase, rules)
+module Phases.Configuration exposing (configuration, rules)
 
 import Html exposing (text)
 import Phases.Abstract exposing (abstractPhase)
 import Types exposing (Phase(..), Step(..))
 
 
-configurationPhase : Phase
-configurationPhase =
+configuration : Phase
+configuration =
     Phase
         { abstractPhase
             | name = "Konfiguration"
@@ -14,7 +14,6 @@ configurationPhase =
                 \_ ->
                     [ rules
                     ]
-            , nextPhase = \_ -> configurationPhase
         }
 
 

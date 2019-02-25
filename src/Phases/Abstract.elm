@@ -5,12 +5,7 @@ import Util exposing (unwrapPhase)
 
 
 abstractPhase =
-    unwrapPhase abstractPhaseWrapper
-
-
-abstractPhaseWrapper =
-    Phase
-        { name = "Please override phase name!"
-        , nextPhase = \_ -> abstractPhaseWrapper
-        , steps = \_ -> []
-        }
+    { name = "Please override phase name!"
+    , nextPhase = \_ -> Phase abstractPhase
+    , steps = \_ -> []
+    }

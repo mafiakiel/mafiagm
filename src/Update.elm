@@ -3,9 +3,15 @@ module Update exposing (update)
 import List exposing (filter, map)
 import List.Extra exposing (elemIndex, getAt)
 import Model exposing (stepAt)
+import Phases.Configuration
+import Phases.Dawn
+import Phases.Day
+import Phases.FirstNight
+import Phases.Night
 import Random
 import Types exposing (Action(..), Model, Msg(..), Phase(..), State, Step(..))
 import UndoList exposing (UndoList)
+import Util exposing (unwrapPhase)
 import Uuid exposing (uuidGenerator)
 
 
@@ -31,8 +37,8 @@ updateState action state =
         (Phase currentPhase) =
             state.currentPhase
 
-        (Step currentStep) =
-            state.currentStep
+        ( nextPhase, nextStep ) =
+            getNextStep state
     in
     case action of
         SetNewPlayerName name ->
@@ -45,11 +51,11 @@ updateState action state =
             { state | players = filter (\player -> player.id /= id) state.players }
 
         StepForward ->
-            { state | currentStep = nextStep state }
+            { state | currentPhase = nextPhase, currentStep = nextStep }
 
 
-nextStep : State -> Step
-nextStep state =
+getNextStep : State -> ( Phase, Step )
+getNextStep state =
     let
         (Phase currentPhase) =
             state.currentPhase
@@ -69,12 +75,48 @@ nextStep state =
         nextStepInPhase =
             getAt (currentStepIndex + 1) stepsInPhase
 
-        (Phase nextPhase) =
-            currentPhase.nextPhase state
+        nextPhase =
+            getNextPhase currentPhase
     in
     case nextStepInPhase of
         Just step ->
-            step
+            ( state.currentPhase, step )
 
         Nothing ->
-            nextPhase.steps state |> stepAt 0
+            ( Phase nextPhase, nextPhase.steps state |> stepAt 0 )
+
+
+getNextPhase phase =
+    let
+        configuration =
+            unwrapPhase Phases.Configuration.configuration
+
+        firstNight =
+            unwrapPhase Phases.FirstNight.firstNight
+
+        dawn =
+            unwrapPhase Phases.Dawn.dawn
+
+        day =
+            unwrapPhase Phases.Day.day
+
+        night =
+            unwrapPhase Phases.Night.night
+    in
+    if phase == configuration then
+        firstNight
+
+    else if phase == firstNight then
+        dawn
+
+    else if phase == dawn then
+        day
+
+    else if phase == day then
+        night
+
+    else if phase == night then
+        dawn
+
+    else
+        phase
