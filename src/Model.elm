@@ -1,5 +1,6 @@
 module Model exposing (init, stepAt)
 
+import Bootstrap.Tab as Tab
 import Html exposing (Html, text)
 import List.Extra exposing (getAt)
 import Phases.Configuration exposing (configuration, rules)
@@ -29,7 +30,14 @@ stepAt index steps =
 
 initState : Flags -> State
 initState flags =
-    { players = [], newPlayerName = "", seed = Random.initialSeed flags.seed, currentPhase = configuration, currentStep = rules }
+    { players = []
+    , newPlayerName = ""
+    , seed = Random.initialSeed flags.seed
+    , currentPhase = configuration
+    , currentStep = rules
+    , pool = []
+    , selectedCardCategory = Tab.initialState
+    }
 
 
 init : Flags -> ( Model, Cmd Msg )

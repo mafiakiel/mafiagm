@@ -1,7 +1,8 @@
-module Types exposing (Action(..), Flags, Model, Msg(..), Phase(..), Player, State, Step(..))
+module Types exposing (Action(..), Card, CardCategory, Flags, Model, Msg(..), Party(..), Phase(..), Player, Role(..), State, Step(..))
 
 -- All types are defined here in a central place because Elm doesn't allow circular file dependencies.
 
+import Bootstrap.Tab as Tab
 import Html exposing (Html)
 import Random
 import UndoList exposing (UndoList)
@@ -22,6 +23,8 @@ type alias State =
     , seed : Random.Seed
     , currentPhase : Phase
     , currentStep : Step
+    , pool : List Card --the same card can be added to the pool multiple times
+    , selectedCardCategory : Tab.State
     }
 
 
@@ -92,6 +95,19 @@ type Role
     | Noips
 
 
+type alias Card =
+    { party : Party
+    , role : Role
+    , text : String
+    }
+
+
+type alias CardCategory =
+    { name : String
+    , cards : List Card
+    }
+
+
 type alias Flags =
     { seed : Int }
 
@@ -105,6 +121,8 @@ type Action
     | AddPlayer
     | RemovePlayer Uuid
     | StepForward
+    | SelectCardCategory Tab.State
+    | AddCardToPool Card
 
 
 type Msg

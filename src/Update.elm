@@ -53,6 +53,12 @@ updateState action state =
         StepForward ->
             { state | currentPhase = nextPhase, currentStep = nextStep }
 
+        SelectCardCategory category ->
+            { state | selectedCardCategory = category }
+
+        AddCardToPool card ->
+            { state | pool = card :: state.pool }
+
 
 getNextStep : State -> ( Phase, Step )
 getNextStep state =

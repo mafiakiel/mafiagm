@@ -10,7 +10,7 @@ import Bootstrap.Table as Table
 import FontAwesome exposing (angleRight, icon, plus, redo, trash, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (href, id, rel)
-import List exposing (map)
+import List exposing (length, map)
 import Types exposing (Action(..), Model, Msg(..), Phase(..), State, Step(..))
 import UndoList exposing (UndoList)
 
@@ -62,7 +62,7 @@ playerList state =
                 ]
     in
     div [ id "players" ]
-        [ h2 [] [ text "Spieler" ]
+        [ h2 [] [ text <| "Spieler (" ++ String.fromInt (length state.players) ++ ")" ]
         , Table.table
             { options = []
             , thead =
