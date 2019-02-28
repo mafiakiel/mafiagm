@@ -9,7 +9,7 @@ import Phases.Day
 import Phases.FirstNight
 import Phases.Night
 import Random
-import Types exposing (Action(..), Model, Msg(..), Phase(..), State, Step(..))
+import Types exposing (Action(..), Model, Msg(..), Party(..), Phase(..), Role(..), State, Step(..))
 import UndoList exposing (UndoList)
 import Util exposing (unwrapPhase)
 import Uuid exposing (uuidGenerator)
@@ -39,13 +39,16 @@ updateState action state =
 
         ( nextPhase, Step nextStep ) =
             getNextStep state
+
+        newPlayer =
+            { id = uuid, name = state.newPlayerName, role = None, party = Villagers }
     in
     case action of
         SetNewPlayerName name ->
             { state | newPlayerName = name }
 
         AddPlayer ->
-            { state | players = state.players ++ [ { id = uuid, name = state.newPlayerName } ], newPlayerName = "", seed = seed }
+            { state | players = state.players ++ [ newPlayer ], newPlayerName = "", seed = seed }
 
         RemovePlayer id ->
             { state | players = filter (\player -> player.id /= id) state.players }

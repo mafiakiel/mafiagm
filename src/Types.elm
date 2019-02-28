@@ -31,6 +31,8 @@ type alias State =
 type alias Player =
     { id : Uuid
     , name : String
+    , party : Party
+    , role : Role
     }
 
 

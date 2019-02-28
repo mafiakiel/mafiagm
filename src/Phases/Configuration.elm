@@ -10,8 +10,10 @@ import Data.Strings exposing (..)
 import FontAwesome exposing (icon, minus, plus)
 import Html exposing (Html, text)
 import List exposing (length, map)
-import List.Extra exposing (count)
+import List.Extra exposing (count, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
+import Random
+import Random.List exposing (shuffle)
 import Types exposing (Action(..), Msg(..), Phase(..), State, Step(..))
 
 
@@ -24,6 +26,7 @@ configuration =
                 \_ ->
                     [ rules
                     , pool
+                    , dealCards
                     ]
         }
 
@@ -96,4 +99,14 @@ dealCards =
 
 dealCardsInit : State -> State
 dealCardsInit state =
-    state
+    let
+        ( shuffledPool, newSeed ) =
+            Random.step (shuffle state.pool) state.seed
+
+        cardPlayerPairs =
+            zip shuffledPool state.players
+
+        dealCardToPlayer ( card, player ) =
+            { player | role = card.role, party = card.party }
+    in
+    { state | seed = newSeed, players = map dealCardToPlayer cardPlayerPairs }

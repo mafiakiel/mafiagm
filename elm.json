@@ -13,6 +13,7 @@
             "elm/random": "1.0.0",
             "elm-community/list-extra": "8.1.0",
             "elm-community/maybe-extra": "5.0.0",
+            "elm-community/random-extra": "3.0.0",
             "elm-community/undo-redo": "3.0.0",
             "frandibar/elm-font-awesome-5": "1.0.0",
             "rundis/elm-bootstrap": "5.1.0"
