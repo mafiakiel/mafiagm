@@ -1,8 +1,20 @@
 module Phases.Configuration exposing (configuration, rules)
 
-import Html exposing (text)
-import Phases.Abstract exposing (abstractPhase)
-import Types exposing (Phase(..), Step(..))
+import Bootstrap.Button as Button
+import Bootstrap.Card as BCard
+import Bootstrap.Card.Block as BCardBlock
+import Bootstrap.Tab as Tab
+import Bootstrap.Utilities.Spacing as Spacing
+import Data.Cards exposing (cardCategories)
+import Data.Strings exposing (..)
+import FontAwesome exposing (icon, minus, plus)
+import Html exposing (Html, text)
+import List exposing (length, map)
+import List.Extra exposing (count, zip)
+import Phases.Abstract exposing (abstractPhase, abstractStep)
+import Random
+import Random.List exposing (shuffle)
+import Types exposing (Action(..), Msg(..), Phase(..), State, Step(..))
 
 
 configuration : Phase
@@ -13,6 +25,8 @@ configuration =
             , steps =
                 \_ ->
                     [ rules
+                    , pool
+                    , dealCards
                     ]
         }
 
@@ -20,6 +34,79 @@ configuration =
 rules : Step
 rules =
     Step
-        { name = "Regeln"
-        , view = \_ -> text "hallo i bims"
+        { abstractStep
+            | name = "Regeln"
+            , view = \_ -> text "Hier könnten Ihre Regeln stehen!"
         }
+
+
+pool : Step
+pool =
+    Step
+        { abstractStep
+            | name = "Kartenpool"
+            , view = poolView
+            , stepForwardVeto =
+                \state ->
+                    if length state.players > length state.pool then
+                        Just "Es sind weniger Karten im Pool, als es Spieler gibt."
+
+                    else
+                        Nothing
+        }
+
+
+poolView : State -> Html Msg
+poolView state =
+    let
+        categoryToTab category =
+            Tab.item
+                { id = category.name
+                , link = Tab.link [] [ text category.name ]
+                , pane = Tab.pane [ Spacing.mt3 ] [ BCard.columns (map cardToBootstrapCard category.cards) ]
+                }
+
+        amountInPool card =
+            count ((==) card) state.pool
+
+        cardToBootstrapCard card =
+            BCard.config []
+                |> BCard.headerH3 [] [ text (roleToString card.role) ]
+                |> BCard.block [] [ BCardBlock.text [] [ text card.text ] ]
+                |> BCard.footer []
+                    [ Button.button [ Button.secondary, Button.disabled (amountInPool card < 1) ] [ icon minus ]
+                    , text <| String.fromInt <| amountInPool card
+                    , Button.button [ Button.secondary, Button.onClick <| Action <| AddCardToPool card ] [ icon plus ]
+                    ]
+
+        selectCategoryAction category =
+            Action (SelectCardCategory category)
+    in
+    Tab.config selectCategoryAction
+        |> Tab.items (map categoryToTab cardCategories)
+        |> Tab.view state.selectedCardCategory
+
+
+dealCards : Step
+dealCards =
+    Step
+        { abstractStep
+            | name = "Karten verteilen"
+            , view = \_ -> text "Verteile die Karten"
+            , init = dealCardsInit
+        }
+
+
+dealCardsInit : State -> State
+dealCardsInit state =
+    let
+        ( shuffledPool, newSeed ) =
+            Random.step (shuffle state.pool) state.seed
+
+        cardPlayerPairs =
+            zip shuffledPool state.players
+
+        dealCardToPlayer ( card, player ) =
+            { player | role = card.role, party = card.party }
+    in
+    { state | seed = newSeed, players = map dealCardToPlayer cardPlayerPairs }
