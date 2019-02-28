@@ -7,6 +7,7 @@ import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Table as Table
+import Data.Strings exposing (partyToString, roleToString)
 import FontAwesome exposing (angleRight, icon, plus, redo, trash, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (href, id, rel)
@@ -14,7 +15,6 @@ import List exposing (length, map)
 import Maybe.Extra exposing (isJust)
 import Types exposing (Action(..), Model, Msg(..), Phase(..), State, Step(..))
 import UndoList exposing (UndoList)
-import Data.Strings exposing (roleToString, partyToString)
 
 
 view : Model -> Html Msg
@@ -72,8 +72,8 @@ playerList state =
         playerToTableRow player =
             Table.tr []
                 [ Table.td [] [ text player.name ]
-                , Table.td [] [ text <| roleToString player.role]
-                , Table.td [] [ text <| partyToString player.party]
+                , Table.td [] [ text <| roleToString player.role ]
+                , Table.td [] [ text <| partyToString player.party ]
                 , Table.td [] []
                 , Table.td [] [ Button.button [ Button.onClick <| actionRemovePlayer player.id, Button.danger, Button.small ] [ icon trash ] ]
                 ]
@@ -84,11 +84,11 @@ playerList state =
             { options = []
             , thead =
                 Table.simpleThead
-                    [ Table.th [] [text "Name"]
-                    , Table.th [] [text "Rolle"]
-                    , Table.th [] [text "Partei"]
-                    , Table.th [] [text "Marker"]
-                    , Table.th [] [text "Aktionen"]
+                    [ Table.th [] [ text "Name" ]
+                    , Table.th [] [ text "Rolle" ]
+                    , Table.th [] [ text "Partei" ]
+                    , Table.th [] [ text "Marker" ]
+                    , Table.th [] [ text "Aktionen" ]
                     ]
             , tbody = Table.tbody [] (map playerToTableRow state.players)
             }
