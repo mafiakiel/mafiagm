@@ -46,6 +46,8 @@ type Step
     = Step
         { name : String
         , view : State -> Html Msg
+        , init : State -> State
+        , stepForwardVeto : State -> Maybe String
         }
 
 

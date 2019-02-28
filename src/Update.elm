@@ -37,7 +37,7 @@ updateState action state =
         (Phase currentPhase) =
             state.currentPhase
 
-        ( nextPhase, nextStep ) =
+        ( nextPhase, Step nextStep ) =
             getNextStep state
     in
     case action of
@@ -51,7 +51,7 @@ updateState action state =
             { state | players = filter (\player -> player.id /= id) state.players }
 
         StepForward ->
-            { state | currentPhase = nextPhase, currentStep = nextStep }
+            nextStep.init { state | currentPhase = nextPhase, currentStep = Step nextStep }
 
         SelectCardCategory category ->
             { state | selectedCardCategory = category }

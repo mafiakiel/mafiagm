@@ -3,6 +3,7 @@ module Model exposing (init, stepAt)
 import Bootstrap.Tab as Tab
 import Html exposing (Html, text)
 import List.Extra exposing (getAt)
+import Phases.Abstract exposing (abstractStep)
 import Phases.Configuration exposing (configuration, rules)
 import Random
 import Types exposing (Action, Flags, Model, Msg, State, Step(..))
@@ -13,8 +14,9 @@ import Uuid exposing (Uuid)
 stepError : Step
 stepError =
     Step
-        { name = "Error"
-        , view = \_ -> text "Step not found"
+        { abstractStep
+            | name = "Error"
+            , view = \_ -> text "Step not found"
         }
 
 

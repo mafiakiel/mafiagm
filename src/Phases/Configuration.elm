@@ -9,9 +9,9 @@ import Data.Cards exposing (cardCategories)
 import Data.Strings exposing (..)
 import FontAwesome exposing (icon, minus, plus)
 import Html exposing (Html, text)
-import List exposing (map)
+import List exposing (length, map)
 import List.Extra exposing (count)
-import Phases.Abstract exposing (abstractPhase)
+import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Types exposing (Action(..), Msg(..), Phase(..), State, Step(..))
 
 
@@ -31,16 +31,25 @@ configuration =
 rules : Step
 rules =
     Step
-        { name = "Regeln"
-        , view = \_ -> text "Hier könnten Ihre Regeln stehen!"
+        { abstractStep
+            | name = "Regeln"
+            , view = \_ -> text "Hier könnten Ihre Regeln stehen!"
         }
 
 
 pool : Step
 pool =
     Step
-        { name = "Kartenpool"
-        , view = poolView
+        { abstractStep
+            | name = "Kartenpool"
+            , view = poolView
+            , stepForwardVeto =
+                \state ->
+                    if length state.players > length state.pool then
+                        Just "Es sind weniger Karten im Pool, als es Spieler gibt."
+
+                    else
+                        Nothing
         }
 
 
@@ -73,3 +82,18 @@ poolView state =
     Tab.config selectCategoryAction
         |> Tab.items (map categoryToTab cardCategories)
         |> Tab.view state.selectedCardCategory
+
+
+dealCards : Step
+dealCards =
+    Step
+        { abstractStep
+            | name = "Karten verteilen"
+            , view = \_ -> text "Verteile die Karten"
+            , init = dealCardsInit
+        }
+
+
+dealCardsInit : State -> State
+dealCardsInit state =
+    state

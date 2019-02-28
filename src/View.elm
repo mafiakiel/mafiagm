@@ -11,6 +11,7 @@ import FontAwesome exposing (angleRight, icon, plus, redo, trash, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (href, id, rel)
 import List exposing (length, map)
+import Maybe.Extra exposing (isJust)
 import Types exposing (Action(..), Model, Msg(..), Phase(..), State, Step(..))
 import UndoList exposing (UndoList)
 
@@ -36,13 +37,25 @@ header model =
 
         (Step currentStep) =
             model.present.currentStep
+
+        stepForwardVeto =
+            currentStep.stepForwardVeto model.present
+
+        stepForwardVetoMessage =
+            case stepForwardVeto of
+                Nothing ->
+                    text ""
+
+                Just message ->
+                    text message
     in
     div [ id "header" ]
         [ h1 [] [ text currentPhase.name ]
         , h2 [] [ text currentStep.name ]
         , Button.button [ Button.onClick Undo, Button.disabled <| not <| UndoList.hasPast model ] [ icon undo ]
         , Button.button [ Button.onClick Redo, Button.disabled <| not <| UndoList.hasFuture model ] [ icon redo ]
-        , Button.button [ Button.onClick <| Action StepForward, Button.primary ] [ text "Weiter ", icon angleRight ]
+        , Button.button [ Button.onClick <| Action StepForward, Button.primary, Button.disabled <| isJust stepForwardVeto ] [ text "Weiter ", icon angleRight ]
+        , stepForwardVetoMessage
         ]
 
 
