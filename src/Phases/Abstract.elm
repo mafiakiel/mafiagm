@@ -17,4 +17,5 @@ abstractStep =
     , view = \_ -> text "Please override step view!"
     , init = \state -> state
     , stepForwardVeto = \_ -> Nothing
+    , playerControls = []
     }

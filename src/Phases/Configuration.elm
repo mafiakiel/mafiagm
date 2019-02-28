@@ -7,14 +7,15 @@ import Bootstrap.Tab as Tab
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Cards exposing (cardCategories)
 import Data.Strings exposing (..)
-import FontAwesome exposing (icon, minus, plus)
+import FontAwesome exposing (icon, minus, plus, trash)
 import Html exposing (Html, text)
 import List exposing (length, map)
 import List.Extra exposing (count, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Random
 import Random.List exposing (shuffle)
-import Types exposing (Action(..), Msg(..), Phase(..), State, Step(..))
+import Types exposing (Action(..), Msg(..), Phase(..), State, Step(..), PlayerControl)
+
 
 
 configuration : Phase
@@ -29,6 +30,14 @@ configuration =
                     , dealCards
                     ]
         }
+
+deletePlayerControl : PlayerControl
+deletePlayerControl = {
+        label = icon trash,
+        action= \player -> RemovePlayer player.id,
+        options= \_ -> [Button.danger],
+        condition = \_ -> True
+    }
 
 
 rules : Step
@@ -53,6 +62,7 @@ pool =
 
                     else
                         Nothing
+            , playerControls = [deletePlayerControl]
         }
 
 

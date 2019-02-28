@@ -1,4 +1,4 @@
-module Util exposing (unwrapPhase)
+module Util exposing (unwrapPhase, unwrapStep)
 
 import Types exposing (Phase(..), Step(..))
 

@@ -11,10 +11,11 @@ import Data.Strings exposing (partyToString, roleToString)
 import FontAwesome exposing (angleRight, icon, plus, redo, trash, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (href, id, rel)
-import List exposing (length, map)
+import List exposing (length, map, filter)
 import Maybe.Extra exposing (isJust)
 import Types exposing (Action(..), Model, Msg(..), Phase(..), State, Step(..))
 import UndoList exposing (UndoList)
+import Util exposing (unwrapStep)
 
 
 view : Model -> Html Msg
@@ -69,13 +70,18 @@ playerList state =
         actionRemovePlayer id =
             Action <| RemovePlayer id
 
+        playerControls = (unwrapStep state.currentStep).playerControls
+
+        playerControlToButton player control =
+            Button.button ([Button.onClick <| Action <| control.action player, Button.small] ++ control.options player) [ control.label ]
+
         playerToTableRow player =
             Table.tr []
                 [ Table.td [] [ text player.name ]
                 , Table.td [] [ text <| roleToString player.role ]
                 , Table.td [] [ text <| partyToString player.party ]
                 , Table.td [] []
-                , Table.td [] [ Button.button [ Button.onClick <| actionRemovePlayer player.id, Button.danger, Button.small ] [ icon trash ] ]
+                , Table.td [] (filter (\c -> c.condition player) playerControls |> map (playerControlToButton player))
                 ]
     in
     div [ id "players" ]
