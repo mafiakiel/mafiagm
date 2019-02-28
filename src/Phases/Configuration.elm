@@ -14,8 +14,7 @@ import List.Extra exposing (count, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Random
 import Random.List exposing (shuffle)
-import Types exposing (Action(..), Msg(..), Phase(..), State, Step(..), PlayerControl)
-
+import Types exposing (Action(..), Msg(..), Phase(..), PlayerControl, State, Step(..))
 
 
 configuration : Phase
@@ -31,12 +30,13 @@ configuration =
                     ]
         }
 
+
 deletePlayerControl : PlayerControl
-deletePlayerControl = {
-        label = icon trash,
-        action= \player -> RemovePlayer player.id,
-        options= \_ -> [Button.danger],
-        condition = \_ -> True
+deletePlayerControl =
+    { label = icon trash
+    , action = \player -> RemovePlayer player.id
+    , options = \_ -> [ Button.danger ]
+    , condition = \_ -> True
     }
 
 
@@ -62,7 +62,7 @@ pool =
 
                     else
                         Nothing
-            , playerControls = [deletePlayerControl]
+            , playerControls = [ deletePlayerControl ]
         }
 
 

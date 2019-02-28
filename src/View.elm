@@ -11,7 +11,7 @@ import Data.Strings exposing (partyToString, roleToString)
 import FontAwesome exposing (angleRight, icon, plus, redo, trash, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (href, id, rel)
-import List exposing (length, map, filter)
+import List exposing (filter, length, map)
 import Maybe.Extra exposing (isJust)
 import Types exposing (Action(..), Model, Msg(..), Phase(..), State, Step(..))
 import UndoList exposing (UndoList)
@@ -70,10 +70,11 @@ playerList state =
         actionRemovePlayer id =
             Action <| RemovePlayer id
 
-        playerControls = (unwrapStep state.currentStep).playerControls
+        playerControls =
+            (unwrapStep state.currentStep).playerControls
 
         playerControlToButton player control =
-            Button.button ([Button.onClick <| Action <| control.action player, Button.small] ++ control.options player) [ control.label ]
+            Button.button ([ Button.onClick <| Action <| control.action player, Button.small ] ++ control.options player) [ control.label ]
 
         playerToTableRow player =
             Table.tr []
