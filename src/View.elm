@@ -10,7 +10,7 @@ import Bootstrap.Grid.Col as Col
 import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString, roleToString)
-import FontAwesome exposing (angleRight, icon, plus, redo, trash, undo)
+import FontAwesome exposing (angleRight, heart, icon, plus, redo, trash, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (href, id, rel)
 import List exposing (filter, length, map)
@@ -117,15 +117,25 @@ playerList state =
 
 
 renderMarker marker =
+    let
+        options =
+            [ Spacing.mr1 ]
+    in
     case marker of
         Kill ->
-            Badge.pillDanger [ Spacing.mr1 ] [ text "KILL" ]
+            Badge.pillDanger options [ text "KILL" ]
 
         Protected ->
-            Badge.pillSuccess [ Spacing.mr1 ] [ text "PROTECC" ]
+            Badge.pillSuccess options [ text "PROTECC" ]
 
         Nominated position ->
-            Badge.pillInfo [ Spacing.mr1 ] [ text "NOM ", text (String.fromInt position) ]
+            Badge.pillInfo options [ text "NOM ", text (String.fromInt position) ]
+
+        Converted ->
+            Badge.pillSecondary options [ text "M" ]
+
+        InLove ->
+            Badge.pillSecondary options [ icon heart ]
 
 
 phaseContent : State -> Html Msg

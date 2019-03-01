@@ -1,8 +1,9 @@
-module Util exposing (getCurrentStep, stepAt, stepError, unwrapPhase, unwrapStep)
+module Util exposing (getCurrentStep, isInChurch, stepAt, stepError, unwrapPhase, unwrapStep)
 
 import Html exposing (text)
+import List exposing (member)
 import List.Extra exposing (getAt)
-import Types exposing (Phase(..), Step(..))
+import Types exposing (Marker(..), Phase(..), Role(..), Step(..))
 
 
 unwrapPhase wrapped =
@@ -45,3 +46,7 @@ stepAt steps index =
 
 getCurrentStep state =
     stepAt (unwrapPhase state.currentPhase).steps state.currentStepIndex |> unwrapStep
+
+
+isInChurch player =
+    member Converted player.markers || player.role == Pope || player.role == Monk || player.role == MonkInLove

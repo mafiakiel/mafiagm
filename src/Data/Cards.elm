@@ -13,6 +13,7 @@ cardCategories =
             , createCard Villagers CrackWhore "todo"
             , createCard Villagers SecretAgent "todo"
             , createCard Villagers Pathologist "todo"
+            , createCard Villagers Cupid "todo"
             ]
       }
     , { name = "Bürger-Checks"

@@ -142,6 +142,8 @@ type Marker
     = Kill
     | Protected
     | Nominated Int
+    | Converted
+    | InLove
 
 
 type alias Flags =

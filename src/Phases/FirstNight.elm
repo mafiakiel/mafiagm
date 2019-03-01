@@ -1,8 +1,12 @@
 module Phases.FirstNight exposing (firstNight)
 
+import Data.Strings exposing (partyToString, roleToString)
+import FontAwesome exposing (heart, icon)
 import Html exposing (text)
+import List.Extra exposing (notMember)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Types exposing (Party(..), Phase(..), Step(..))
+import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..))
+import Util exposing (isInChurch)
 
 
 firstNight : Phase
@@ -10,8 +14,7 @@ firstNight =
     Phase
         { abstractPhase
             | name = "Erste Nacht"
-            , steps =
-                [ mafia ]
+            , steps = [ mafia, church, cupid ]
         }
 
 
@@ -19,7 +22,38 @@ mafia : Step
 mafia =
     Step
         { abstractStep
-            | name = "Mafia"
+            | name = partyToString Mafia
             , view = \_ -> text "Die Mafia darf aufwachen und sich erkennen. 😏"
             , isPlayerActive = \player _ -> player.party == Mafia
         }
+
+
+church : Step
+church =
+    Step
+        { abstractStep
+            | name = "Kirche"
+            , view = \_ -> text "Die Kirche darf aufwachen und sich erkennen. 😏"
+            , isPlayerActive = \player _ -> isInChurch player
+        }
+
+
+cupid : Step
+cupid =
+    Step
+        { abstractStep
+            | name = roleToString Cupid
+            , view = \_ -> text "Amor darf aufwachen und zwei Mitspieler verlieben."
+            , isPlayerActive = \player _ -> player.role == Cupid
+            , playerControls = cupidPlayerControls
+        }
+
+
+cupidPlayerControls : List PlayerControl
+cupidPlayerControls =
+    [ { label = icon heart
+      , action = \player -> AddMarker player.id InLove
+      , options = \_ -> []
+      , condition = \player -> player.role /= Cupid && notMember InLove player.markers
+      }
+    ]
