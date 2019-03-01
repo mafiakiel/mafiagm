@@ -1,7 +1,23 @@
-module Types exposing (Action(..), Card, CardCategory, Flags, Model, Msg(..), Party(..), Phase(..), Player, Role(..), State, Step(..))
+module Types exposing
+    ( Action(..)
+    , Card
+    , CardCategory
+    , Flags
+    , Marker(..)
+    , Model
+    , Msg(..)
+    , Party(..)
+    , Phase(..)
+    , Player
+    , PlayerControl
+    , Role(..)
+    , State
+    , Step(..)
+    )
 
 -- All types are defined here in a central place because Elm doesn't allow circular file dependencies.
 
+import Bootstrap.Button as Button
 import Bootstrap.Tab as Tab
 import Html exposing (Html)
 import Random
@@ -33,6 +49,7 @@ type alias Player =
     , name : String
     , party : Party
     , role : Role
+    , markers : List Marker
     }
 
 
@@ -50,6 +67,7 @@ type Step
         , view : State -> Html Msg
         , init : State -> State
         , stepForwardVeto : State -> Maybe String
+        , playerControls : List PlayerControl
         }
 
 
@@ -112,6 +130,20 @@ type alias CardCategory =
     }
 
 
+type alias PlayerControl =
+    { label : Html Msg
+    , action : Player -> Action
+    , options : Player -> List (Button.Option Msg)
+    , condition : Player -> Bool
+    }
+
+
+type Marker
+    = Kill
+    | Protected
+    | Nominated Int
+
+
 type alias Flags =
     { seed : Int }
 
@@ -127,6 +159,8 @@ type Action
     | StepForward
     | SelectCardCategory Tab.State
     | AddCardToPool Card
+    | AddMarker Uuid Marker
+    | RemoveMarker Uuid Marker
 
 
 type Msg

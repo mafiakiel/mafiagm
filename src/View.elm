@@ -1,5 +1,6 @@
 module View exposing (view)
 
+import Bootstrap.Badge as Badge
 import Bootstrap.Button as Button
 import Bootstrap.CDN as CDN
 import Bootstrap.Form.Input as Input
@@ -7,14 +8,16 @@ import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Table as Table
+import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString, roleToString)
 import FontAwesome exposing (angleRight, icon, plus, redo, trash, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (href, id, rel)
-import List exposing (length, map)
+import List exposing (filter, length, map)
 import Maybe.Extra exposing (isJust)
-import Types exposing (Action(..), Model, Msg(..), Phase(..), State, Step(..))
+import Types exposing (Action(..), Marker(..), Model, Msg(..), Phase(..), State, Step(..))
 import UndoList exposing (UndoList)
+import Util exposing (unwrapStep)
 
 
 view : Model -> Html Msg
@@ -69,13 +72,19 @@ playerList state =
         actionRemovePlayer id =
             Action <| RemovePlayer id
 
+        playerControls =
+            (unwrapStep state.currentStep).playerControls
+
+        playerControlToButton player control =
+            Button.button ([ Button.onClick <| Action <| control.action player, Button.small ] ++ control.options player) [ control.label ]
+
         playerToTableRow player =
             Table.tr []
                 [ Table.td [] [ text player.name ]
                 , Table.td [] [ text <| roleToString player.role ]
                 , Table.td [] [ text <| partyToString player.party ]
-                , Table.td [] []
-                , Table.td [] [ Button.button [ Button.onClick <| actionRemovePlayer player.id, Button.danger, Button.small ] [ icon trash ] ]
+                , Table.td [] (map renderMarker player.markers)
+                , Table.td [] (filter (\c -> c.condition player) playerControls |> map (playerControlToButton player))
                 ]
     in
     div [ id "players" ]
@@ -98,6 +107,18 @@ playerList state =
                 [ InputGroup.button [ Button.success, Button.onClick <| Action AddPlayer, Button.disabled <| state.newPlayerName == "" ] [ icon plus ] ]
             |> InputGroup.view
         ]
+
+
+renderMarker marker =
+    case marker of
+        Kill ->
+            Badge.pillDanger [ Spacing.mr1 ] [ text "KILL" ]
+
+        Protected ->
+            Badge.pillSuccess [ Spacing.mr1 ] [ text "PROTECC" ]
+
+        Nominated position ->
+            Badge.pillInfo [ Spacing.mr1 ] [ text "NOM ", text (String.fromInt position) ]
 
 
 phaseContent : State -> Html Msg

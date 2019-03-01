@@ -1,7 +1,7 @@
 module Update exposing (update)
 
 import List exposing (filter, map)
-import List.Extra exposing (elemIndex, getAt)
+import List.Extra exposing (elemIndex, filterNot, getAt, remove, updateIf)
 import Model exposing (stepAt)
 import Phases.Configuration
 import Phases.Dawn
@@ -9,7 +9,7 @@ import Phases.Day
 import Phases.FirstNight
 import Phases.Night
 import Random
-import Types exposing (Action(..), Model, Msg(..), Party(..), Phase(..), Role(..), State, Step(..))
+import Types exposing (Action(..), Marker(..), Model, Msg(..), Party(..), Phase(..), Role(..), State, Step(..))
 import UndoList exposing (UndoList)
 import Util exposing (unwrapPhase)
 import Uuid exposing (uuidGenerator)
@@ -40,8 +40,11 @@ updateState action state =
         ( nextPhase, Step nextStep ) =
             getNextStep state
 
+        hasId id player =
+            player.id == id
+
         newPlayer =
-            { id = uuid, name = state.newPlayerName, role = None, party = Villagers }
+            { id = uuid, name = state.newPlayerName, role = None, party = Villagers, markers = [] }
     in
     case action of
         SetNewPlayerName name ->
@@ -51,7 +54,7 @@ updateState action state =
             { state | players = state.players ++ [ newPlayer ], newPlayerName = "", seed = seed }
 
         RemovePlayer id ->
-            { state | players = filter (\player -> player.id /= id) state.players }
+            { state | players = filterNot (hasId id) state.players }
 
         StepForward ->
             nextStep.init { state | currentPhase = nextPhase, currentStep = Step nextStep }
@@ -61,6 +64,12 @@ updateState action state =
 
         AddCardToPool card ->
             { state | pool = card :: state.pool }
+
+        AddMarker playerId marker ->
+            { state | players = updateIf (hasId playerId) (\p -> { p | markers = p.markers ++ [ marker ] }) state.players }
+
+        RemoveMarker playerId marker ->
+            { state | players = updateIf (hasId playerId) (\p -> { p | markers = remove marker p.markers }) state.players }
 
 
 getNextStep : State -> ( Phase, Step )
