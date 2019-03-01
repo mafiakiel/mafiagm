@@ -7,8 +7,7 @@ import Util exposing (unwrapPhase)
 
 abstractPhase =
     { name = "Please override phase name!"
-    , nextPhase = \_ -> Phase abstractPhase
-    , steps = \_ -> []
+    , steps = []
     }
 
 

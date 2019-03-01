@@ -17,7 +17,7 @@ import List exposing (filter, length, map)
 import Maybe.Extra exposing (isJust)
 import Types exposing (Action(..), Marker(..), Model, Msg(..), Phase(..), State, Step(..))
 import UndoList exposing (UndoList)
-import Util exposing (unwrapStep)
+import Util exposing (getCurrentStep, unwrapStep)
 
 
 view : Model -> Html Msg
@@ -39,8 +39,8 @@ header model =
         (Phase currentPhase) =
             model.present.currentPhase
 
-        (Step currentStep) =
-            model.present.currentStep
+        currentStep =
+            getCurrentStep model.present
 
         stepForwardVeto =
             currentStep.stepForwardVeto model.present
@@ -73,13 +73,13 @@ playerList state =
             Action <| RemovePlayer id
 
         playerControls =
-            (unwrapStep state.currentStep).playerControls
+            (getCurrentStep state).playerControls
 
         playerControlToButton player control =
             Button.button ([ Button.onClick <| Action <| control.action player, Button.small ] ++ control.options player) [ control.label ]
 
         playerTableRowOptions player =
-            if (unwrapStep state.currentStep).isPlayerActive player state then
+            if (getCurrentStep state).isPlayerActive player state then
                 [ Table.rowActive ]
 
             else
@@ -130,11 +130,7 @@ renderMarker marker =
 
 phaseContent : State -> Html Msg
 phaseContent state =
-    let
-        (Step currentStep) =
-            state.currentStep
-    in
-    div [ id "phase-viewport" ] [ currentStep.view state ]
+    div [ id "phase-viewport" ] [ (getCurrentStep state).view state ]
 
 
 fontAwesome : Html msg

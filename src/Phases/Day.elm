@@ -11,6 +11,5 @@ day =
         { abstractPhase
             | name = "Tag"
             , steps =
-                \_ ->
-                    []
+                []
         }

@@ -1,33 +1,14 @@
-module Model exposing (init, stepAt)
+module Model exposing (init)
 
 import Bootstrap.Tab as Tab
 import Html exposing (Html, text)
 import List.Extra exposing (getAt)
 import Phases.Abstract exposing (abstractStep)
-import Phases.Configuration exposing (configuration, rules)
+import Phases.Configuration exposing (configuration)
 import Random
 import Types exposing (Action, Flags, Model, Msg, State, Step(..))
 import UndoList exposing (UndoList)
 import Uuid exposing (Uuid)
-
-
-stepError : Step
-stepError =
-    Step
-        { abstractStep
-            | name = "Error"
-            , view = \_ -> text "Step not found"
-        }
-
-
-stepAt : Int -> List Step -> Step
-stepAt index steps =
-    case getAt index steps of
-        Just step ->
-            step
-
-        Nothing ->
-            stepError
 
 
 initState : Flags -> State
@@ -36,7 +17,7 @@ initState flags =
     , newPlayerName = ""
     , seed = Random.initialSeed flags.seed
     , currentPhase = configuration
-    , currentStep = rules
+    , currentStepIndex = 0
     , pool = []
     , selectedCardCategory = Tab.initialState
     }

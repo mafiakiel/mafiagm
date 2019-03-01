@@ -1,8 +1,7 @@
 module Update exposing (update)
 
-import List exposing (filter, map)
+import List exposing (filter, length, map)
 import List.Extra exposing (elemIndex, filterNot, getAt, remove, updateIf)
-import Model exposing (stepAt)
 import Phases.Configuration
 import Phases.Dawn
 import Phases.Day
@@ -11,7 +10,7 @@ import Phases.Night
 import Random
 import Types exposing (Action(..), Marker(..), Model, Msg(..), Party(..), Phase(..), Role(..), State, Step(..))
 import UndoList exposing (UndoList)
-import Util exposing (unwrapPhase)
+import Util exposing (stepAt, unwrapPhase, unwrapStep)
 import Uuid exposing (uuidGenerator)
 
 
@@ -31,14 +30,17 @@ update msg model =
 updateState : Action -> State -> State
 updateState action state =
     let
-        ( uuid, seed ) =
+        ( uuid, newSeed ) =
             Random.step uuidGenerator state.seed
 
         (Phase currentPhase) =
             state.currentPhase
 
-        ( nextPhase, Step nextStep ) =
+        ( nextPhase, nextStepIndex ) =
             getNextStep state
+
+        nextStep =
+            stepAt (unwrapPhase nextPhase).steps nextStepIndex |> unwrapStep
 
         hasId id player =
             player.id == id
@@ -51,13 +53,13 @@ updateState action state =
             { state | newPlayerName = name }
 
         AddPlayer ->
-            { state | players = state.players ++ [ newPlayer ], newPlayerName = "", seed = seed }
+            { state | players = state.players ++ [ newPlayer ], newPlayerName = "", seed = newSeed }
 
         RemovePlayer id ->
             { state | players = filterNot (hasId id) state.players }
 
         StepForward ->
-            nextStep.init { state | currentPhase = nextPhase, currentStep = Step nextStep }
+            nextStep.init { state | currentPhase = nextPhase, currentStepIndex = nextStepIndex }
 
         SelectCardCategory category ->
             { state | selectedCardCategory = category }
@@ -72,36 +74,20 @@ updateState action state =
             { state | players = updateIf (hasId playerId) (\p -> { p | markers = remove marker p.markers }) state.players }
 
 
-getNextStep : State -> ( Phase, Step )
+getNextStep : State -> ( Phase, Int )
 getNextStep state =
     let
         (Phase currentPhase) =
             state.currentPhase
 
-        stepsInPhase =
-            currentPhase.steps state
-
-        currentStepIndex =
-            case elemIndex state.currentStep stepsInPhase of
-                Just index ->
-                    index
-
-                Nothing ->
-                    -- should not happen
-                    -1
-
-        nextStepInPhase =
-            getAt (currentStepIndex + 1) stepsInPhase
-
         nextPhase =
             getNextPhase currentPhase
     in
-    case nextStepInPhase of
-        Just step ->
-            ( state.currentPhase, step )
+    if state.currentStepIndex + 1 < length currentPhase.steps then
+        ( state.currentPhase, state.currentStepIndex + 1 )
 
-        Nothing ->
-            ( Phase nextPhase, nextPhase.steps state |> stepAt 0 )
+    else
+        ( Phase nextPhase, 0 )
 
 
 getNextPhase phase =

@@ -1,8 +1,8 @@
 module Phases.FirstNight exposing (firstNight)
 
 import Html exposing (text)
-import Phases.Abstract exposing (abstractPhase)
-import Types exposing (Phase(..), Step(..))
+import Phases.Abstract exposing (abstractPhase, abstractStep)
+import Types exposing (Party(..), Phase(..), Step(..))
 
 
 firstNight : Phase
@@ -11,6 +11,15 @@ firstNight =
         { abstractPhase
             | name = "Erste Nacht"
             , steps =
-                \_ ->
-                    []
+                [ mafia ]
+        }
+
+
+mafia : Step
+mafia =
+    Step
+        { abstractStep
+            | name = "Mafia"
+            , view = \_ -> text "Die Mafia darf aufwachen und sich erkennen. 😏"
+            , isPlayerActive = \player _ -> player.party == Mafia
         }

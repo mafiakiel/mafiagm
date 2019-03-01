@@ -23,11 +23,10 @@ configuration =
         { abstractPhase
             | name = "Konfiguration"
             , steps =
-                \_ ->
-                    [ rules
-                    , pool
-                    , dealCards
-                    ]
+                [ rules
+                , pool
+                , dealCards
+                ]
         }
 
 

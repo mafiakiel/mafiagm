@@ -38,7 +38,7 @@ type alias State =
     , newPlayerName : String
     , seed : Random.Seed
     , currentPhase : Phase
-    , currentStep : Step
+    , currentStepIndex : Int
     , pool : List Card --the same card can be added to the pool multiple times
     , selectedCardCategory : Tab.State
     }
@@ -56,8 +56,7 @@ type alias Player =
 type Phase
     = Phase
         { name : String
-        , steps : State -> List Step
-        , nextPhase : State -> Phase
+        , steps : List Step
         }
 
 
