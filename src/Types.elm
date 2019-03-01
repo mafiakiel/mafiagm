@@ -3,6 +3,7 @@ module Types exposing
     , Card
     , CardCategory
     , Flags
+    , Marker(..)
     , Model
     , Msg(..)
     , Party(..)
@@ -48,6 +49,7 @@ type alias Player =
     , name : String
     , party : Party
     , role : Role
+    , markers : List Marker
     }
 
 
@@ -136,6 +138,12 @@ type alias PlayerControl =
     }
 
 
+type Marker
+    = Kill
+    | Protected
+    | Nominated Int
+
+
 type alias Flags =
     { seed : Int }
 
@@ -151,6 +159,8 @@ type Action
     | StepForward
     | SelectCardCategory Tab.State
     | AddCardToPool Card
+    | AddMarker Uuid Marker
+    | RemoveMarker Uuid Marker
 
 
 type Msg
