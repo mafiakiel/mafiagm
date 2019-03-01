@@ -78,8 +78,15 @@ playerList state =
         playerControlToButton player control =
             Button.button ([ Button.onClick <| Action <| control.action player, Button.small ] ++ control.options player) [ control.label ]
 
+        playerTableRowOptions player =
+            if (unwrapStep state.currentStep).isPlayerActive player state then
+                [ Table.rowActive ]
+
+            else
+                []
+
         playerToTableRow player =
-            Table.tr []
+            Table.tr (playerTableRowOptions player)
                 [ Table.td [] [ text player.name ]
                 , Table.td [] [ text <| roleToString player.role ]
                 , Table.td [] [ text <| partyToString player.party ]

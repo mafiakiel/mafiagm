@@ -18,4 +18,5 @@ abstractStep =
     , init = \state -> state
     , stepForwardVeto = \_ -> Nothing
     , playerControls = []
+    , isPlayerActive = \_ _ -> False
     }

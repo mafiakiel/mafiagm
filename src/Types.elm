@@ -68,6 +68,7 @@ type Step
         , init : State -> State
         , stepForwardVeto : State -> Maybe String
         , playerControls : List PlayerControl
+        , isPlayerActive : Player -> State -> Bool
         }
 
 
