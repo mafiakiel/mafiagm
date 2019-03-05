@@ -33,9 +33,6 @@ updateState action state =
         ( uuid, newSeed ) =
             Random.step uuidGenerator state.seed
 
-        (Phase currentPhase) =
-            state.currentPhase
-
         ( nextPhase, nextStepIndex ) =
             getNextStep state
 

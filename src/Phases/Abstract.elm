@@ -1,8 +1,7 @@
 module Phases.Abstract exposing (abstractPhase, abstractStep)
 
 import Html exposing (text)
-import Types exposing (Phase(..))
-import Util exposing (unwrapPhase)
+import Types exposing (Phase(..), StepMode(..))
 
 
 abstractPhase =
@@ -18,4 +17,5 @@ abstractStep =
     , stepForwardVeto = \_ -> Nothing
     , playerControls = []
     , isPlayerActive = \_ _ -> False
+    , mode = \_ -> Execute
     }

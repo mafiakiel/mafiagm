@@ -6,7 +6,7 @@ import Html exposing (text)
 import List.Extra exposing (notMember)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..))
-import Util exposing (isInChurch)
+import Util exposing (isInChurch, stepModeByRole, stepModeByParty)
 
 
 firstNight : Phase
@@ -25,6 +25,7 @@ mafia =
             | name = partyToString Mafia
             , view = \_ -> text "Die Mafia darf aufwachen und sich erkennen. 😏"
             , isPlayerActive = \player _ -> player.party == Mafia
+            , mode = stepModeByParty Mafia
         }
 
 
@@ -46,6 +47,7 @@ cupid =
             , view = \_ -> text "Amor darf aufwachen und zwei Mitspieler verlieben."
             , isPlayerActive = \player _ -> player.role == Cupid
             , playerControls = cupidPlayerControls
+            , mode = stepModeByRole Cupid
         }
 
 

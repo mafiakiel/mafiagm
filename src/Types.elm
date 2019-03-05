@@ -13,6 +13,7 @@ module Types exposing
     , Role(..)
     , State
     , Step(..)
+    , StepMode(..)
     )
 
 -- All types are defined here in a central place because Elm doesn't allow circular file dependencies.
@@ -68,7 +69,14 @@ type Step
         , stepForwardVeto : State -> Maybe String
         , playerControls : List PlayerControl
         , isPlayerActive : Player -> State -> Bool
+        , mode : State -> StepMode
         }
+
+
+type StepMode
+    = Execute
+    | Fake
+    | Skip
 
 
 type Party
