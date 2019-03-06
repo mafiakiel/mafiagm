@@ -10,14 +10,14 @@ import Bootstrap.Grid.Col as Col
 import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString, roleToString)
-import FontAwesome exposing (angleRight, icon, plus, redo, trash, undo)
+import FontAwesome exposing (angleRight, heart, icon, plus, redo, trash, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (href, id, rel)
 import List exposing (filter, length, map)
 import Maybe.Extra exposing (isJust)
 import Types exposing (Action(..), Marker(..), Model, Msg(..), Phase(..), State, Step(..))
 import UndoList exposing (UndoList)
-import Util exposing (unwrapStep)
+import Util exposing (getCurrentStep, unwrapStep)
 
 
 view : Model -> Html Msg
@@ -39,8 +39,8 @@ header model =
         (Phase currentPhase) =
             model.present.currentPhase
 
-        (Step currentStep) =
-            model.present.currentStep
+        currentStep =
+            getCurrentStep model.present
 
         stepForwardVeto =
             currentStep.stepForwardVeto model.present
@@ -73,13 +73,20 @@ playerList state =
             Action <| RemovePlayer id
 
         playerControls =
-            (unwrapStep state.currentStep).playerControls
+            (getCurrentStep state).playerControls
 
         playerControlToButton player control =
             Button.button ([ Button.onClick <| Action <| control.action player, Button.small ] ++ control.options player) [ control.label ]
 
+        playerTableRowOptions player =
+            if (getCurrentStep state).isPlayerActive player state then
+                [ Table.rowActive ]
+
+            else
+                []
+
         playerToTableRow player =
-            Table.tr []
+            Table.tr (playerTableRowOptions player)
                 [ Table.td [] [ text player.name ]
                 , Table.td [] [ text <| roleToString player.role ]
                 , Table.td [] [ text <| partyToString player.party ]
@@ -110,24 +117,30 @@ playerList state =
 
 
 renderMarker marker =
+    let
+        options =
+            [ Spacing.mr1 ]
+    in
     case marker of
         Kill ->
-            Badge.pillDanger [ Spacing.mr1 ] [ text "KILL" ]
+            Badge.pillDanger options [ text "KILL" ]
 
         Protected ->
-            Badge.pillSuccess [ Spacing.mr1 ] [ text "PROTECC" ]
+            Badge.pillSuccess options [ text "PROTECC" ]
 
         Nominated position ->
-            Badge.pillInfo [ Spacing.mr1 ] [ text "NOM ", text (String.fromInt position) ]
+            Badge.pillInfo options [ text "NOM ", text (String.fromInt position) ]
+
+        Converted ->
+            Badge.pillSecondary options [ text "M" ]
+
+        InLove ->
+            Badge.pillSecondary options [ icon heart ]
 
 
 phaseContent : State -> Html Msg
 phaseContent state =
-    let
-        (Step currentStep) =
-            state.currentStep
-    in
-    div [ id "phase-viewport" ] [ currentStep.view state ]
+    div [ id "phase-viewport" ] [ (getCurrentStep state).view state ]
 
 
 fontAwesome : Html msg

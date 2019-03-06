@@ -11,6 +11,5 @@ dawn =
         { abstractPhase
             | name = "Morgen"
             , steps =
-                \_ ->
-                    []
+                []
         }

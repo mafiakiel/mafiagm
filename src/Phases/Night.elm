@@ -11,6 +11,5 @@ night =
         { abstractPhase
             | name = "Nacht"
             , steps =
-                \_ ->
-                    []
+                []
         }
