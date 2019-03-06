@@ -42,6 +42,7 @@ type alias State =
     , currentStepIndex : Int
     , pool : List Card --the same card can be added to the pool multiple times
     , selectedCardCategory : Tab.State
+    , undealtPool : List Card
     }
 
 

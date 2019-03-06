@@ -79,10 +79,12 @@ stepModeByRole : Role -> State -> StepMode
 stepModeByRole role state =
     let
         playerRoles =
-            map (\player -> player.role) state.players
+            state.players
+                |> filter isAlive
+                |> map (\player -> player.role)
 
         poolRoles =
-            map (\card -> card.role) state.pool
+            map (\card -> card.role) state.undealtPool
     in
     if member role playerRoles then
         Execute
@@ -98,10 +100,12 @@ stepModeByParty : Party -> State -> StepMode
 stepModeByParty party state =
     let
         playerParties =
-            map (\player -> player.party) state.players
+            state.players
+                |> filter isAlive
+                |> map (\player -> player.party)
 
         poolParties =
-            map (\card -> card.party) state.pool
+            map (\card -> card.party) state.undealtPool
     in
     if member party playerParties then
         Execute
