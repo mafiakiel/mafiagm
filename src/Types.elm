@@ -171,6 +171,7 @@ type Action
     | StepForward
     | SelectCardCategory Tab.State
     | AddCardToPool Card
+    | RemoveCardFromPool Card
     | AddMarker Uuid Marker
     | RemoveMarker Uuid Marker
     | KillPlayer Uuid

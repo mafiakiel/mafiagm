@@ -83,7 +83,7 @@ poolView state =
                 |> BCard.headerH3 [] [ text (roleToString card.role) ]
                 |> BCard.block [] [ BCardBlock.text [] [ text card.text ] ]
                 |> BCard.footer []
-                    [ Button.button [ Button.secondary, Button.disabled (amountInPool card < 1) ] [ icon minus ]
+                    [ Button.button [ Button.secondary, Button.onClick <| Action <| RemoveCardFromPool card ] [ icon minus ]
                     , text <| String.fromInt <| amountInPool card
                     , Button.button [ Button.secondary, Button.onClick <| Action <| AddCardToPool card ] [ icon plus ]
                     ]

@@ -53,6 +53,9 @@ updateState action state =
 
         hasId id player =
             player.id == id
+        
+        hasCard card pool =
+            pool.card == card
 
         newPlayer =
             { id = uuid, name = state.newPlayerName, role = None, party = Villagers, markers = [], alive = True }
@@ -75,6 +78,9 @@ updateState action state =
 
         AddCardToPool card ->
             { state | pool = card :: state.pool }
+
+        RemoveCardFromPool card ->
+            { state | pool = remove card state.pool}
 
         AddMarker playerId marker ->
             { state | players = updateIf (hasId playerId) (\p -> { p | markers = p.markers ++ [ marker ] }) state.players }
