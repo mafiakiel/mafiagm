@@ -1,5 +1,6 @@
 module Util exposing
     ( getCurrentStep
+    , isAlive
     , isInChurch
     , stepAt
     , stepError
@@ -10,7 +11,7 @@ module Util exposing
     )
 
 import Html exposing (text)
-import List exposing (map, member)
+import List exposing (filter, map, member)
 import List.Extra exposing (getAt)
 import Types exposing (Marker(..), Party(..), Phase(..), Player, Role(..), State, Step(..), StepMode(..))
 
@@ -69,14 +70,21 @@ isInChurch player =
         == MonkInLove
 
 
+isAlive : Player -> Bool
+isAlive player =
+    player.alive
+
+
 stepModeByRole : Role -> State -> StepMode
 stepModeByRole role state =
     let
         playerRoles =
-            map (\player -> player.role) state.players
+            state.players
+                |> filter isAlive
+                |> map (\player -> player.role)
 
         poolRoles =
-            map (\card -> card.role) state.pool
+            map (\card -> card.role) state.undealtPool
     in
     if member role playerRoles then
         Execute
@@ -92,10 +100,12 @@ stepModeByParty : Party -> State -> StepMode
 stepModeByParty party state =
     let
         playerParties =
-            map (\player -> player.party) state.players
+            state.players
+                |> filter isAlive
+                |> map (\player -> player.party)
 
         poolParties =
-            map (\card -> card.party) state.pool
+            map (\card -> card.party) state.undealtPool
     in
     if member party playerParties then
         Execute

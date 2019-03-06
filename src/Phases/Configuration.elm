@@ -9,7 +9,7 @@ import Data.Cards exposing (cardCategories)
 import Data.Strings exposing (..)
 import FontAwesome exposing (icon, minus, plus, trash)
 import Html exposing (Html, text)
-import List exposing (length, map)
+import List exposing (drop, length, map)
 import List.Extra exposing (count, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Random
@@ -118,4 +118,8 @@ dealCardsInit state =
         dealCardToPlayer ( card, player ) =
             { player | role = card.role, party = card.party }
     in
-    { state | seed = newSeed, players = map dealCardToPlayer cardPlayerPairs }
+    { state
+        | seed = newSeed
+        , players = map dealCardToPlayer cardPlayerPairs
+        , undealtPool = drop (length cardPlayerPairs) shuffledPool
+    }

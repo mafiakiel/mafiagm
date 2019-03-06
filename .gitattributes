@@ -1,0 +1,4 @@
+* text=auto
+
+# elm-format converts all line endings to LF
+*.elm text eol=lf

@@ -42,6 +42,7 @@ type alias State =
     , currentStepIndex : Int
     , pool : List Card --the same card can be added to the pool multiple times
     , selectedCardCategory : Tab.State
+    , undealtPool : List Card
     }
 
 
@@ -51,6 +52,7 @@ type alias Player =
     , party : Party
     , role : Role
     , markers : List Marker
+    , alive : Bool
     }
 
 
@@ -171,6 +173,7 @@ type Action
     | AddCardToPool Card
     | AddMarker Uuid Marker
     | RemoveMarker Uuid Marker
+    | KillPlayer Uuid
 
 
 type Msg

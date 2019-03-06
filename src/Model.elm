@@ -20,6 +20,7 @@ initState flags =
     , currentStepIndex = 0
     , pool = []
     , selectedCardCategory = Tab.initialState
+    , undealtPool = []
     }
 
 
