@@ -6,7 +6,7 @@ import Html exposing (text)
 import List.Extra exposing (notMember)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..))
-import Util exposing (isInChurch, stepModeByRole, stepModeByParty)
+import Util exposing (isInChurch, stepModeByParty, stepModeByRole)
 
 
 firstNight : Phase
@@ -36,6 +36,8 @@ church =
             | name = "Kirche"
             , view = \_ -> text "Die Kirche darf aufwachen und sich erkennen. 😏"
             , isPlayerActive = \player _ -> isInChurch player
+
+            -- TODO: mode
         }
 
 
