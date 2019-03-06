@@ -1,14 +1,26 @@
 module Update exposing (update)
 
-import List exposing (filter, length, map)
-import List.Extra exposing (elemIndex, filterNot, getAt, remove, updateIf)
+import List exposing (length)
+import List.Extra exposing (filterNot, remove, updateIf)
 import Phases.Configuration
 import Phases.Dawn
 import Phases.Day
 import Phases.FirstNight
 import Phases.Night
 import Random
-import Types exposing (Action(..), Marker(..), Model, Msg(..), Party(..), Phase(..), Role(..), State, Step(..))
+import Types
+    exposing
+        ( Action(..)
+        , Marker(..)
+        , Model
+        , Msg(..)
+        , Party(..)
+        , Phase(..)
+        , Role(..)
+        , State
+        , Step(..)
+        , StepMode(..)
+        )
 import UndoList exposing (UndoList)
 import Util exposing (stepAt, unwrapPhase, unwrapStep)
 import Uuid exposing (uuidGenerator)
@@ -34,7 +46,7 @@ updateState action state =
             Random.step uuidGenerator state.seed
 
         ( nextPhase, nextStepIndex ) =
-            getNextStep state
+            getNextStep ( state.currentPhase, state.currentStepIndex ) state
 
         nextStep =
             stepAt (unwrapPhase nextPhase).steps nextStepIndex |> unwrapStep
@@ -71,20 +83,24 @@ updateState action state =
             { state | players = updateIf (hasId playerId) (\p -> { p | markers = remove marker p.markers }) state.players }
 
 
-getNextStep : State -> ( Phase, Int )
-getNextStep state =
+getNextStep : ( Phase, Int ) -> State -> ( Phase, Int )
+getNextStep ( currentPhase, currentStepIndex ) state =
     let
-        (Phase currentPhase) =
-            state.currentPhase
+        ( newPhase, newStepIndex ) =
+            if currentStepIndex + 1 < length (unwrapPhase currentPhase).steps then
+                ( currentPhase, currentStepIndex + 1 )
 
-        nextPhase =
-            getNextPhase currentPhase
+            else
+                ( Phase <| getNextPhase <| unwrapPhase currentPhase, 0 )
+
+        newStep =
+            stepAt (unwrapPhase newPhase).steps newStepIndex |> unwrapStep
     in
-    if state.currentStepIndex + 1 < length currentPhase.steps then
-        ( state.currentPhase, state.currentStepIndex + 1 )
+    if newStep.mode state == Skip then
+        getNextStep ( newPhase, newStepIndex ) state
 
     else
-        ( Phase nextPhase, 0 )
+        ( newPhase, newStepIndex )
 
 
 getNextPhase phase =
