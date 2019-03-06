@@ -5,19 +5,17 @@ import Bootstrap.Button as Button
 import Bootstrap.CDN as CDN
 import Bootstrap.Form.Input as Input
 import Bootstrap.Form.InputGroup as InputGroup
-import Bootstrap.Grid as Grid
-import Bootstrap.Grid.Col as Col
 import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString, roleToString)
-import FontAwesome exposing (angleRight, heart, icon, plus, redo, trash, undo)
+import FontAwesome exposing (angleRight, heart, icon, plus, redo, undo)
 import Html exposing (Html, div, h1, h2, node, text)
-import Html.Attributes exposing (href, id, rel)
+import Html.Attributes exposing (class, href, id, rel)
 import List exposing (filter, length, map)
 import Maybe.Extra exposing (isJust)
 import Types exposing (Action(..), Marker(..), Model, Msg(..), Phase(..), State, Step(..))
 import UndoList exposing (UndoList)
-import Util exposing (getCurrentStep, unwrapStep)
+import Util exposing (getCurrentStep)
 
 
 view : Model -> Html Msg
@@ -110,6 +108,7 @@ playerList state =
             |> InputGroup.successors
                 [ InputGroup.button [ Button.success, Button.onClick <| Action AddPlayer, Button.disabled <| state.newPlayerName == "" ] [ icon plus ] ]
             |> InputGroup.view
+        , div [ class "spacer" ] []
         ]
 
 
