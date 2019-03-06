@@ -55,7 +55,7 @@ updateState action state =
             player.id == id
 
         newPlayer =
-            { id = uuid, name = state.newPlayerName, role = None, party = Villagers, markers = [] }
+            { id = uuid, name = state.newPlayerName, role = None, party = Villagers, markers = [], alive = True }
     in
     case action of
         SetNewPlayerName name ->
@@ -81,6 +81,9 @@ updateState action state =
 
         RemoveMarker playerId marker ->
             { state | players = updateIf (hasId playerId) (\p -> { p | markers = remove marker p.markers }) state.players }
+
+        KillPlayer id ->
+            { state | players = updateIf (hasId id) (\p -> { p | alive = False }) state.players }
 
 
 getNextStep : ( Phase, Int ) -> State -> ( Phase, Int )

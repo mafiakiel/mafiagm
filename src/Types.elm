@@ -51,6 +51,7 @@ type alias Player =
     , party : Party
     , role : Role
     , markers : List Marker
+    , alive : Bool
     }
 
 
@@ -171,6 +172,7 @@ type Action
     | AddCardToPool Card
     | AddMarker Uuid Marker
     | RemoveMarker Uuid Marker
+    | KillPlayer Uuid
 
 
 type Msg

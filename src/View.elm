@@ -69,9 +69,6 @@ playerList state =
         actionSetNewPlayerName name =
             Action <| SetNewPlayerName name
 
-        actionRemovePlayer id =
-            Action <| RemovePlayer id
-
         playerControls =
             (getCurrentStep state).playerControls
 

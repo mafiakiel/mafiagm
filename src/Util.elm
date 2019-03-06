@@ -1,5 +1,6 @@
 module Util exposing
     ( getCurrentStep
+    , isAlive
     , isInChurch
     , stepAt
     , stepError
@@ -10,7 +11,7 @@ module Util exposing
     )
 
 import Html exposing (text)
-import List exposing (map, member)
+import List exposing (filter, map, member)
 import List.Extra exposing (getAt)
 import Types exposing (Marker(..), Party(..), Phase(..), Player, Role(..), State, Step(..), StepMode(..))
 
@@ -67,6 +68,11 @@ isInChurch player =
         == Monk
         || player.role
         == MonkInLove
+
+
+isAlive : Player -> Bool
+isAlive player =
+    player.alive
 
 
 stepModeByRole : Role -> State -> StepMode
