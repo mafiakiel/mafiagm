@@ -36,8 +36,9 @@ body,
 
 #players {
   border-right: 1px solid black;
-  width: 30%;
+  width: 50%;
   padding: 15px;
+  flex-shrink: 0;
 }
 
 #phase-viewport {
