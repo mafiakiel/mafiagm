@@ -65,6 +65,7 @@ body,
   flex-direction: column;
   width: 65%;
   flex-shrink: 0;
+  padding-right: 15px;
 }
 
 #game-steplist {

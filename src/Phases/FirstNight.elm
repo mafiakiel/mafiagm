@@ -2,10 +2,9 @@ module Phases.FirstNight exposing (firstNight)
 
 import Data.Strings exposing (partyToString, roleToString)
 import FontAwesome exposing (heart, icon)
-import Html exposing (text)
 import List.Extra exposing (notMember)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Phases.GameCommons exposing (gameView)
+import Phases.GameCommons exposing (announcement, gameView)
 import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..))
 import Util exposing (isInChurch, stepModeByParty, stepModeByRole)
 
@@ -24,7 +23,7 @@ mafia =
     Step
         { abstractStep
             | name = partyToString Mafia
-            , view = gameView <| [ text "Die Mafia darf aufwachen und sich erkennen. 😏" ]
+            , view = gameView <| [announcement "Die Mafia darf aufwachen und sich erkennen. 😏"]
             , isPlayerActive = \player _ -> player.party == Mafia
             , mode = stepModeByParty Mafia
         }
@@ -35,7 +34,7 @@ church =
     Step
         { abstractStep
             | name = "Kirche"
-            , view = gameView <| [ text "Die Kirche darf aufwachen und sich erkennen. 😏" ]
+            , view = gameView <| [announcement "Die Kirche darf aufwachen und sich erkennen. 😏"]
             , isPlayerActive = \player _ -> isInChurch player
 
             -- TODO: mode
@@ -47,7 +46,7 @@ cupid =
     Step
         { abstractStep
             | name = roleToString Cupid
-            , view = gameView <| [ text "Amor darf aufwachen und zwei Mitspieler verlieben." ]
+            , view = gameView <| [announcement "Amor darf aufwachen und zwei Mitspieler verlieben."]
             , isPlayerActive = \player _ -> player.role == Cupid
             , playerControls = cupidPlayerControls
             , mode = stepModeByRole Cupid

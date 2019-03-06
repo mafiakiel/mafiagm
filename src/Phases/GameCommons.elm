@@ -1,5 +1,6 @@
-module Phases.GameCommons exposing (gameView)
+module Phases.GameCommons exposing (gameView, announcement)
 
+import Bootstrap.Alert as Alert
 import Bootstrap.Badge as Badge
 import Bootstrap.ListGroup as ListGroup
 import Bootstrap.Utilities.Spacing as Spacing
@@ -8,6 +9,7 @@ import Html.Attributes exposing (id)
 import List exposing (length, map, range)
 import Types exposing (Msg, State, StepMode(..))
 import Util exposing (stepAt, unwrapPhase, unwrapStep)
+import FontAwesome exposing (icon, bullhorn)
 
 
 gameView : List (Html Msg) -> State -> Html Msg
@@ -55,3 +57,9 @@ stepList state =
             ListGroup.li options ([ text step.name ] ++ badges)
     in
     ListGroup.ul (map stepIndexToListItem stepsInPhaseIndices)
+
+announcement : String -> Html Msg
+announcement content = Alert.simplePrimary [] [
+    Alert.h4 [] [icon bullhorn, text " Ansage"]
+    , text content
+    ]
