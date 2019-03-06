@@ -15,7 +15,9 @@ body,
 #players,
 #phase-viewport,
 #content > .row,
-#content > .row > div {
+#content > .row > div,
+#game-container,
+#game-main {
   height: 100%;
 }
 
@@ -49,4 +51,26 @@ body,
 
 #phase-viewport {
   padding: 15px;
+  width: 50%
+}
+
+#game-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+#game-main {
+  display: flex;
+  flex-direction: column;
+  width: 65%;
+  flex-shrink: 0;
+}
+
+#game-steplist {
+  width: 35%;
+}
+
+#game-children {
+  flex-grow: 1;
 }

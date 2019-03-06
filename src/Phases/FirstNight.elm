@@ -5,6 +5,7 @@ import FontAwesome exposing (heart, icon)
 import Html exposing (text)
 import List.Extra exposing (notMember)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
+import Phases.GameCommons exposing (gameView)
 import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..))
 import Util exposing (isInChurch, stepModeByParty, stepModeByRole)
 
@@ -23,7 +24,7 @@ mafia =
     Step
         { abstractStep
             | name = partyToString Mafia
-            , view = \_ -> text "Die Mafia darf aufwachen und sich erkennen. 😏"
+            , view = gameView <| [ text "Die Mafia darf aufwachen und sich erkennen. 😏" ]
             , isPlayerActive = \player _ -> player.party == Mafia
             , mode = stepModeByParty Mafia
         }
@@ -34,7 +35,7 @@ church =
     Step
         { abstractStep
             | name = "Kirche"
-            , view = \_ -> text "Die Kirche darf aufwachen und sich erkennen. 😏"
+            , view = gameView <| [ text "Die Kirche darf aufwachen und sich erkennen. 😏" ]
             , isPlayerActive = \player _ -> isInChurch player
 
             -- TODO: mode
@@ -46,7 +47,7 @@ cupid =
     Step
         { abstractStep
             | name = roleToString Cupid
-            , view = \_ -> text "Amor darf aufwachen und zwei Mitspieler verlieben."
+            , view = gameView <| [ text "Amor darf aufwachen und zwei Mitspieler verlieben." ]
             , isPlayerActive = \player _ -> player.role == Cupid
             , playerControls = cupidPlayerControls
             , mode = stepModeByRole Cupid
