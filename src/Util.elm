@@ -36,6 +36,7 @@ stepError : Step
 stepError =
     Step
         { init = \state -> state
+        , cleanup = \state -> state
         , stepForwardVeto = \_ -> Nothing
         , playerControls = []
         , isPlayerActive = \_ _ -> False

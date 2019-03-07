@@ -70,6 +70,7 @@ type Step
         { name : String
         , view : State -> Html Msg
         , init : State -> State
+        , cleanup : State -> State
         , stepForwardVeto : State -> Maybe String
         , playerControls : List PlayerControl
         , isPlayerActive : Player -> State -> Bool

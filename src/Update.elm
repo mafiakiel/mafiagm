@@ -48,6 +48,9 @@ updateState action state =
         ( nextPhase, nextStepIndex ) =
             getNextStep ( state.currentPhase, state.currentStepIndex ) state
 
+        currentStep =
+            stepAt (unwrapPhase state.currentPhase).steps state.currentStepIndex |> unwrapStep
+
         nextStep =
             stepAt (unwrapPhase nextPhase).steps nextStepIndex |> unwrapStep
 
@@ -74,7 +77,9 @@ updateState action state =
             { state | players = filterNot (hasId id) state.players }
 
         StepForward ->
-            nextStep.init { state | currentPhase = nextPhase, currentStepIndex = nextStepIndex }
+            { state | currentPhase = nextPhase, currentStepIndex = nextStepIndex }
+                |> currentStep.cleanup
+                |> nextStep.init
 
         SelectCardCategory category ->
             { state | selectedCardCategory = category }
