@@ -55,7 +55,7 @@ updateState action state =
             player.id == id
 
         newPlayer =
-            { id = uuid, name = state.newPlayerName, role = None, party = Villagers, markers = [], alive = True }
+            { id = uuid, name = state.newPlayerName, role = None, party = Villagers, markers = [], alive = False }
     in
     case action of
         SetNewPlayerName name ->

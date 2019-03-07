@@ -111,11 +111,14 @@ dealCards =
 dealCardsInit : State -> State
 dealCardsInit state =
     let
+        resurrectPlayers =
+            map (\p -> { p | alive = True }) state.players
+
         ( shuffledPool, newSeed ) =
             Random.step (shuffle state.pool) state.seed
 
         cardPlayerPairs =
-            zip shuffledPool state.players
+            zip shuffledPool resurrectPlayers
 
         dealCardToPlayer ( card, player ) =
             { player | role = card.role, party = card.party }
