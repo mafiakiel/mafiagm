@@ -8,7 +8,7 @@ import Bootstrap.Utilities.Spacing as Spacing
 import Data.Cards exposing (cardCategories)
 import Data.Strings exposing (..)
 import FontAwesome exposing (icon, minus, plus, trash)
-import Html exposing (Html, text)
+import Html exposing (Html, text, h2, div)
 import List exposing (drop, length, map)
 import List.Extra exposing (count, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
@@ -91,10 +91,12 @@ poolView state =
         selectCategoryAction category =
             Action (SelectCardCategory category)
     in
-    Tab.config selectCategoryAction
-        |> Tab.items (map categoryToTab cardCategories)
-        |> Tab.view state.selectedCardCategory
-
+    div [][
+        h2 [] [text <| "Kartenanzahl (" ++ String.fromInt (length state.pool) ++ ")" ],
+        Tab.config selectCategoryAction
+            |> Tab.items (map categoryToTab cardCategories)
+            |> Tab.view state.selectedCardCategory
+    ]
 
 dealCards : Step
 dealCards =
