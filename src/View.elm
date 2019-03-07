@@ -1,5 +1,6 @@
 module View exposing (view)
 
+import Bootstrap.Alert as Alert
 import Bootstrap.Badge as Badge
 import Bootstrap.Button as Button
 import Bootstrap.CDN as CDN
@@ -8,7 +9,7 @@ import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString, roleToString)
-import FontAwesome exposing (angleRight, heart, icon, plus, redo, undo)
+import FontAwesome exposing (angleRight, eye, heart, icon, plus, redo, timesCircle, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (class, href, id, rel)
 import List exposing (filter, length, map)
@@ -49,15 +50,27 @@ header model =
                     text ""
 
                 Just message ->
-                    text message
+                    Alert.simpleDanger [] [ text message ]
     in
     div [ id "header" ]
-        [ h1 [] [ text currentPhase.name ]
-        , h2 [] [ text currentStep.name ]
-        , Button.button [ Button.onClick Undo, Button.disabled <| not <| UndoList.hasPast model ] [ icon undo ]
-        , Button.button [ Button.onClick Redo, Button.disabled <| not <| UndoList.hasFuture model ] [ icon redo ]
-        , Button.button [ Button.onClick <| Action StepForward, Button.primary, Button.disabled <| isJust stepForwardVeto ] [ text "Weiter ", icon angleRight ]
-        , stepForwardVetoMessage
+        [ div [ id "header-main" ]
+            [ h2 [] [ text currentPhase.name ]
+            , h1 [] [ text currentStep.name ]
+            ]
+        , div [ id "header-veto" ] [ stepForwardVetoMessage ]
+        , div [ id "header-buttons" ]
+            [ Button.button [] [ icon eye ]
+            , Button.button [] [ icon timesCircle ]
+            , Button.button
+                [ Button.onClick <| Action StepForward
+                , Button.primary
+                , Button.disabled <| isJust stepForwardVeto
+                , Button.attrs [ id "step-forward" ]
+                ]
+                [ text "Weiter ", icon angleRight ]
+            , Button.button [ Button.onClick Undo, Button.disabled <| not <| UndoList.hasPast model ] [ icon undo ]
+            , Button.button [ Button.onClick Redo, Button.disabled <| not <| UndoList.hasFuture model ] [ icon redo ]
+            ]
         ]
 
 
