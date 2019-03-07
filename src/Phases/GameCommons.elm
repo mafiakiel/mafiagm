@@ -66,6 +66,7 @@ announcement content =
         , text content
         ]
 
+
 instruction : String -> Html Msg
 instruction content =
     Alert.simpleWarning []
