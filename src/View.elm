@@ -9,7 +9,7 @@ import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString, roleToString)
-import FontAwesome exposing (angleRight, eye, heart, icon, plus, redo, timesCircle, undo)
+import FontAwesome exposing (angleRight, exclamationTriangle, eye, heart, icon, plus, redo, timesCircle, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (class, href, id, rel, style)
 import List exposing (filter, length, map)
@@ -50,7 +50,7 @@ header model =
                     text ""
 
                 Just message ->
-                    Alert.simpleDanger [] [ text message ]
+                    Alert.simpleDanger [] [ icon exclamationTriangle, text " ", text message ]
 
         background =
             "url(" ++ currentPhase.backgroundImage ++ ")"
