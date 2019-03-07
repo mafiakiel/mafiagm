@@ -176,6 +176,7 @@ type Action
     | AddMarker Uuid Marker
     | RemoveMarker Uuid Marker
     | KillPlayer Uuid
+    | EndGame
 
 
 type Msg

@@ -2,7 +2,7 @@ module Update exposing (update)
 
 import List exposing (length)
 import List.Extra exposing (filterNot, remove, updateIf)
-import Phases.Configuration
+import Phases.Configuration exposing (configuration)
 import Phases.Dawn
 import Phases.Day
 import Phases.FirstNight
@@ -56,6 +56,12 @@ updateState action state =
 
         newPlayer =
             { id = uuid, name = state.newPlayerName, role = None, party = Villagers, markers = [], alive = False }
+
+        firstPhase =
+            unwrapPhase configuration
+
+        firstStep =
+            stepAt firstPhase.steps 0 |> unwrapStep
     in
     case action of
         SetNewPlayerName name ->
@@ -84,6 +90,9 @@ updateState action state =
 
         KillPlayer id ->
             { state | players = updateIf (hasId id) (\p -> { p | alive = False }) state.players }
+
+        EndGame ->
+            firstStep.init { state | currentPhase = Phase firstPhase, currentStepIndex = 0 }
 
 
 getNextStep : ( Phase, Int ) -> State -> ( Phase, Int )

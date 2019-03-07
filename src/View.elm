@@ -63,7 +63,7 @@ header model =
         , div [ id "header-veto" ] [ stepForwardVetoMessage ]
         , div [ id "header-buttons" ]
             [ Button.button [ Button.outlineSecondary ] [ icon eye ]
-            , Button.button [ Button.outlineSecondary ] [ icon timesCircle ]
+            , Button.button [ Button.outlineSecondary, Button.onClick <| Action EndGame ] [ icon timesCircle ]
             , Button.button
                 [ Button.onClick <| Action StepForward
                 , Button.outlinePrimary
