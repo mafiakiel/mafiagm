@@ -3,7 +3,7 @@ module Phases.Night exposing (night)
 import Bootstrap.Button as Button
 import FontAwesome exposing (icon, skull)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Phases.GameCommons exposing (gameView, instruction)
+import Phases.Common exposing (announcement, gameView, instruction)
 import Types exposing (Action(..), Phase(..), PlayerControl, Step(..))
 import Util exposing (isAlive)
 
@@ -26,7 +26,11 @@ deaths =
     Step
         { abstractStep
             | name = "Tode"
-            , view = gameView <| [ instruction "Markiere Spieler, die diese Nacht gestorben sind!" ]
+            , view =
+                gameView <|
+                    [ announcement "Gestorben sind: ..."
+                    , instruction "Markiere Spieler, die diese Nacht gestorben sind!"
+                    ]
             , playerControls = [ killPlayerControl ]
         }
 

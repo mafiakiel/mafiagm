@@ -4,7 +4,7 @@ import Data.Strings exposing (partyToString, roleToString)
 import FontAwesome exposing (heart, icon)
 import List.Extra exposing (notMember)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Phases.GameCommons exposing (announcement, gameView)
+import Phases.Common exposing (announcement, gameView)
 import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..))
 import Util exposing (isInChurch, stepModeByParty, stepModeByRole)
 

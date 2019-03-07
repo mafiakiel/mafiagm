@@ -12,7 +12,7 @@ import Html exposing (Html, text)
 import List exposing (drop, length, map)
 import List.Extra exposing (count, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Phases.GameCommons exposing (instruction)
+import Phases.Common exposing (instruction)
 import Random
 import Random.List exposing (shuffle)
 import Types exposing (Action(..), Msg(..), Phase(..), PlayerControl, State, Step(..))

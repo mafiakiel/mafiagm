@@ -1,4 +1,4 @@
-module Phases.GameCommons exposing (announcement, gameView, instruction)
+module Phases.Common exposing (announcement, gameView, instruction)
 
 import Bootstrap.Alert as Alert
 import Bootstrap.Badge as Badge
