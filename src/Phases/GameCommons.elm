@@ -1,10 +1,10 @@
-module Phases.GameCommons exposing (announcement, gameView)
+module Phases.GameCommons exposing (announcement, gameView, instruction)
 
 import Bootstrap.Alert as Alert
 import Bootstrap.Badge as Badge
 import Bootstrap.ListGroup as ListGroup
 import Bootstrap.Utilities.Spacing as Spacing
-import FontAwesome exposing (bullhorn, icon)
+import FontAwesome exposing (bullhorn, icon, tasks)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (id)
 import List exposing (length, map, range)
@@ -63,5 +63,12 @@ announcement : String -> Html Msg
 announcement content =
     Alert.simplePrimary []
         [ Alert.h4 [] [ icon bullhorn, text " Ansage" ]
+        , text content
+        ]
+
+instruction : String -> Html Msg
+instruction content =
+    Alert.simpleWarning []
+        [ Alert.h4 [] [ icon tasks, text " Aufgabe" ]
         , text content
         ]

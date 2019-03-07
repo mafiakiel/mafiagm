@@ -60,6 +60,8 @@ type Phase
     = Phase
         { name : String
         , steps : List Step
+        , backgroundImage : String
+        , textColor : String
         }
 
 

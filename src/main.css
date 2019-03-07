@@ -31,7 +31,7 @@ body,
 }
 
 #header {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid rgb(138, 138, 138);
   padding: 15px;
   display: flex;
   flex-direction: row;
@@ -68,6 +68,10 @@ body,
   font-size: 20px;
 }
 
+#header-buttons button:not(:hover) {
+  background-color: white;
+}
+
 #step-forward {
   font-size: 30px !important;
   grid-row: span 2;
@@ -80,7 +84,7 @@ body,
 }
 
 #players {
-  border-right: 1px solid black;
+  border-right: 1px solid #dee2e6;
   width: 50%;
   padding: 15px;
   flex-shrink: 0;

@@ -1,6 +1,5 @@
 module Phases.Dawn exposing (dawn)
 
-import Html exposing (text)
 import Phases.Abstract exposing (abstractPhase)
 import Types exposing (Phase(..), Step(..))
 
@@ -12,4 +11,6 @@ dawn =
             | name = "Morgen"
             , steps =
                 []
+            , backgroundImage = "%PUBLIC_URL%/img/dawn.jpg"
+            , textColor = "white"
         }

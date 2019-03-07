@@ -11,7 +11,7 @@ import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString, roleToString)
 import FontAwesome exposing (angleRight, eye, heart, icon, plus, redo, timesCircle, undo)
 import Html exposing (Html, div, h1, h2, node, text)
-import Html.Attributes exposing (class, href, id, rel)
+import Html.Attributes exposing (class, href, id, rel, style)
 import List exposing (filter, length, map)
 import Maybe.Extra exposing (isJust)
 import Types exposing (Action(..), Marker(..), Model, Msg(..), Phase(..), State, Step(..))
@@ -51,25 +51,38 @@ header model =
 
                 Just message ->
                     Alert.simpleDanger [] [ text message ]
+
+        background =
+            "url(" ++ currentPhase.backgroundImage ++ ")"
     in
-    div [ id "header" ]
+    div [ id "header", style "background-image" background, style "color" currentPhase.textColor ]
         [ div [ id "header-main" ]
             [ h2 [] [ text currentPhase.name ]
             , h1 [] [ text currentStep.name ]
             ]
         , div [ id "header-veto" ] [ stepForwardVetoMessage ]
         , div [ id "header-buttons" ]
-            [ Button.button [] [ icon eye ]
-            , Button.button [] [ icon timesCircle ]
+            [ Button.button [ Button.outlineSecondary ] [ icon eye ]
+            , Button.button [ Button.outlineSecondary ] [ icon timesCircle ]
             , Button.button
                 [ Button.onClick <| Action StepForward
-                , Button.primary
+                , Button.outlinePrimary
                 , Button.disabled <| isJust stepForwardVeto
                 , Button.attrs [ id "step-forward" ]
                 ]
                 [ text "Weiter ", icon angleRight ]
-            , Button.button [ Button.onClick Undo, Button.disabled <| not <| UndoList.hasPast model ] [ icon undo ]
-            , Button.button [ Button.onClick Redo, Button.disabled <| not <| UndoList.hasFuture model ] [ icon redo ]
+            , Button.button
+                [ Button.outlineSecondary
+                , Button.onClick Undo
+                , Button.disabled <| not <| UndoList.hasPast model
+                ]
+                [ icon undo ]
+            , Button.button
+                [ Button.outlineSecondary
+                , Button.onClick Redo
+                , Button.disabled <| not <| UndoList.hasFuture model
+                ]
+                [ icon redo ]
             ]
         ]
 

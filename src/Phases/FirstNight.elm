@@ -15,6 +15,8 @@ firstNight =
         { abstractPhase
             | name = "Erste Nacht"
             , steps = [ mafia, church, cupid ]
+            , backgroundImage = "%PUBLIC_URL%/img/night.jpg"
+            , textColor = "white"
         }
 
 
