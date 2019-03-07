@@ -117,3 +117,8 @@ body,
 #game-children {
   flex-grow: 1;
 }
+
+.dead {
+  color: #b0b0b0;
+  text-decoration: line-through;
+}

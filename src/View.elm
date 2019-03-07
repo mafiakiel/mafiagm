@@ -101,7 +101,10 @@ playerList state =
 
         playerTableRowOptions player =
             if (getCurrentStep state).isPlayerActive player state then
-                [ Table.rowActive ]
+                [ Table.rowSuccess ]
+
+            else if not player.alive then
+                [ Table.rowAttr (class "dead") ]
 
             else
                 []
