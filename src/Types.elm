@@ -60,6 +60,8 @@ type Phase
     = Phase
         { name : String
         , steps : List Step
+        , backgroundImage : String
+        , textColor : String
         }
 
 
@@ -174,6 +176,7 @@ type Action
     | AddMarker Uuid Marker
     | RemoveMarker Uuid Marker
     | KillPlayer Uuid
+    | EndGame
 
 
 type Msg

@@ -7,6 +7,8 @@ import Types exposing (Phase(..), StepMode(..))
 abstractPhase =
     { name = "Please override phase name!"
     , steps = []
+    , backgroundImage = "Please override phase background image!"
+    , textColor = "black"
     }
 
 
