@@ -1,5 +1,6 @@
 module Phases.Configuration exposing (configuration, rules)
 
+import Bootstrap.Badge as Badge
 import Bootstrap.Button as Button
 import Bootstrap.Card as BCard
 import Bootstrap.Card.Block as BCardBlock
@@ -10,7 +11,7 @@ import Data.Strings exposing (..)
 import FontAwesome exposing (icon, minus, plus, trash)
 import Html exposing (Html, div, h2, small, span, text)
 import Html.Attributes exposing (class)
-import List exposing (drop, length, map, member)
+import List exposing (drop, filter, length, map, member, sum)
 import List.Extra exposing (count, notMember, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (instruction)
@@ -71,10 +72,24 @@ pool =
 poolView : State -> Html Msg
 poolView state =
     let
+        cardsInPool category =
+            map (\c -> filter ((==) c) state.pool) category.cards
+                |> map length
+                |> sum
+
+        categoryTabLabel category =
+            if cardsInPool category > 0 then
+                [ text category.name
+                , Badge.pillPrimary [ Spacing.ml1 ] [ text <| String.fromInt <| cardsInPool category ]
+                ]
+
+            else
+                [ text category.name ]
+
         categoryToTab category =
             Tab.item
                 { id = category.name
-                , link = Tab.link [] [ text category.name ]
+                , link = Tab.link [] <| categoryTabLabel category
                 , pane = Tab.pane [ Spacing.mt3 ] [ BCard.columns (map cardToBootstrapCard category.cards) ]
                 }
 
