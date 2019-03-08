@@ -43,6 +43,10 @@ type alias State =
     , pool : List Card --the same card can be added to the pool multiple times
     , selectedCardCategory : Tab.State
     , undealtPool : List Card
+    , nextNominationPosition : Int
+    , stealthMode : Bool
+    , nominationCountdownDuration : Int
+    , nominationCountdownRunning : Bool
     }
 
 
@@ -60,6 +64,8 @@ type Phase
     = Phase
         { name : String
         , steps : List Step
+        , backgroundImage : String
+        , textColor : String
         }
 
 
@@ -68,9 +74,10 @@ type Step
         { name : String
         , view : State -> Html Msg
         , init : State -> State
+        , cleanup : State -> State
         , stepForwardVeto : State -> Maybe String
         , playerControls : List PlayerControl
-        , isPlayerActive : Player -> State -> Bool
+        , isPlayerActive : State -> Player -> Bool
         , mode : State -> StepMode
         }
 
@@ -173,8 +180,17 @@ type Action
     | AddCardToPool Card
     | RemoveCardFromPool Card
     | AddMarker Uuid Marker
-    | RemoveMarker Uuid Marker
     | KillPlayer Uuid
+    | EndGame
+    | NominatePlayer Uuid
+    | SetStealthMode Bool
+    | SetNominationCountdownDuration Int
+    | SetNominationCountdownRunning Bool
+    | NominationCountdownFinished
+
+
+
+--    | NominationCountdownFinished
 
 
 type Msg

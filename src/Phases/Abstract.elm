@@ -7,15 +7,18 @@ import Types exposing (Phase(..), StepMode(..))
 abstractPhase =
     { name = "Please override phase name!"
     , steps = []
+    , backgroundImage = "Please override phase background image!"
+    , textColor = "black"
     }
 
 
 abstractStep =
     { name = "Please override step name!"
-    , view = \_ -> text "Please override step view!"
-    , init = \state -> state
-    , stepForwardVeto = \_ -> Nothing
+    , view = always <| text "Please override step view!"
+    , init = identity
+    , cleanup = identity
+    , stepForwardVeto = always Nothing
     , playerControls = []
-    , isPlayerActive = \_ _ -> False
-    , mode = \_ -> Execute
+    , isPlayerActive = always <| always False
+    , mode = always Execute
     }

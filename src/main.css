@@ -15,13 +15,10 @@ body,
 #players,
 #phase-viewport,
 #content > .row,
-#content > .row > div {
+#content > .row > div,
+#game-container,
+#game-main {
   height: 100%;
-}
-
-#header {
-  border-bottom: 1px solid black;
-  padding: 15px;
 }
 
 #container {
@@ -29,19 +26,107 @@ body,
   flex-direction: column;
 }
 
+.spacer {
+  height: 15px;
+}
+
+#header {
+  border-bottom: 1px solid rgb(138, 138, 138);
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+}
+
+#header-main h2 {
+  font-size: 25px;
+}
+
+#header-veto {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#header-veto .alert {
+  display: inline-block;
+}
+
+#header-buttons {
+  width: 300px;
+  height: 100px;
+  display: grid;
+  grid-template-columns: 25% 25% 50%;
+  grid-template-rows: 50% 50%;
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  margin-bottom: 5px; /* = row gap */
+  margin-right: 5px; /* = column gap */
+}
+
+#header-buttons button {
+  font-size: 20px;
+}
+
+#header-buttons button:not(:hover) {
+  background-color: white;
+}
+
+#step-forward {
+  font-size: 30px !important;
+  grid-row: span 2;
+}
+
 #content {
   flex-grow: 1;
   display: flex;
+  overflow: hidden;
 }
 
 #players {
-  border-right: 1px solid black;
-  width: 30%;
+  border-right: 1px solid #dee2e6;
+  width: 50%;
   padding: 15px;
+  flex-shrink: 0;
+  overflow-y: auto;
 }
 
 #phase-viewport {
   padding: 15px;
+  width: 50%
+}
+
+#game-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+#game-main {
+  display: flex;
+  flex-direction: column;
+  width: 65%;
+  flex-shrink: 0;
+  padding-right: 15px;
+}
+
+#game-steplist {
+  width: 35%;
+}
+
+#game-children {
+  flex-grow: 1;
+}
+
+.dead {
+  color: #b0b0b0;
+  text-decoration: line-through;
+}
+
+.censored, .censored * {
+  background: #dee2e6 !important;
+  color: #dee2e6 !important;
+  text-decoration: line-through;
 }
 
 .card-footer {

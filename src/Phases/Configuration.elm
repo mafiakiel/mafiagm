@@ -12,6 +12,7 @@ import Html exposing (Html, div, h2, text)
 import List exposing (drop, length, map)
 import List.Extra exposing (count, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
+import Phases.Common exposing (instruction)
 import Random
 import Random.List exposing (shuffle)
 import Types exposing (Action(..), Msg(..), Phase(..), PlayerControl, State, Step(..))
@@ -27,6 +28,7 @@ configuration =
                 , pool
                 , dealCards
                 ]
+            , backgroundImage = "%PUBLIC_URL%/img/configuration.jpg"
         }
 
 
@@ -34,8 +36,8 @@ deletePlayerControl : PlayerControl
 deletePlayerControl =
     { label = icon trash
     , action = \player -> RemovePlayer player.id
-    , options = \_ -> [ Button.danger ]
-    , condition = \_ -> True
+    , options = always [ Button.danger ]
+    , condition = always True
     }
 
 
@@ -44,7 +46,7 @@ rules =
     Step
         { abstractStep
             | name = "Regeln"
-            , view = \_ -> text "Hier könnten Ihre Regeln stehen!"
+            , view = always <| text "Hier könnten Ihre Regeln stehen!"
         }
 
 
@@ -104,7 +106,7 @@ dealCards =
     Step
         { abstractStep
             | name = "Karten verteilen"
-            , view = \_ -> text "Verteile die Karten"
+            , view = always <| instruction "Verteile die Karten"
             , init = dealCardsInit
         }
 
@@ -112,11 +114,14 @@ dealCards =
 dealCardsInit : State -> State
 dealCardsInit state =
     let
+        resetPlayers =
+            map (\p -> { p | alive = True, markers = [] }) state.players
+
         ( shuffledPool, newSeed ) =
             Random.step (shuffle state.pool) state.seed
 
         cardPlayerPairs =
-            zip shuffledPool state.players
+            zip shuffledPool resetPlayers
 
         dealCardToPlayer ( card, player ) =
             { player | role = card.role, party = card.party }

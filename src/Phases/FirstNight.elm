@@ -2,11 +2,12 @@ module Phases.FirstNight exposing (firstNight)
 
 import Data.Strings exposing (partyToString, roleToString)
 import FontAwesome exposing (heart, icon)
-import Html exposing (text)
 import List.Extra exposing (notMember)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
+import Phases.Common exposing (announcement, gameView)
 import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..))
-import Util exposing (isInChurch, stepModeByParty, stepModeByRole)
+import Util.Phases exposing (stepModeByParty, stepModeByRole)
+import Util.Player exposing (hasParty, hasRole, isInChurch)
 
 
 firstNight : Phase
@@ -15,6 +16,8 @@ firstNight =
         { abstractPhase
             | name = "Erste Nacht"
             , steps = [ mafia, church, cupid ]
+            , backgroundImage = "%PUBLIC_URL%/img/night.jpg"
+            , textColor = "white"
         }
 
 
@@ -23,8 +26,8 @@ mafia =
     Step
         { abstractStep
             | name = partyToString Mafia
-            , view = \_ -> text "Die Mafia darf aufwachen und sich erkennen. 😏"
-            , isPlayerActive = \player _ -> player.party == Mafia
+            , view = gameView [ announcement "Die Mafia darf aufwachen und sich erkennen. 😏" ]
+            , isPlayerActive = always (hasParty Mafia)
             , mode = stepModeByParty Mafia
         }
 
@@ -34,8 +37,8 @@ church =
     Step
         { abstractStep
             | name = "Kirche"
-            , view = \_ -> text "Die Kirche darf aufwachen und sich erkennen. 😏"
-            , isPlayerActive = \player _ -> isInChurch player
+            , view = gameView [ announcement "Die Kirche darf aufwachen und sich erkennen. 😏" ]
+            , isPlayerActive = always isInChurch
 
             -- TODO: mode
         }
@@ -46,8 +49,8 @@ cupid =
     Step
         { abstractStep
             | name = roleToString Cupid
-            , view = \_ -> text "Amor darf aufwachen und zwei Mitspieler verlieben."
-            , isPlayerActive = \player _ -> player.role == Cupid
+            , view = gameView [ announcement "Amor darf aufwachen und zwei Mitspieler verlieben." ]
+            , isPlayerActive = always (hasRole Cupid)
             , playerControls = cupidPlayerControls
             , mode = stepModeByRole Cupid
         }
@@ -57,7 +60,7 @@ cupidPlayerControls : List PlayerControl
 cupidPlayerControls =
     [ { label = icon heart
       , action = \player -> AddMarker player.id InLove
-      , options = \_ -> []
+      , options = always []
       , condition = \player -> player.role /= Cupid && notMember InLove player.markers
       }
     ]

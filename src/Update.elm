@@ -1,8 +1,8 @@
 module Update exposing (update)
 
 import List exposing (length)
-import List.Extra exposing (filterNot, remove, updateIf)
-import Phases.Configuration
+import List.Extra exposing (filterNot, updateIf, remove)
+import Phases.Configuration exposing (configuration)
 import Phases.Dawn
 import Phases.Day
 import Phases.FirstNight
@@ -22,8 +22,10 @@ import Types
         , StepMode(..)
         )
 import UndoList exposing (UndoList)
-import Util exposing (stepAt, unwrapPhase, unwrapStep)
-import Uuid exposing (uuidGenerator)
+import Util.Phases exposing (stepAt, unwrapPhase, unwrapStep)
+import Util.Player exposing (hasId)
+import Util.Update exposing (addMarkerToPlayer, setNominationCountdownRunning, setStealthMode)
+import Uuid exposing (Uuid, uuidGenerator)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -48,17 +50,25 @@ updateState action state =
         ( nextPhase, nextStepIndex ) =
             getNextStep ( state.currentPhase, state.currentStepIndex ) state
 
+        currentStep =
+            stepAt (unwrapPhase state.currentPhase).steps state.currentStepIndex |> unwrapStep
+
         nextStep =
             stepAt (unwrapPhase nextPhase).steps nextStepIndex |> unwrapStep
 
-        hasId id player =
-            player.id == id
-
-        hasCard card pool =
-            pool.card == card
-
         newPlayer =
-            { id = uuid, name = state.newPlayerName, role = None, party = Villagers, markers = [], alive = True }
+            { id = uuid, name = state.newPlayerName, role = None, party = Villagers, markers = [], alive = False }
+
+        firstPhase =
+            unwrapPhase configuration
+
+        firstStep =
+            stepAt firstPhase.steps 0 |> unwrapStep
+
+        stepForward =
+            { state | currentPhase = nextPhase, currentStepIndex = nextStepIndex }
+                |> currentStep.cleanup
+                |> nextStep.init
     in
     case action of
         SetNewPlayerName name ->
@@ -71,7 +81,7 @@ updateState action state =
             { state | players = filterNot (hasId id) state.players }
 
         StepForward ->
-            nextStep.init { state | currentPhase = nextPhase, currentStepIndex = nextStepIndex }
+            stepForward
 
         SelectCardCategory category ->
             { state | selectedCardCategory = category }
@@ -83,13 +93,32 @@ updateState action state =
             { state | pool = remove card state.pool }
 
         AddMarker playerId marker ->
-            { state | players = updateIf (hasId playerId) (\p -> { p | markers = p.markers ++ [ marker ] }) state.players }
-
-        RemoveMarker playerId marker ->
-            { state | players = updateIf (hasId playerId) (\p -> { p | markers = remove marker p.markers }) state.players }
+            addMarkerToPlayer playerId marker state
 
         KillPlayer id ->
             { state | players = updateIf (hasId id) (\p -> { p | alive = False }) state.players }
+
+        EndGame ->
+            { state | currentPhase = Phase firstPhase, currentStepIndex = 0 }
+                |> setStealthMode False
+                |> currentStep.cleanup
+                |> firstStep.init
+
+        NominatePlayer id ->
+            { state | nextNominationPosition = state.nextNominationPosition + 1 }
+                |> addMarkerToPlayer id (Nominated state.nextNominationPosition)
+
+        SetStealthMode isEnabled ->
+            setStealthMode isEnabled state
+
+        SetNominationCountdownDuration duration ->
+            { state | nominationCountdownDuration = duration }
+
+        SetNominationCountdownRunning isRunning ->
+            setNominationCountdownRunning isRunning state
+
+        NominationCountdownFinished ->
+            stepForward
 
 
 getNextStep : ( Phase, Int ) -> State -> ( Phase, Int )
