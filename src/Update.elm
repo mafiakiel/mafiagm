@@ -94,6 +94,7 @@ updateState action state =
 
         EndGame ->
             firstStep.init { state | currentPhase = Phase firstPhase, currentStepIndex = 0 }
+                |> setStealthMode False
 
         NominatePlayer id ->
             { state | nextNominationPosition = state.nextNominationPosition + 1 }
