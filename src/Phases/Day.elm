@@ -63,7 +63,11 @@ hanging =
         { abstractStep
             | name = "Hinrichtung"
             , view =
-                gameView <| [ instruction "Markiere den Spieler, der gehängt werden soll." ]
+                gameView <|
+                    [ instruction "Markiere den Spieler, der gehängt werden soll."
+                    , announcement "... wurde gehängt. Er/sie war ..."
+                    , announcement "Alle schlafen ein."
+                    ]
             , playerControls = [ killPlayerControl (both isNominated isAlive) ]
             , isPlayerActive = always isNominated
             , cleanup = removeMarkersFromAllPlayers isNominatedMarker
