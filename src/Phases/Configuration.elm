@@ -8,7 +8,7 @@ import Bootstrap.Utilities.Spacing as Spacing
 import Data.Cards exposing (cardCategories)
 import Data.Strings exposing (..)
 import FontAwesome exposing (icon, minus, plus, trash)
-import Html exposing (Html, text, h2, div)
+import Html exposing (Html, div, h2, text)
 import List exposing (drop, length, map)
 import List.Extra exposing (count, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
@@ -83,7 +83,7 @@ poolView state =
                 |> BCard.headerH3 [] [ text (roleToString card.role) ]
                 |> BCard.block [] [ BCardBlock.text [] [ text card.text ] ]
                 |> BCard.footer []
-                    [ Button.button [ Button.secondary,Button.attrs [], Button.onClick <| Action <| RemoveCardFromPool card ] [ icon minus ]
+                    [ Button.button [ Button.secondary, Button.attrs [], Button.onClick <| Action <| RemoveCardFromPool card ] [ icon minus ]
                     , h2 [] [ text <| String.fromInt <| amountInPool card ]
                     , Button.button [ Button.secondary, Button.onClick <| Action <| AddCardToPool card ] [ icon plus ]
                     ]
@@ -91,12 +91,13 @@ poolView state =
         selectCategoryAction category =
             Action (SelectCardCategory category)
     in
-    div [] [
-        h2 [] [ text <| "Kartenanzahl (" ++ String.fromInt (length state.pool) ++ ")" ]
+    div []
+        [ h2 [] [ text <| "Kartenanzahl (" ++ String.fromInt (length state.pool) ++ ")" ]
         , Tab.config selectCategoryAction
             |> Tab.items (map categoryToTab cardCategories)
             |> Tab.view state.selectedCardCategory
-    ]
+        ]
+
 
 dealCards : Step
 dealCards =

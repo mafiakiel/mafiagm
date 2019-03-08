@@ -53,7 +53,7 @@ updateState action state =
 
         hasId id player =
             player.id == id
-        
+
         hasCard card pool =
             pool.card == card
 
