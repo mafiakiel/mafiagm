@@ -8,7 +8,7 @@ import Types exposing (Action(..), Phase(..), PlayerControl, Step(..))
 import Util.Condition exposing (both)
 import Util.Marker exposing (isNominatedMarker)
 import Util.Player exposing (isAlive, isNominated)
-import Util.Update exposing (removeMarkersFromAllPlayers)
+import Util.Update exposing (removeMarkersFromAllPlayers, resetNextNominationPostion, setStealthMode)
 
 
 day : Phase
@@ -33,7 +33,7 @@ nomination =
                     , instruction "Nimm Nominierungen entgegen."
                     ]
             , playerControls = [ nominatePlayerControl ]
-            , init = \state -> { state | nextNominationPosition = 1 }
+            , init = resetNextNominationPostion >> setStealthMode True
         }
 
 
@@ -70,5 +70,5 @@ hanging =
                     ]
             , playerControls = [ killPlayerControl (both isNominated isAlive) ]
             , isPlayerActive = always isNominated
-            , cleanup = removeMarkersFromAllPlayers isNominatedMarker
+            , cleanup = removeMarkersFromAllPlayers isNominatedMarker >> setStealthMode False
         }
