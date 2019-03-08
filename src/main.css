@@ -49,3 +49,8 @@ body,
   justify-content: space-between;
 }
 
+.card-footer 
+  .btn-secondary {
+    width: 12%;
+}
+
