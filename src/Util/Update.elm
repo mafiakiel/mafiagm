@@ -1,4 +1,4 @@
-module Util.Update exposing (addMarkerToPlayer, removeMarkersFromAllPlayers)
+module Util.Update exposing (addMarkerToPlayer, removeMarkersFromAllPlayers, resetNextNominationPostion, setStealthMode)
 
 import List exposing (map)
 import List.Extra exposing (filterNot, updateIf)
@@ -19,3 +19,13 @@ removeMarkersFromAllPlayers condition state =
             { player | markers = filterNot condition player.markers }
     in
     { state | players = map removeMarkers state.players }
+
+
+setStealthMode : Bool -> State -> State
+setStealthMode isEnabled state =
+    { state | stealthMode = isEnabled }
+
+
+resetNextNominationPostion : State -> State
+resetNextNominationPostion state =
+    { state | nextNominationPosition = 1 }

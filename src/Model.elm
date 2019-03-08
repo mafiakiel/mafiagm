@@ -18,6 +18,7 @@ initState flags =
     , selectedCardCategory = Tab.initialState
     , undealtPool = []
     , nextNominationPosition = 1
+    , stealthMode = False
     }
 
 
