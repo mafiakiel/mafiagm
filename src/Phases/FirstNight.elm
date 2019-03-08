@@ -60,7 +60,7 @@ cupidPlayerControls : List PlayerControl
 cupidPlayerControls =
     [ { label = icon heart
       , action = \player -> AddMarker player.id InLove
-      , options = \_ -> []
+      , options = always []
       , condition = \player -> player.role /= Cupid && notMember InLove player.markers
       }
     ]

@@ -103,7 +103,7 @@ dealCards =
     Step
         { abstractStep
             | name = "Karten verteilen"
-            , view = \_ -> instruction "Verteile die Karten"
+            , view = always <| instruction "Verteile die Karten"
             , init = dealCardsInit
         }
 
