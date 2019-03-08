@@ -93,8 +93,9 @@ updateState action state =
             { state | players = updateIf (hasId id) (\p -> { p | alive = False }) state.players }
 
         EndGame ->
-            firstStep.init { state | currentPhase = Phase firstPhase, currentStepIndex = 0 }
+            { state | currentPhase = Phase firstPhase, currentStepIndex = 0 }
                 |> setStealthMode False
+                |> firstStep.init
 
         NominatePlayer id ->
             { state | nextNominationPosition = state.nextNominationPosition + 1 }
