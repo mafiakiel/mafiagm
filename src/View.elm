@@ -133,7 +133,7 @@ playerList state =
                 ]
     in
     div [ id "players" ]
-        [ h2 [] [ text <| "Spieler (" ++ String.fromInt (length state.players) ++ ")" ]
+        [ h2 [] [ text <| "Spieler: " ++ String.fromInt (length state.players) ]
         , Table.table
             { options = []
             , thead =

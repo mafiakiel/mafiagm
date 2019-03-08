@@ -1,7 +1,7 @@
 module Update exposing (update)
 
 import List exposing (length)
-import List.Extra exposing (filterNot, updateIf)
+import List.Extra exposing (filterNot, remove, updateIf)
 import Phases.Configuration exposing (configuration)
 import Phases.Dawn
 import Phases.Day
@@ -88,6 +88,9 @@ updateState action state =
 
         AddCardToPool card ->
             { state | pool = card :: state.pool }
+
+        RemoveCardFromPool card ->
+            { state | pool = remove card state.pool }
 
         AddMarker playerId marker ->
             addMarkerToPlayer playerId marker state

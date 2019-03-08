@@ -128,3 +128,13 @@ body,
   color: #dee2e6 !important;
   text-decoration: line-through;
 }
+
+.pool-card .card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pool-card-amount {
+  font-size: 20px;
+}
