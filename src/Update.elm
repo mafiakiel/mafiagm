@@ -80,7 +80,7 @@ updateState action state =
             { state | pool = card :: state.pool }
 
         RemoveCardFromPool card ->
-            { state | pool = remove card state.pool}
+            { state | pool = remove card state.pool }
 
         AddMarker playerId marker ->
             { state | players = updateIf (hasId playerId) (\p -> { p | markers = p.markers ++ [ marker ] }) state.players }

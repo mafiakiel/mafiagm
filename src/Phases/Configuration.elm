@@ -84,16 +84,16 @@ poolView state =
                 |> BCard.block [] [ BCardBlock.text [] [ text card.text ] ]
                 |> BCard.footer []
                     [ Button.button [ Button.secondary,Button.attrs [], Button.onClick <| Action <| RemoveCardFromPool card ] [ icon minus ]
-                    , h2 [] [text <| String.fromInt <| amountInPool card]
+                    , h2 [] [ text <| String.fromInt <| amountInPool card ]
                     , Button.button [ Button.secondary, Button.onClick <| Action <| AddCardToPool card ] [ icon plus ]
                     ]
 
         selectCategoryAction category =
             Action (SelectCardCategory category)
     in
-    div [][
-        h2 [] [text <| "Kartenanzahl (" ++ String.fromInt (length state.pool) ++ ")" ],
-        Tab.config selectCategoryAction
+    div [] [
+        h2 [] [ text <| "Kartenanzahl (" ++ String.fromInt (length state.pool) ++ ")" ]
+        , Tab.config selectCategoryAction
             |> Tab.items (map categoryToTab cardCategories)
             |> Tab.view state.selectedCardCategory
     ]
