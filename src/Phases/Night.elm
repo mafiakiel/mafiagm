@@ -25,7 +25,7 @@ deaths =
         { abstractStep
             | name = "Tode"
             , view =
-                gameView <|
+                gameView
                     [ announcement "Gestorben sind: ..."
                     , instruction "Markiere Spieler, die diese Nacht gestorben sind!"
                     ]

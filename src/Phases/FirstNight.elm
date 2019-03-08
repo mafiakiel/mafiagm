@@ -26,7 +26,7 @@ mafia =
     Step
         { abstractStep
             | name = partyToString Mafia
-            , view = gameView <| [ announcement "Die Mafia darf aufwachen und sich erkennen. 😏" ]
+            , view = gameView [ announcement "Die Mafia darf aufwachen und sich erkennen. 😏" ]
             , isPlayerActive = always (hasParty Mafia)
             , mode = stepModeByParty Mafia
         }
@@ -37,7 +37,7 @@ church =
     Step
         { abstractStep
             | name = "Kirche"
-            , view = gameView <| [ announcement "Die Kirche darf aufwachen und sich erkennen. 😏" ]
+            , view = gameView [ announcement "Die Kirche darf aufwachen und sich erkennen. 😏" ]
             , isPlayerActive = always isInChurch
 
             -- TODO: mode
@@ -49,7 +49,7 @@ cupid =
     Step
         { abstractStep
             | name = roleToString Cupid
-            , view = gameView <| [ announcement "Amor darf aufwachen und zwei Mitspieler verlieben." ]
+            , view = gameView [ announcement "Amor darf aufwachen und zwei Mitspieler verlieben." ]
             , isPlayerActive = always (hasRole Cupid)
             , playerControls = cupidPlayerControls
             , mode = stepModeByRole Cupid

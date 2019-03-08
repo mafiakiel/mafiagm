@@ -19,6 +19,8 @@ initState flags =
     , undealtPool = []
     , nextNominationPosition = 1
     , stealthMode = False
+    , nominationCountdownDuration = 10
+    , nominationCountdownRunning = False
     }
 
 

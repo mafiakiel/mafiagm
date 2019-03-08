@@ -24,7 +24,7 @@ import Types
 import UndoList exposing (UndoList)
 import Util.Phases exposing (stepAt, unwrapPhase, unwrapStep)
 import Util.Player exposing (hasId)
-import Util.Update exposing (addMarkerToPlayer, setStealthMode)
+import Util.Update exposing (addMarkerToPlayer, setNominationCountdownRunning, setStealthMode)
 import Uuid exposing (Uuid, uuidGenerator)
 
 
@@ -64,6 +64,11 @@ updateState action state =
 
         firstStep =
             stepAt firstPhase.steps 0 |> unwrapStep
+
+        stepForward =
+            { state | currentPhase = nextPhase, currentStepIndex = nextStepIndex }
+                |> currentStep.cleanup
+                |> nextStep.init
     in
     case action of
         SetNewPlayerName name ->
@@ -76,9 +81,7 @@ updateState action state =
             { state | players = filterNot (hasId id) state.players }
 
         StepForward ->
-            { state | currentPhase = nextPhase, currentStepIndex = nextStepIndex }
-                |> currentStep.cleanup
-                |> nextStep.init
+            stepForward
 
         SelectCardCategory category ->
             { state | selectedCardCategory = category }
@@ -95,6 +98,7 @@ updateState action state =
         EndGame ->
             { state | currentPhase = Phase firstPhase, currentStepIndex = 0 }
                 |> setStealthMode False
+                |> currentStep.cleanup
                 |> firstStep.init
 
         NominatePlayer id ->
@@ -103,6 +107,15 @@ updateState action state =
 
         SetStealthMode isEnabled ->
             setStealthMode isEnabled state
+
+        SetNominationCountdownDuration duration ->
+            { state | nominationCountdownDuration = duration }
+
+        SetNominationCountdownRunning isRunning ->
+            setNominationCountdownRunning isRunning state
+
+        NominationCountdownFinished ->
+            stepForward
 
 
 getNextStep : ( Phase, Int ) -> State -> ( Phase, Int )
