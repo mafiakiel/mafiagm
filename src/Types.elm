@@ -45,6 +45,8 @@ type alias State =
     , undealtPool : List Card
     , nextNominationPosition : Int
     , stealthMode : Bool
+    , nominationCountdownDuration : Int
+    , nominationCountdownRunning : Bool
     }
 
 
@@ -181,6 +183,12 @@ type Action
     | EndGame
     | NominatePlayer Uuid
     | SetStealthMode Bool
+    | SetNominationCountdownDuration Int
+    | SetNominationCountdownRunning Bool
+
+
+
+--    | NominationCountdownFinished
 
 
 type Msg

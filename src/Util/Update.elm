@@ -1,4 +1,10 @@
-module Util.Update exposing (addMarkerToPlayer, removeMarkersFromAllPlayers, resetNextNominationPostion, setStealthMode)
+module Util.Update exposing
+    ( addMarkerToPlayer
+    , removeMarkersFromAllPlayers
+    , resetNextNominationPostion
+    , setNominationCountdownRunning
+    , setStealthMode
+    )
 
 import List exposing (map)
 import List.Extra exposing (filterNot, updateIf)
@@ -29,3 +35,8 @@ setStealthMode isEnabled state =
 resetNextNominationPostion : State -> State
 resetNextNominationPostion state =
     { state | nextNominationPosition = 1 }
+
+
+setNominationCountdownRunning : Bool -> State -> State
+setNominationCountdownRunning isRunning state =
+    { state | nominationCountdownRunning = isRunning }
