@@ -1,19 +1,10 @@
-module Util exposing
-    ( getCurrentStep
-    , isAlive
-    , isInChurch
-    , stepAt
-    , stepError
-    , stepModeByParty
-    , stepModeByRole
-    , unwrapPhase
-    , unwrapStep
-    )
+module Util.Phases exposing (getCurrentStep, stepAt, stepError, stepModeByParty, stepModeByRole, unwrapPhase, unwrapStep)
 
 import Html exposing (text)
 import List exposing (filter, map, member)
 import List.Extra exposing (getAt)
-import Types exposing (Marker(..), Party(..), Phase(..), Player, Role(..), State, Step(..), StepMode(..))
+import Types exposing (Party, Phase(..), Role, State, Step(..), StepMode(..))
+import Util.Player exposing (isAlive)
 
 
 unwrapPhase wrapped =
@@ -35,14 +26,14 @@ unwrapStep wrapped =
 stepError : Step
 stepError =
     Step
-        { init = \state -> state
-        , cleanup = \state -> state
-        , stepForwardVeto = \_ -> Nothing
+        { init = identity
+        , cleanup = identity
+        , stepForwardVeto = always Nothing
         , playerControls = []
-        , isPlayerActive = \_ _ -> False
+        , isPlayerActive = always <| always False
         , name = "Error"
-        , view = \_ -> text "Step not found"
-        , mode = \_ -> Execute
+        , view = always <| text "Step not found"
+        , mode = always Execute
         }
 
 
@@ -58,22 +49,6 @@ stepAt steps index =
 
 getCurrentStep state =
     stepAt (unwrapPhase state.currentPhase).steps state.currentStepIndex |> unwrapStep
-
-
-isInChurch : Player -> Bool
-isInChurch player =
-    member Converted player.markers
-        || player.role
-        == Pope
-        || player.role
-        == Monk
-        || player.role
-        == MonkInLove
-
-
-isAlive : Player -> Bool
-isAlive player =
-    player.alive
 
 
 stepModeByRole : Role -> State -> StepMode

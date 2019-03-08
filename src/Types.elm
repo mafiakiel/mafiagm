@@ -43,6 +43,7 @@ type alias State =
     , pool : List Card --the same card can be added to the pool multiple times
     , selectedCardCategory : Tab.State
     , undealtPool : List Card
+    , nextNominationPosition : Int
     }
 
 
@@ -73,7 +74,7 @@ type Step
         , cleanup : State -> State
         , stepForwardVeto : State -> Maybe String
         , playerControls : List PlayerControl
-        , isPlayerActive : Player -> State -> Bool
+        , isPlayerActive : State -> Player -> Bool
         , mode : State -> StepMode
         }
 
@@ -175,9 +176,9 @@ type Action
     | SelectCardCategory Tab.State
     | AddCardToPool Card
     | AddMarker Uuid Marker
-    | RemoveMarker Uuid Marker
     | KillPlayer Uuid
     | EndGame
+    | NominatePlayer Uuid
 
 
 type Msg

@@ -1,7 +1,7 @@
 module Update exposing (update)
 
 import List exposing (length)
-import List.Extra exposing (filterNot, remove, updateIf)
+import List.Extra exposing (filterNot, updateIf)
 import Phases.Configuration exposing (configuration)
 import Phases.Dawn
 import Phases.Day
@@ -22,8 +22,10 @@ import Types
         , StepMode(..)
         )
 import UndoList exposing (UndoList)
-import Util exposing (stepAt, unwrapPhase, unwrapStep)
-import Uuid exposing (uuidGenerator)
+import Util.Phases exposing (stepAt, unwrapPhase, unwrapStep)
+import Util.Player exposing (hasId)
+import Util.Update exposing (addMarkerToPlayer)
+import Uuid exposing (Uuid, uuidGenerator)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -53,9 +55,6 @@ updateState action state =
 
         nextStep =
             stepAt (unwrapPhase nextPhase).steps nextStepIndex |> unwrapStep
-
-        hasId id player =
-            player.id == id
 
         newPlayer =
             { id = uuid, name = state.newPlayerName, role = None, party = Villagers, markers = [], alive = False }
@@ -88,16 +87,17 @@ updateState action state =
             { state | pool = card :: state.pool }
 
         AddMarker playerId marker ->
-            { state | players = updateIf (hasId playerId) (\p -> { p | markers = p.markers ++ [ marker ] }) state.players }
-
-        RemoveMarker playerId marker ->
-            { state | players = updateIf (hasId playerId) (\p -> { p | markers = remove marker p.markers }) state.players }
+            addMarkerToPlayer playerId marker state
 
         KillPlayer id ->
             { state | players = updateIf (hasId id) (\p -> { p | alive = False }) state.players }
 
         EndGame ->
             firstStep.init { state | currentPhase = Phase firstPhase, currentStepIndex = 0 }
+
+        NominatePlayer id ->
+            { state | nextNominationPosition = state.nextNominationPosition + 1 }
+                |> addMarkerToPlayer id (Nominated state.nextNominationPosition)
 
 
 getNextStep : ( Phase, Int ) -> State -> ( Phase, Int )

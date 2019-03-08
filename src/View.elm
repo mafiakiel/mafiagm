@@ -9,14 +9,14 @@ import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString, roleToString)
-import FontAwesome exposing (angleRight, exclamationTriangle, eye, heart, icon, plus, redo, timesCircle, undo)
+import FontAwesome exposing (angleRight, award, exclamationTriangle, eye, heart, icon, plus, redo, timesCircle, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (class, href, id, rel, style)
 import List exposing (filter, length, map)
 import Maybe.Extra exposing (isJust)
 import Types exposing (Action(..), Marker(..), Model, Msg(..), Phase(..), State, Step(..))
 import UndoList exposing (UndoList)
-import Util exposing (getCurrentStep)
+import Util.Phases exposing (getCurrentStep)
 
 
 view : Model -> Html Msg
@@ -100,7 +100,7 @@ playerList state =
             Button.button ([ Button.onClick <| Action <| control.action player, Button.small ] ++ control.options player) [ control.label ]
 
         playerTableRowOptions player =
-            if (getCurrentStep state).isPlayerActive player state then
+            if (getCurrentStep state).isPlayerActive state player then
                 [ Table.rowSuccess ]
 
             else if not player.alive then
@@ -154,7 +154,7 @@ renderMarker marker =
             Badge.pillSuccess options [ text "PROTECC" ]
 
         Nominated position ->
-            Badge.pillInfo options [ text "NOM ", text (String.fromInt position) ]
+            Badge.pillInfo options [ icon award, text " ", text (String.fromInt position) ]
 
         Converted ->
             Badge.pillSecondary options [ text "M" ]

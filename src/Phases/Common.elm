@@ -1,15 +1,16 @@
-module Phases.Common exposing (announcement, gameView, instruction)
+module Phases.Common exposing (announcement, gameView, instruction, killPlayerControl)
 
 import Bootstrap.Alert as Alert
 import Bootstrap.Badge as Badge
+import Bootstrap.Button as Button
 import Bootstrap.ListGroup as ListGroup
 import Bootstrap.Utilities.Spacing as Spacing
-import FontAwesome exposing (bullhorn, icon, tasks)
+import FontAwesome exposing (bullhorn, icon, skull, tasks)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (id)
 import List exposing (length, map, range)
-import Types exposing (Msg, State, StepMode(..))
-import Util exposing (stepAt, unwrapPhase, unwrapStep)
+import Types exposing (Action(..), Msg, Player, PlayerControl, State, StepMode(..))
+import Util.Phases exposing (stepAt, unwrapPhase, unwrapStep)
 
 
 gameView : List (Html Msg) -> State -> Html Msg
@@ -73,3 +74,12 @@ instruction content =
         [ Alert.h4 [] [ icon tasks, text " Aufgabe" ]
         , text content
         ]
+
+
+killPlayerControl : (Player -> Bool) -> PlayerControl
+killPlayerControl condition =
+    { label = icon skull
+    , action = \player -> KillPlayer player.id
+    , options = always [ Button.danger ]
+    , condition = condition
+    }
