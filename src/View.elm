@@ -100,11 +100,11 @@ playerList state =
             Button.button ([ Button.onClick <| Action <| control.action player, Button.small ] ++ control.options player) [ control.label ]
 
         playerTableRowOptions player =
-            if (getCurrentStep state).isPlayerActive state player then
-                [ Table.rowSuccess ]
-
-            else if not player.alive then
+            if not player.alive then
                 [ Table.rowAttr (class "dead") ]
+
+            else if (getCurrentStep state).isPlayerActive state player then
+                [ Table.rowSuccess ]
 
             else
                 []
