@@ -64,6 +64,11 @@ updateState action state =
 
         firstStep =
             stepAt firstPhase.steps 0 |> unwrapStep
+
+        stepForward =
+            { state | currentPhase = nextPhase, currentStepIndex = nextStepIndex }
+                |> currentStep.cleanup
+                |> nextStep.init
     in
     case action of
         SetNewPlayerName name ->
@@ -76,9 +81,7 @@ updateState action state =
             { state | players = filterNot (hasId id) state.players }
 
         StepForward ->
-            { state | currentPhase = nextPhase, currentStepIndex = nextStepIndex }
-                |> currentStep.cleanup
-                |> nextStep.init
+            stepForward
 
         SelectCardCategory category ->
             { state | selectedCardCategory = category }
@@ -110,6 +113,9 @@ updateState action state =
 
         SetNominationCountdownRunning isRunning ->
             setNominationCountdownRunning isRunning state
+
+        NominationCountdownFinished ->
+            stepForward
 
 
 getNextStep : ( Phase, Int ) -> State -> ( Phase, Int )

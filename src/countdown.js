@@ -40,6 +40,7 @@ export class Countdown extends HTMLElement {
       remainingTime = this.duration - elapsedTime;
       if (remainingTime < 0) {
         this.running = false;
+        this.dispatchEvent(new CustomEvent("finished"));
       }
     } else {
       remainingTime = this.duration

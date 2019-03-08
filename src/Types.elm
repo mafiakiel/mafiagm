@@ -185,6 +185,7 @@ type Action
     | SetStealthMode Bool
     | SetNominationCountdownDuration Int
     | SetNominationCountdownRunning Bool
+    | NominationCountdownFinished
 
 
 

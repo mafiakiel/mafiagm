@@ -7,6 +7,8 @@ import Bootstrap.Utilities.Spacing as Spacing
 import FontAwesome exposing (award, clock, icon)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (property)
+import Html.Events exposing (on)
+import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (announcement, gameView, instruction, killPlayerControl)
@@ -64,8 +66,7 @@ nominationCountdown state =
             Html.node "x-countdown"
                 [ property "duration" <| Encode.int state.nominationCountdownDuration
                 , property "running" <| Encode.bool state.nominationCountdownRunning
-
-                --            , on "finished"
+                , on "finished" <| Decode.succeed <| Action NominationCountdownFinished
                 ]
                 []
     in
