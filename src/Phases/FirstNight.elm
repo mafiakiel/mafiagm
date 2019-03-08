@@ -6,7 +6,8 @@ import List.Extra exposing (notMember)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (announcement, gameView)
 import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..))
-import Util exposing (isInChurch, stepModeByParty, stepModeByRole)
+import Util.Phases exposing (stepModeByParty, stepModeByRole)
+import Util.Player exposing (hasParty, hasRole, isInChurch)
 
 
 firstNight : Phase
@@ -26,7 +27,7 @@ mafia =
         { abstractStep
             | name = partyToString Mafia
             , view = gameView <| [ announcement "Die Mafia darf aufwachen und sich erkennen. 😏" ]
-            , isPlayerActive = \player _ -> player.party == Mafia
+            , isPlayerActive = always (hasParty Mafia)
             , mode = stepModeByParty Mafia
         }
 
@@ -37,7 +38,7 @@ church =
         { abstractStep
             | name = "Kirche"
             , view = gameView <| [ announcement "Die Kirche darf aufwachen und sich erkennen. 😏" ]
-            , isPlayerActive = \player _ -> isInChurch player
+            , isPlayerActive = always isInChurch
 
             -- TODO: mode
         }
@@ -49,7 +50,7 @@ cupid =
         { abstractStep
             | name = roleToString Cupid
             , view = gameView <| [ announcement "Amor darf aufwachen und zwei Mitspieler verlieben." ]
-            , isPlayerActive = \player _ -> player.role == Cupid
+            , isPlayerActive = always (hasRole Cupid)
             , playerControls = cupidPlayerControls
             , mode = stepModeByRole Cupid
         }
@@ -59,7 +60,7 @@ cupidPlayerControls : List PlayerControl
 cupidPlayerControls =
     [ { label = icon heart
       , action = \player -> AddMarker player.id InLove
-      , options = \_ -> []
+      , options = always []
       , condition = \player -> player.role /= Cupid && notMember InLove player.markers
       }
     ]

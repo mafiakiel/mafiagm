@@ -1,14 +1,10 @@
 module Model exposing (init)
 
 import Bootstrap.Tab as Tab
-import Html exposing (Html, text)
-import List.Extra exposing (getAt)
-import Phases.Abstract exposing (abstractStep)
 import Phases.Configuration exposing (configuration)
 import Random
 import Types exposing (Action, Flags, Model, Msg, State, Step(..))
 import UndoList exposing (UndoList)
-import Uuid exposing (Uuid)
 
 
 initState : Flags -> State
@@ -21,6 +17,7 @@ initState flags =
     , pool = []
     , selectedCardCategory = Tab.initialState
     , undealtPool = []
+    , nextNominationPosition = 1
     }
 
 

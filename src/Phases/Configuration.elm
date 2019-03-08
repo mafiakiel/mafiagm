@@ -36,8 +36,8 @@ deletePlayerControl : PlayerControl
 deletePlayerControl =
     { label = icon trash
     , action = \player -> RemovePlayer player.id
-    , options = \_ -> [ Button.danger ]
-    , condition = \_ -> True
+    , options = always [ Button.danger ]
+    , condition = always True
     }
 
 
@@ -46,7 +46,7 @@ rules =
     Step
         { abstractStep
             | name = "Regeln"
-            , view = \_ -> text "Hier könnten Ihre Regeln stehen!"
+            , view = always <| text "Hier könnten Ihre Regeln stehen!"
         }
 
 
@@ -103,7 +103,7 @@ dealCards =
     Step
         { abstractStep
             | name = "Karten verteilen"
-            , view = \_ -> instruction "Verteile die Karten"
+            , view = always <| instruction "Verteile die Karten"
             , init = dealCardsInit
         }
 
