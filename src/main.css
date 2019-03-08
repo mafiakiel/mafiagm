@@ -122,3 +122,9 @@ body,
   color: #b0b0b0;
   text-decoration: line-through;
 }
+
+.censored, .censored * {
+  background: #dee2e6 !important;
+  color: #dee2e6 !important;
+  text-decoration: line-through;
+}

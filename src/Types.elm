@@ -44,6 +44,7 @@ type alias State =
     , selectedCardCategory : Tab.State
     , undealtPool : List Card
     , nextNominationPosition : Int
+    , stealthMode : Bool
     }
 
 
@@ -179,6 +180,7 @@ type Action
     | KillPlayer Uuid
     | EndGame
     | NominatePlayer Uuid
+    | SetStealthMode Bool
 
 
 type Msg

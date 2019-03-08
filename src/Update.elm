@@ -24,7 +24,7 @@ import Types
 import UndoList exposing (UndoList)
 import Util.Phases exposing (stepAt, unwrapPhase, unwrapStep)
 import Util.Player exposing (hasId)
-import Util.Update exposing (addMarkerToPlayer)
+import Util.Update exposing (addMarkerToPlayer, setStealthMode)
 import Uuid exposing (Uuid, uuidGenerator)
 
 
@@ -98,6 +98,9 @@ updateState action state =
         NominatePlayer id ->
             { state | nextNominationPosition = state.nextNominationPosition + 1 }
                 |> addMarkerToPlayer id (Nominated state.nextNominationPosition)
+
+        SetStealthMode isEnabled ->
+            setStealthMode isEnabled state
 
 
 getNextStep : ( Phase, Int ) -> State -> ( Phase, Int )

@@ -9,7 +9,7 @@ import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString, roleToString)
-import FontAwesome exposing (angleRight, award, exclamationTriangle, eye, heart, icon, plus, redo, timesCircle, undo)
+import FontAwesome exposing (angleRight, award, exclamationTriangle, eye, eyeSlash, heart, icon, plus, redo, timesCircle, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (class, href, id, rel, style)
 import List exposing (filter, length, map)
@@ -54,6 +54,13 @@ header model =
 
         background =
             "url(" ++ currentPhase.backgroundImage ++ ")"
+
+        ( stealthModeIcon, stealthModeAction ) =
+            if model.present.stealthMode then
+                ( eye, Action <| SetStealthMode False )
+
+            else
+                ( eyeSlash, Action <| SetStealthMode True )
     in
     div [ id "header", style "background-image" background, style "color" currentPhase.textColor ]
         [ div [ id "header-main" ]
@@ -62,7 +69,7 @@ header model =
             ]
         , div [ id "header-veto" ] [ stepForwardVetoMessage ]
         , div [ id "header-buttons" ]
-            [ Button.button [ Button.outlineSecondary ] [ icon eye ]
+            [ Button.button [ Button.outlineSecondary, Button.onClick stealthModeAction ] [ icon stealthModeIcon ]
             , Button.button [ Button.outlineSecondary, Button.onClick <| Action EndGame ] [ icon timesCircle ]
             , Button.button
                 [ Button.onClick <| Action StepForward
@@ -109,12 +116,19 @@ playerList state =
             else
                 []
 
+        sensitiveCellOptions =
+            if state.stealthMode then
+                [ Table.cellAttr <| class "censored" ]
+
+            else
+                []
+
         playerToTableRow player =
             Table.tr (playerTableRowOptions player)
                 [ Table.td [] [ text player.name ]
-                , Table.td [] [ text <| roleToString player.role ]
-                , Table.td [] [ text <| partyToString player.party ]
-                , Table.td [] (map renderMarker player.markers)
+                , Table.td sensitiveCellOptions [ text <| roleToString player.role ]
+                , Table.td sensitiveCellOptions [ text <| partyToString player.party ]
+                , Table.td sensitiveCellOptions (map renderMarker player.markers)
                 , Table.td [] (filter (\c -> c.condition player) playerControls |> map (playerControlToButton player))
                 ]
     in
