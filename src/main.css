@@ -129,13 +129,12 @@ body,
   text-decoration: line-through;
 }
 
-.card-footer {
+.pool-card .card-footer {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
-.card-footer 
-  .btn-secondary {
-    width: 12%;
+.pool-card-amount {
+  font-size: 20px;
 }
-

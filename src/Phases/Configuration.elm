@@ -8,9 +8,10 @@ import Bootstrap.Utilities.Spacing as Spacing
 import Data.Cards exposing (cardCategories)
 import Data.Strings exposing (..)
 import FontAwesome exposing (icon, minus, plus, trash)
-import Html exposing (Html, div, h2, text)
-import List exposing (drop, length, map)
-import List.Extra exposing (count, zip)
+import Html exposing (Html, div, h2, small, span, text)
+import Html.Attributes exposing (class)
+import List exposing (drop, length, map, member)
+import List.Extra exposing (count, notMember, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (instruction)
 import Random
@@ -80,13 +81,25 @@ poolView state =
         amountInPool card =
             count ((==) card) state.pool
 
+        cardOptions card =
+            if member card state.pool then
+                [ BCard.outlineSuccess ]
+
+            else
+                []
+
         cardToBootstrapCard card =
-            BCard.config []
-                |> BCard.headerH3 [] [ text (roleToString card.role) ]
+            BCard.config ([ BCard.attrs [ class "pool-card" ] ] ++ cardOptions card)
+                |> BCard.headerH5 [] [ text (roleToString card.role) ]
                 |> BCard.block [] [ BCardBlock.text [] [ text card.text ] ]
                 |> BCard.footer []
-                    [ Button.button [ Button.secondary, Button.attrs [], Button.onClick <| Action <| RemoveCardFromPool card ] [ icon minus ]
-                    , h2 [] [ text <| String.fromInt <| amountInPool card ]
+                    [ Button.button
+                        [ Button.secondary
+                        , Button.onClick <| Action <| RemoveCardFromPool card
+                        , Button.disabled <| notMember card state.pool
+                        ]
+                        [ icon minus ]
+                    , span [ class "pool-card-amount" ] [ text <| String.fromInt <| amountInPool card ]
                     , Button.button [ Button.secondary, Button.onClick <| Action <| AddCardToPool card ] [ icon plus ]
                     ]
 
@@ -94,7 +107,11 @@ poolView state =
             Action (SelectCardCategory category)
     in
     div []
-        [ h2 [] [ text <| "Kartenanzahl (" ++ String.fromInt (length state.pool) ++ ")" ]
+        [ h2 []
+            [ text <| "Karten: " ++ String.fromInt (length state.pool)
+            , small [ class "text-muted" ]
+                [ text " (nicht verteilte Karten werden gefaket)" ]
+            ]
         , Tab.config selectCategoryAction
             |> Tab.items (map categoryToTab cardCategories)
             |> Tab.view state.selectedCardCategory

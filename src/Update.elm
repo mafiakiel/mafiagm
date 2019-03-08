@@ -1,7 +1,7 @@
 module Update exposing (update)
 
 import List exposing (length)
-import List.Extra exposing (filterNot, updateIf, remove)
+import List.Extra exposing (filterNot, remove, updateIf)
 import Phases.Configuration exposing (configuration)
 import Phases.Dawn
 import Phases.Day
