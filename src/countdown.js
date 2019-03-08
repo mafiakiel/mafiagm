@@ -54,9 +54,10 @@ export class Countdown extends HTMLElement {
     this.innerHTML = `
       <h5><span class="remaining"></span> <i>e</i> Sekunden</h5>
       <p>
-      <div class="progress">
-        <div class="progress-bar" role="progressbar"></div>
-      </div></p>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar"></div>
+        </div>
+      </p>
     `;
     this.update();
   }
