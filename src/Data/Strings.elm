@@ -110,7 +110,7 @@ roleToString role =
 
         Noips ->
             "noipS"
-        
+
         EvilGardener ->
             "böser Gärtner"
 
