@@ -17,7 +17,7 @@ cardCategories =
                    Der Engel beschützt nie vor dem Teufel."""
             , createCard Villagers
                 Gardener
-                """Der Gärtner wird von dem Dedektiv als Mafiosi gefunden, während der Inspektor/Spion ihn Gärtner erkennt."""
+                """Der Gärtner wird von dem Dedektiv als Mafioso gefunden, während der Inspektor/Spion ihn Gärtner erkennt."""
             , createCard Villagers
                 CrackWhore
                 """Als Nutte kann man jede Nacht einen Spieler vor dem Hängen am Tag beschützen. Es wird dann keiner gehängt. Stirbt man selbst, verfällt auch der Schutz."""

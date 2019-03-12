@@ -2,7 +2,8 @@ module Phases.Night exposing (night)
 
 import Bootstrap.Button as Button
 import Data.Strings exposing (partyToString, roleToString)
-import FontAwesome exposing (bed, crosshairs, icon, shieldAlt)
+import FontAwesome exposing (bed, crosshairs, exclamation, icon, shieldAlt)
+import Html exposing (span, text)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (addKillMarkerPlayerControl, announcement, gameView, instruction, killPlayerControl, mafiaStep)
 import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..), StepMode(..))
@@ -138,7 +139,7 @@ devil =
 
 devilPlayerControl : PlayerControl
 devilPlayerControl =
-    { label = icon crosshairs
+    { label = span [] [ icon crosshairs, text " ", icon exclamation ]
     , action = \player -> AddMarker player.id DevilKill
     , options = always [ Button.danger ]
     , condition = all [ isAlive, not << hasRole Devil, not << hasMarker DevilKill ]

@@ -41,10 +41,7 @@ import Util.Player exposing (hasParty, hasRole)
 gameView : List (Html Msg) -> State -> Html Msg
 gameView children state =
     div [ id "game-container" ]
-        [ div [ id "game-main" ]
-            [ div [ id "game-children" ] children
-            , div [ id "game-raffle" ] [ text "TODO: Raffle" ]
-            ]
+        [ div [ id "game-main" ] children
         , div [ id "game-steplist" ] [ stepList state ]
         ]
 

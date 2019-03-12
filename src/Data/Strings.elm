@@ -82,7 +82,7 @@ roleToString role =
             "Mönch"
 
         MonkInLove ->
-            "verliebter Mönch"
+            "Verliebter Mönch"
 
         Dracula ->
             "Graf Dracula"

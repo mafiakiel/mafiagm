@@ -193,10 +193,6 @@ type Action
     | NominationCountdownFinished
 
 
-
---    | NominationCountdownFinished
-
-
 type Msg
     = Undo
     | Redo

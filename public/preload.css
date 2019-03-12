@@ -4,6 +4,6 @@ body::after {
   height: 0;
   overflow: hidden;
   z-index: -1;
-  content: url(img/configure.jpg) url(img/dawn.jpg) url(img/day.jpg)
+  content: url(img/configuration.jpg) url(img/dawn.jpg) url(img/day.jpg)
     url(img/night.jpg);
 }
