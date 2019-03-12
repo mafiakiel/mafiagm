@@ -3,9 +3,10 @@ module Phases.Dawn exposing (dawn)
 import Data.Strings exposing (roleToString)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (announcement, gameView, silenceWarning)
-import Types exposing (Phase(..), Role(..), Step(..))
-import Util.Phases exposing (stepModeByRole)
-import Util.Player exposing (hasRole)
+import Types exposing (Party(..), Phase(..), Role(..), Step(..))
+import Util.Condition exposing (both)
+import Util.Phases exposing (stepModeByPartyAndRole, stepModeByRole)
+import Util.Player exposing (hasParty, hasRole)
 
 
 dawn : Phase
@@ -14,7 +15,7 @@ dawn =
         { abstractPhase
             | name = "Morgen"
             , steps =
-                [ detective, privateDetective, inspector ]
+                [ detective, privateDetective, inspector, villagerSpy ]
             , backgroundImage = "%PUBLIC_URL%/img/dawn.jpg"
             , textColor = "white"
         }
@@ -56,4 +57,17 @@ inspector =
                     [ announcement "Der Inspektor darf aufwachen und jemanden überprüfen." ]
             , mode = stepModeByRole Inspector
             , isPlayerActive = always (hasRole Inspector)
+        }
+
+
+villagerSpy : Step
+villagerSpy =
+    Step
+        { abstractStep
+            | name = "Bürger-Spion"
+            , view =
+                gameView
+                    [ announcement "Der Bürger-Spion darf aufwachen und jemanden überprüfen.", silenceWarning ]
+            , mode = stepModeByPartyAndRole Villagers Spy
+            , isPlayerActive = always <| both (hasRole Spy) (hasParty Villagers)
         }
