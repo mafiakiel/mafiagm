@@ -103,28 +103,6 @@ poolView state =
             else
                 []
 
-        cardTitle card =
-            case card.role of
-                None ->
-                    case card.party of
-                        Villagers ->
-                            "Normaler Bürger"
-
-                        Mafia ->
-                            "Normaler Mafioso"
-
-                        Vampires ->
-                            "Normaler Vampir"
-
-                        Zombies ->
-                            "Normaler Zombie"
-
-                        TheEvil ->
-                            "<does not exist>"
-
-                _ ->
-                    roleToString card.role
-
         cardToBootstrapCard card =
             BCard.config ([ BCard.attrs [ class "pool-card" ] ] ++ cardOptions card)
                 |> BCard.headerH5 [] [ text (cardTitle card) ]
