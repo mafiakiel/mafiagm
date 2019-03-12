@@ -164,6 +164,7 @@ type Marker
     | InLove
     | VisitedByHilda
     | Muted
+    | Alibi
 
 
 type alias Flags =

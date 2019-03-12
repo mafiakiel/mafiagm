@@ -2,11 +2,11 @@ module Phases.Dawn exposing (dawn, muter)
 
 import Bootstrap.Button as Button
 import Data.Strings exposing (roleToString)
-import FontAwesome exposing (icon, volumeMute)
+import FontAwesome exposing (icon, ribbon, volumeMute)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (announcement, gameView, silenceWarning)
 import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..))
-import Util.Condition exposing (both)
+import Util.Condition exposing (all, both)
 import Util.Phases exposing (stepModeByPartyAndRole, stepModeByRole)
 import Util.Player exposing (hasMarker, hasParty, hasRole, isAlive)
 import Util.Update exposing (removeMarkersFromAllPlayers)
@@ -18,7 +18,7 @@ dawn =
         { abstractPhase
             | name = "Morgen"
             , steps =
-                [ detective, privateDetective, inspector, villagerSpy, mafiaSpy, muter ]
+                [ detective, privateDetective, inspector, villagerSpy, mafiaSpy, muter, crackWhore ]
             , backgroundImage = "%PUBLIC_URL%/img/dawn.jpg"
             , textColor = "white"
         }
@@ -110,4 +110,27 @@ muterPlayerControl =
     , action = \player -> AddMarker player.id Muted
     , options = always [ Button.dark ]
     , condition = both isAlive (not << hasMarker Muted)
+    }
+
+
+crackWhore : Step
+crackWhore =
+    Step
+        { abstractStep
+            | name = roleToString CrackWhore
+            , view =
+                gameView
+                    [ announcement "Die Nutte darf aufwachen und jemandem ein Alibi geben." ]
+            , mode = stepModeByRole CrackWhore
+            , isPlayerActive = always (hasRole CrackWhore)
+            , playerControls = [ crackWhorePlayerControl ]
+        }
+
+
+crackWhorePlayerControl : PlayerControl
+crackWhorePlayerControl =
+    { label = icon ribbon
+    , action = \player -> AddMarker player.id Alibi
+    , options = always [ Button.success ]
+    , condition = all [ isAlive, not << hasRole CrackWhore, not << hasMarker Alibi ]
     }
