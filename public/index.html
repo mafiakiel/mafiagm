@@ -14,10 +14,16 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="stylesheet" href="%PUBLIC_URL%/preload.css" />
     <title>MafiaGM</title>
 
     <!-- Polyfill custom elements in Firefox https://github.com/WebReflection/document-register-element -->
-    <script>this.customElements||document.write('<script src="//unpkg.com/document-register-element"><\x2fscript>');</script>
+    <script>
+      this.customElements ||
+        document.write(
+          '<script src="//unpkg.com/document-register-element"><\x2fscript>'
+        );
+    </script>
     <script src="//unpkg.com/built-in-element"></script>
   </head>
   <body>
