@@ -2,7 +2,7 @@ module Phases.Night exposing (night)
 
 import Bootstrap.Button as Button
 import Data.Strings exposing (roleToString)
-import FontAwesome exposing (bed, icon, shieldAlt)
+import FontAwesome exposing (bed, crosshairs, icon, shieldAlt)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (addKillMarkerPlayerControl, announcement, gameView, instruction, killPlayerControl, mafiaStep)
 import Types exposing (Action(..), Marker(..), Phase(..), PlayerControl, Role(..), Step(..))
@@ -21,6 +21,7 @@ night =
                 [ wildHilda
                 , guardianAngel
                 , mafia
+                , devil
                 , deaths -- needs to stay at the end!
                 ]
             , backgroundImage = "%PUBLIC_URL%/img/night.jpg"
@@ -39,7 +40,14 @@ deaths =
                     , instruction "Markiere Spieler, die diese Nacht gestorben sind!"
                     ]
             , playerControls = [ killPlayerControl isAlive ]
-            , cleanup = removeMarkersFromAllPlayers <| any [ (==) VisitedByHilda, (==) Protected, (==) Kill ]
+            , cleanup =
+                removeMarkersFromAllPlayers <|
+                    any
+                        [ (==) VisitedByHilda
+                        , (==) Protected
+                        , (==) Kill
+                        , (==) DevilKill
+                        ]
         }
 
 
@@ -96,3 +104,26 @@ mafia =
             | view = gameView [ announcement "Die Mafia darf aufwachen und jemanden töten." ]
             , playerControls = [ addKillMarkerPlayerControl isAlive ]
         }
+
+
+devil : Step
+devil =
+    Step
+        { abstractStep
+            | name = roleToString Devil
+            , view =
+                gameView
+                    [ announcement "Der Teufel darf aufwachen und jemanden töten." ]
+            , mode = stepModeByRole Devil
+            , isPlayerActive = always (hasRole Devil)
+            , playerControls = [ devilPlayerControl ]
+        }
+
+
+devilPlayerControl : PlayerControl
+devilPlayerControl =
+    { label = icon crosshairs
+    , action = \player -> AddMarker player.id DevilKill
+    , options = always [ Button.danger ]
+    , condition = all [ isAlive, not << hasRole Devil, not << hasMarker DevilKill ]
+    }

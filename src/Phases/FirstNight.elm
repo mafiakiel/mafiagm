@@ -5,7 +5,7 @@ import FontAwesome exposing (heart, icon)
 import List.Extra exposing (notMember)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (announcement, gameView, mafiaStep)
-import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..))
+import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..), StepMode(..))
 import Util.Phases exposing (stepModeByRole)
 import Util.Player exposing (hasRole, isInChurch)
 
@@ -36,8 +36,7 @@ church =
             | name = "Kirche"
             , view = gameView [ announcement "Die Kirche darf aufwachen und sich erkennen. 😏" ]
             , isPlayerActive = always isInChurch
-
-            -- TODO: mode
+            , mode = always Skip
         }
 
 

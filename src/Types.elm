@@ -157,6 +157,7 @@ type alias PlayerControl =
 
 type Marker
     = Kill
+    | DevilKill
     | Protected
     | Nominated Int
     | Converted

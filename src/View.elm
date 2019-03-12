@@ -167,6 +167,9 @@ renderMarker marker =
         Kill ->
             Badge.pillDanger options [ icon crosshairs ]
 
+        DevilKill ->
+            Badge.pillDanger options [ text "Teufel ", icon crosshairs ]
+
         Protected ->
             Badge.pillSuccess options [ icon shieldAlt ]
 
