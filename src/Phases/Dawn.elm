@@ -14,7 +14,7 @@ dawn =
         { abstractPhase
             | name = "Morgen"
             , steps =
-                [ detective, privateDetective ]
+                [ detective, privateDetective, inspector ]
             , backgroundImage = "%PUBLIC_URL%/img/dawn.jpg"
             , textColor = "white"
         }
@@ -43,4 +43,17 @@ privateDetective =
                     [ announcement "Der Privatdetektiv darf aufwachen und jemanden überprüfen.", silenceWarning ]
             , mode = stepModeByRole PrivateDetective
             , isPlayerActive = always (hasRole PrivateDetective)
+        }
+
+
+inspector : Step
+inspector =
+    Step
+        { abstractStep
+            | name = roleToString Inspector
+            , view =
+                gameView
+                    [ announcement "Der Inspektor darf aufwachen und jemanden überprüfen." ]
+            , mode = stepModeByRole Inspector
+            , isPlayerActive = always (hasRole Inspector)
         }
