@@ -1,6 +1,7 @@
 module Util.Condition exposing (all, any, both)
 
 import List exposing (map, member)
+import Util.Misc exposing (apply)
 
 
 {-| Returns true if both of the conditions return true.
@@ -23,5 +24,5 @@ all conditions value =
 -}
 any : List (a -> Bool) -> a -> Bool
 any conditions value =
-    map (\condition -> condition value) conditions
+    map (apply value) conditions
         |> member True

@@ -4,7 +4,7 @@ import Bootstrap.Button as Button
 import Data.Strings exposing (roleToString)
 import FontAwesome exposing (bed, icon, shieldAlt)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Phases.Common exposing (announcement, gameView, instruction, killPlayerControl)
+import Phases.Common exposing (addKillMarkerPlayerControl, announcement, gameView, instruction, killPlayerControl, mafiaStep)
 import Types exposing (Action(..), Marker(..), Phase(..), PlayerControl, Role(..), Step(..))
 import Util.Condition exposing (all, any, both)
 import Util.Phases exposing (stepModeByRole)
@@ -20,6 +20,7 @@ night =
             , steps =
                 [ wildHilda
                 , guardianAngel
+                , mafia
                 , deaths -- needs to stay at the end!
                 ]
             , backgroundImage = "%PUBLIC_URL%/img/night.jpg"
@@ -38,7 +39,7 @@ deaths =
                     , instruction "Markiere Spieler, die diese Nacht gestorben sind!"
                     ]
             , playerControls = [ killPlayerControl isAlive ]
-            , cleanup = removeMarkersFromAllPlayers <| any [ (==) VisitedByHilda, (==) Protected ]
+            , cleanup = removeMarkersFromAllPlayers <| any [ (==) VisitedByHilda, (==) Protected, (==) Kill ]
         }
 
 
@@ -86,3 +87,12 @@ guardianAngelPlayerControl =
     , options = always [ Button.success ]
     , condition = both isAlive (not << hasMarker Protected)
     }
+
+
+mafia : Step
+mafia =
+    Step
+        { mafiaStep
+            | view = gameView [ announcement "Die Mafia darf aufwachen und jemanden töten." ]
+            , playerControls = [ addKillMarkerPlayerControl isAlive ]
+        }
