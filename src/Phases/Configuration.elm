@@ -26,8 +26,7 @@ configuration =
         { abstractPhase
             | name = "Konfiguration"
             , steps =
-                [ rules
-                , pool
+                [ pool
                 , dealCards
                 ]
             , backgroundImage = "%PUBLIC_URL%/img/configuration.jpg"
