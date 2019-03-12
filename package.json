@@ -24,6 +24,6 @@
     "elm-format": "^0.8.1"
   },
   "dependencies": {
-    "create-elm-app": "^3.0.4"
+    "create-elm-app": "^3.0.6"
   }
 }

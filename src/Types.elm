@@ -132,6 +132,7 @@ type Role
     | Satanist
     | Copier
     | Noips
+    | EvilGardener
 
 
 type alias Card =

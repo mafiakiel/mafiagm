@@ -110,6 +110,9 @@ roleToString role =
 
         Noips ->
             "noipS"
+        
+        EvilGardener ->
+            "böser Gärtner"
 
 
 partyToString : Party -> String
