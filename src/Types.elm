@@ -161,6 +161,7 @@ type Marker
     | Nominated Int
     | Converted
     | InLove
+    | VisitedByHilda
 
 
 type alias Flags =

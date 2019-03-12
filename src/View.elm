@@ -9,7 +9,7 @@ import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString, roleToString)
-import FontAwesome exposing (angleRight, award, exclamationTriangle, eye, eyeSlash, heart, icon, plus, redo, timesCircle, undo)
+import FontAwesome exposing (angleRight, award, bed, exclamationTriangle, eye, eyeSlash, heart, icon, plus, redo, timesCircle, undo)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (class, href, id, rel, style)
 import List exposing (filter, length, map)
@@ -178,6 +178,9 @@ renderMarker marker =
 
         InLove ->
             Badge.pillSecondary options [ icon heart ]
+
+        VisitedByHilda ->
+            Badge.badgeInfo options [ icon bed ]
 
 
 phaseContent : State -> Html Msg
