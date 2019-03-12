@@ -54,7 +54,7 @@ nominatePlayerControl =
     { label = icon award
     , action = \player -> NominatePlayer player.id
     , options = always [ Button.info ]
-    , condition = isAlive
+    , condition = both isAlive (not << isNominated)
     }
 
 
