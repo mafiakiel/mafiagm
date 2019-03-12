@@ -16,7 +16,7 @@ import Types exposing (Action(..), Msg(..), Phase(..), PlayerControl, State, Ste
 import Util.Condition exposing (both)
 import Util.Marker exposing (isNominatedMarker)
 import Util.Player exposing (isAlive, isNominated)
-import Util.Update exposing (removeMarkersFromAllPlayers, resetNextNominationPostion, setNominationCountdownRunning, setStealthMode)
+import Util.Update exposing (removeMarkersFromAllPlayers, resetNextNominationPosition, setNominationCountdownRunning, setStealthMode)
 
 
 day : Phase
@@ -44,7 +44,7 @@ nomination =
                         ]
                         state
             , playerControls = [ nominatePlayerControl ]
-            , init = resetNextNominationPostion >> setStealthMode True
+            , init = resetNextNominationPosition >> setStealthMode True
             , cleanup = setNominationCountdownRunning False
         }
 
