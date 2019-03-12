@@ -53,6 +53,10 @@ cardCategories =
             , createCard Villagers
                 CrimeSceneCleaner
                 """Wenn der Tatortreiniger im Spiel ist wird von den Gestorbenen nur die Partei (wie vom Dedektiv gefunden) laut angesagt. Der Tatortreiniger kann ein mal aufdecken und dann werden alle Rollen angesagt."""
+            , createCard Villagers Orphan "Das Weisenkind sucht sich am Anfang des Spiels einen Mitspieler als Vorbild aus. Stirbt dieser Spieler am Tag wird das Waisenkind zum Mafioso."
+            , createCard Villagers Copier "Der Kopierer darf sich ein Mal im Spiel die Zusatzrolle von einem anderen Spieler kopieren und diese ab dann ausüben."
+            , createCard Villagers Noips """Der noipS kann nachts nach einer Rolle fragen. Der Spielleiter muss dann die Person mit dieser Rolle pantomimisch nachmachen
+                                            (ohne Garantie auf Verständnis!)"""
             ]
       }
     , { name = "Bürger-Checks"
@@ -109,6 +113,11 @@ cardCategories =
             , createCard Mafia
                 Gardener
                 """Der böse Gärtner gehört der Mafia an, wird allerdings vom Inspektor nur als Gärtner gefunden."""
+            , createCard Mafia Copier "Der Kopierer darf sich ein Mal im Spiel die Zusatzrolle von einem anderen Spieler kopieren und diese ab dann ausüben."
+            , createCard Mafia Noips """Der noipS kann nachts nach einer Rolle fragen. Der Spielleiter muss dann die Person mit dieser Rolle pantomimisch nachmachen
+                                        (ohne Garantie auf Verständnis!)"""
+            , createCard Mafia SecretAgent "Der Mafia-Agent darf wie der Bürger-Agent in der Nacht Spieler erschießen. Der Spielleiter legt fest wie viele Kugeln er zur Verfügung hat. "
+            , createCard Mafia CrackWhore "Die Mafia-Nutte kann wie die normale Nutte jemanden vor dem gehängt werden am Tag beschützen."
             ]
       }
     , { name = "Kirche"
@@ -132,6 +141,7 @@ cardCategories =
             [ createCard TheEvil
                 Devil
                 """Der Teufel wacht mit den Mafioso auf und stimmt mit diesen ab. Zusätzlich hat er einen eigenen Nachtkill. Der Schutzengel schützt nicht vor dem Teufel. Der Papst kann nicht getötet werrden."""
+            , createCard TheEvil Satanist "Der Satanist spielt mit dem Teufel zusammen, hat aber keinen eigenen Kill."
             , createCard Vampires
                 Dracula
                 """Graf Dracula kann jede Nacht einen Spieler beißen. Weder Teufel noch Papst können zum Vampir werden.

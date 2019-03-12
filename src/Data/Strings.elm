@@ -133,23 +133,25 @@ partyToString party =
 
 cardTitle : Card -> String
 cardTitle card =
-    case card.role of
-        None ->
-            case card.party of
-                Villagers ->
-                    "Normaler Bürger"
+    if card.role == Gardener && card.party == Mafia then
+        "Böser Gärtner"
 
-                Mafia ->
-                    "Normaler Mafioso"
+    else if card.role == None then
+        case card.party of
+            Villagers ->
+                "Normaler Bürger"
 
-                Vampires ->
-                    "Normaler Vampir"
+            Mafia ->
+                "Normaler Mafioso"
 
-                Zombies ->
-                    "Normaler Zombie"
+            Vampires ->
+                "Normaler Vampir"
 
-                TheEvil ->
-                    "<does not exist>"
+            Zombies ->
+                "Normaler Zombie"
 
-        _ ->
-            roleToString card.role
+            TheEvil ->
+                "<does not exist>"
+
+    else
+        roleToString card.role
