@@ -15,7 +15,7 @@ dawn =
         { abstractPhase
             | name = "Morgen"
             , steps =
-                [ detective, privateDetective, inspector, villagerSpy ]
+                [ detective, privateDetective, inspector, villagerSpy, mafiaSpy ]
             , backgroundImage = "%PUBLIC_URL%/img/dawn.jpg"
             , textColor = "white"
         }
@@ -70,4 +70,17 @@ villagerSpy =
                     [ announcement "Der Bürger-Spion darf aufwachen und jemanden überprüfen.", silenceWarning ]
             , mode = stepModeByPartyAndRole Villagers Spy
             , isPlayerActive = always <| both (hasRole Spy) (hasParty Villagers)
+        }
+
+
+mafiaSpy : Step
+mafiaSpy =
+    Step
+        { abstractStep
+            | name = "Mafia-Spion"
+            , view =
+                gameView
+                    [ announcement "Der Mafia-Spion darf aufwachen und jemanden überprüfen.", silenceWarning ]
+            , mode = stepModeByPartyAndRole Mafia Spy
+            , isPlayerActive = always <| both (hasRole Spy) (hasParty Mafia)
         }
