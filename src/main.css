@@ -142,3 +142,7 @@ body,
 .card-text {
   white-space: pre-line;
 }
+
+#phase-viewport {
+  overflow: auto;
+}
