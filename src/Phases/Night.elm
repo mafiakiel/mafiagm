@@ -1,11 +1,11 @@
 module Phases.Night exposing (night)
 
 import Bootstrap.Button as Button
-import Data.Strings exposing (roleToString)
+import Data.Strings exposing (partyToString, roleToString)
 import FontAwesome exposing (bed, crosshairs, icon, shieldAlt)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (addKillMarkerPlayerControl, announcement, gameView, instruction, killPlayerControl, mafiaStep)
-import Types exposing (Action(..), Marker(..), Phase(..), PlayerControl, Role(..), Step(..))
+import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..), StepMode(..))
 import Util.Condition exposing (all, any, both)
 import Util.Phases exposing (stepModeByRole)
 import Util.Player exposing (hasMarker, hasRole, isAlive)
@@ -20,8 +20,15 @@ night =
             , steps =
                 [ wildHilda
                 , guardianAngel
+                , doctor
                 , mafia
                 , devil
+                , vampires
+                , secretAgent
+                , church
+                , zombies
+                , witch
+                , shoemaker
                 , deaths -- needs to stay at the end!
                 ]
             , backgroundImage = "%PUBLIC_URL%/img/night.jpg"
@@ -97,6 +104,15 @@ guardianAngelPlayerControl =
     }
 
 
+doctor : Step
+doctor =
+    Step
+        { abstractStep
+            | name = roleToString Doctor
+            , mode = always Skip
+        }
+
+
 mafia : Step
 mafia =
     Step
@@ -127,3 +143,57 @@ devilPlayerControl =
     , options = always [ Button.danger ]
     , condition = all [ isAlive, not << hasRole Devil, not << hasMarker DevilKill ]
     }
+
+
+vampires : Step
+vampires =
+    Step
+        { abstractStep
+            | name = partyToString Vampires
+            , mode = always Skip
+        }
+
+
+secretAgent : Step
+secretAgent =
+    Step
+        { abstractStep
+            | name = roleToString SecretAgent
+            , mode = always Skip
+        }
+
+
+church : Step
+church =
+    Step
+        { abstractStep
+            | name = "Kirche"
+            , mode = always Skip
+        }
+
+
+zombies : Step
+zombies =
+    Step
+        { abstractStep
+            | name = partyToString Zombies
+            , mode = always Skip
+        }
+
+
+witch : Step
+witch =
+    Step
+        { abstractStep
+            | name = roleToString Witch
+            , mode = always Skip
+        }
+
+
+shoemaker : Step
+shoemaker =
+    Step
+        { abstractStep
+            | name = roleToString Shoemaker
+            , mode = always Skip
+        }
