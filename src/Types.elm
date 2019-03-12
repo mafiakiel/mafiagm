@@ -163,6 +163,7 @@ type Marker
     | Converted
     | InLove
     | VisitedByHilda
+    | Muted
 
 
 type alias Flags =
