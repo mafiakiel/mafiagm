@@ -159,6 +159,9 @@ renderMarker marker =
     let
         options =
             [ Spacing.mr1 ]
+
+        publicOptions =
+            class "public" :: options
     in
     case marker of
         Kill ->
@@ -168,7 +171,7 @@ renderMarker marker =
             Badge.pillSuccess options [ text "PROTECC" ]
 
         Nominated position ->
-            Badge.pillInfo options [ icon award, text " ", text (String.fromInt position) ]
+            Badge.pillInfo publicOptions [ icon award, text " ", text (String.fromInt position) ]
 
         Converted ->
             Badge.pillSecondary options [ text "M" ]
