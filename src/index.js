@@ -13,3 +13,8 @@ Elm.Main.init({
 });
 
 registerServiceWorker();
+
+// prevent loss of state by reloading or pressing back
+if (process.env.NODE_ENV === "production") {
+  window.onbeforeunload = () => "this is not actually displayed"
+}
