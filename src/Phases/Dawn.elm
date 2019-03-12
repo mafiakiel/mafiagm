@@ -5,7 +5,7 @@ import Data.Strings exposing (roleToString)
 import FontAwesome exposing (icon, ribbon, volumeMute)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (announcement, gameView, silenceWarning)
-import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..))
+import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..), StepMode(..))
 import Util.Condition exposing (all, both)
 import Util.Phases exposing (stepModeByPartyAndRole, stepModeByRole)
 import Util.Player exposing (hasMarker, hasParty, hasRole, isAlive)
@@ -18,7 +18,16 @@ dawn =
         { abstractPhase
             | name = "Morgen"
             , steps =
-                [ detective, privateDetective, inspector, villagerSpy, mafiaSpy, muter, crackWhore ]
+                [ detective
+                , privateDetective
+                , inspector
+                , villagerSpy
+                , mafiaSpy
+                , muter
+                , crackWhore
+                , pathologist
+                , crimeSceneCleaner
+                ]
             , backgroundImage = "%PUBLIC_URL%/img/dawn.jpg"
             , textColor = "white"
         }
@@ -134,3 +143,21 @@ crackWhorePlayerControl =
     , options = always [ Button.success ]
     , condition = all [ isAlive, not << hasRole CrackWhore, not << hasMarker Alibi ]
     }
+
+
+pathologist : Step
+pathologist =
+    Step
+        { abstractStep
+            | name = roleToString Pathologist
+            , mode = always Skip
+        }
+
+
+crimeSceneCleaner : Step
+crimeSceneCleaner =
+    Step
+        { abstractStep
+            | name = roleToString CrimeSceneCleaner
+            , mode = always Skip
+        }

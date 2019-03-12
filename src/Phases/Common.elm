@@ -74,7 +74,10 @@ stepList state =
                         []
 
                 badges =
-                    if step.mode state == Fake then
+                    if step.mode state == Fake && stepIndex == state.currentStepIndex then
+                        [ Badge.badgeDanger [ Spacing.ml1 ] [ text "fake" ] ]
+
+                    else if step.mode state == Fake then
                         [ Badge.badgeSecondary [ Spacing.ml1 ] [ text "fake" ] ]
 
                     else
