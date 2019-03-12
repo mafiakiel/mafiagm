@@ -1,4 +1,4 @@
-module Data.Strings exposing (partyToString, roleToString)
+module Data.Strings exposing (cardTitle, partyToString, roleToString)
 
 import Types exposing (..)
 
@@ -76,7 +76,7 @@ roleToString role =
             "Schuster"
 
         Pope ->
-            "Paspt"
+            "Papst"
 
         Monk ->
             "Mönch"
@@ -129,3 +129,29 @@ partyToString party =
 
         Zombies ->
             "Zombies"
+
+
+cardTitle : Card -> String
+cardTitle card =
+    if card.role == Gardener && card.party == Mafia then
+        "Böser Gärtner"
+
+    else if card.role == None then
+        case card.party of
+            Villagers ->
+                "Normaler Bürger"
+
+            Mafia ->
+                "Normaler Mafioso"
+
+            Vampires ->
+                "Normaler Vampir"
+
+            Zombies ->
+                "Normaler Zombie"
+
+            TheEvil ->
+                "<does not exist>"
+
+    else
+        roleToString card.role

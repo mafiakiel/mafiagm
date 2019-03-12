@@ -93,7 +93,8 @@ body,
 
 #phase-viewport {
   padding: 15px;
-  width: 50%
+  width: 50%;
+  overflow-y: auto;
 }
 
 #game-container {
@@ -137,6 +138,10 @@ body,
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.pool-card .card-text {
+  white-space: pre-line;
 }
 
 .pool-card-amount {
