@@ -5,6 +5,8 @@ module Phases.Common exposing
     , instruction
     , killPlayerControl
     , mafiaStep
+    , silenceWarning
+    , warning
     )
 
 import Bootstrap.Alert as Alert
@@ -13,7 +15,7 @@ import Bootstrap.Button as Button
 import Bootstrap.ListGroup as ListGroup
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString)
-import FontAwesome exposing (bullhorn, crosshairs, icon, skull, tasks)
+import FontAwesome exposing (bullhorn, crosshairs, exclamationTriangle, icon, skull, tasks)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (id)
 import List exposing (length, map, range)
@@ -97,6 +99,19 @@ instruction content =
         [ Alert.h4 [] [ icon tasks, text " Aufgabe" ]
         , text content
         ]
+
+
+warning : String -> Html Msg
+warning content =
+    Alert.simpleDanger []
+        [ Alert.h4 [] [ icon exclamationTriangle, text " Achtung!" ]
+        , text content
+        ]
+
+
+silenceWarning : Html Msg
+silenceWarning =
+    warning "Das Ergebnis nicht ansagen, sondern per Handzeichen darstellen."
 
 
 killPlayerControl : (Player -> Bool) -> PlayerControl
