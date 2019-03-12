@@ -16,7 +16,13 @@ import Types exposing (Action(..), Msg(..), Phase(..), PlayerControl, State, Ste
 import Util.Condition exposing (both)
 import Util.Marker exposing (isNominatedMarker)
 import Util.Player exposing (isAlive, isNominated)
-import Util.Update exposing (removeMarkersFromAllPlayers, resetNextNominationPosition, setNominationCountdownRunning, setStealthMode)
+import Util.Update
+    exposing
+        ( removeMarkersFromAllPlayers
+        , resetNextNominationPosition
+        , setNominationCountdownRunning
+        , setStealthMode
+        )
 
 
 day : Phase
@@ -61,7 +67,6 @@ nominatePlayerControl =
 nominationCountdown : State -> Html Msg
 nominationCountdown state =
     let
-        {- A custom element is used so that the countdown state does not interfere with undo/redo -}
         remainingTime =
             Html.node "x-countdown"
                 [ property "duration" <| Encode.int state.nominationCountdownDuration
