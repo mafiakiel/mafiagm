@@ -1,9 +1,20 @@
-module Util.Phases exposing (getCurrentStep, stepAt, stepError, stepModeByParty, stepModeByRole, unwrapPhase, unwrapStep)
+module Util.Phases exposing
+    ( combineStepModes
+    , getCurrentStep
+    , stepAt
+    , stepError
+    , stepModeByParty
+    , stepModeByPartyAndRole
+    , stepModeByRole
+    , unwrapPhase
+    , unwrapStep
+    )
 
 import Html exposing (text)
-import List exposing (filter, map, member)
+import List exposing (any, filter, map, member)
 import List.Extra exposing (getAt)
 import Types exposing (Party, Phase(..), Role, State, Step(..), StepMode(..))
+import Util.Misc exposing (apply)
 import Util.Player exposing (isAlive)
 
 
@@ -87,6 +98,38 @@ stepModeByParty party state =
         Execute
 
     else if member party poolParties then
+        Fake
+
+    else
+        Skip
+
+
+stepModeByPartyAndRole : Party -> Role -> State -> StepMode
+stepModeByPartyAndRole party role state =
+    let
+        match playerOrCard =
+            playerOrCard.party == party && playerOrCard.role == role
+    in
+    if any match state.players then
+        Execute
+
+    else if any match state.undealtPool then
+        Fake
+
+    else
+        Skip
+
+
+combineStepModes : List (State -> StepMode) -> State -> StepMode
+combineStepModes modeProviders state =
+    let
+        modes =
+            map (apply state) modeProviders
+    in
+    if member Execute modes then
+        Execute
+
+    else if member Fake modes then
         Fake
 
     else

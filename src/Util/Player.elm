@@ -1,4 +1,4 @@
-module Util.Player exposing (hasId, hasParty, hasRole, isAlive, isInChurch, isNominated)
+module Util.Player exposing (hasId, hasMarker, hasParty, hasRole, isAlive, isInChurch, isNominated)
 
 import List exposing (any, member)
 import Types exposing (Marker(..), Party, Player, Role(..))
@@ -19,6 +19,11 @@ hasRole role player =
 hasParty : Party -> Player -> Bool
 hasParty party player =
     player.party == party
+
+
+hasMarker : Marker -> Player -> Bool
+hasMarker marker player =
+    member marker player.markers
 
 
 isInChurch : Player -> Bool

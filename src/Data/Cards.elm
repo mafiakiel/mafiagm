@@ -55,8 +55,6 @@ cardCategories =
                 """Wenn der Tatortreiniger im Spiel ist wird von den Gestorbenen nur die Partei (wie vom Dedektiv gefunden) laut angesagt. Der Tatortreiniger kann ein mal aufdecken und dann werden alle Rollen angesagt."""
             , createCard Villagers Orphan "Das Weisenkind sucht sich am Anfang des Spiels einen Mitspieler als Vorbild aus. Stirbt dieser Spieler am Tag wird das Waisenkind zum Mafioso."
             , createCard Villagers Copier "Der Kopierer darf sich ein Mal im Spiel die Zusatzrolle von einem anderen Spieler kopieren und diese ab dann ausüben."
-            , createCard Villagers Noips """Der noipS kann nachts nach einer Rolle fragen. Der Spielleiter muss dann die Person mit dieser Rolle pantomimisch nachmachen
-                                            (ohne Garantie auf Verständnis!)"""
             ]
       }
     , { name = "Bürger-Checks"
@@ -88,6 +86,8 @@ cardCategories =
             , createCard Villagers
                 Statistician
                 """Der Statistiker darf eine vom Spielleiter festgelegte Anzahl an Spielern aussuchen und bekommt mitgeteilt wie viele von ihnen zu den Bürgern gehören."""
+            , createCard Villagers Noips """Der noipS kann nachts nach einer Rolle fragen. Der Spielleiter muss dann die Person mit dieser Rolle pantomimisch nachmachen
+                                            (ohne Garantie auf Verständnis!)"""
             ]
       }
     , { name = "Mafia"

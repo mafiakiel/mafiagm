@@ -115,6 +115,10 @@ body,
   width: 35%;
 }
 
+#game-steplist .disabled {
+  color: #bebebe;
+}
+
 #game-children {
   flex-grow: 1;
 }

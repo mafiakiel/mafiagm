@@ -1,7 +1,7 @@
 module Util.Update exposing
     ( addMarkerToPlayer
     , removeMarkersFromAllPlayers
-    , resetNextNominationPostion
+    , resetNextNominationPosition
     , setNominationCountdownRunning
     , setStealthMode
     )
@@ -32,8 +32,8 @@ setStealthMode isEnabled state =
     { state | stealthMode = isEnabled }
 
 
-resetNextNominationPostion : State -> State
-resetNextNominationPostion state =
+resetNextNominationPosition : State -> State
+resetNextNominationPosition state =
     { state | nextNominationPosition = 1 }
 
 

@@ -122,7 +122,7 @@ partyToString party =
             "Mafia"
 
         Vampires ->
-            "Vampiere"
+            "Vampire"
 
         TheEvil ->
             "Das Böse"

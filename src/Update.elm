@@ -3,7 +3,7 @@ module Update exposing (update)
 import List exposing (length)
 import List.Extra exposing (filterNot, remove, updateIf)
 import Phases.Configuration exposing (configuration)
-import Phases.Dawn
+import Phases.Dawn exposing (muter)
 import Phases.Day
 import Phases.FirstNight
 import Phases.Night
@@ -24,7 +24,7 @@ import Types
 import UndoList exposing (UndoList)
 import Util.Phases exposing (stepAt, unwrapPhase, unwrapStep)
 import Util.Player exposing (hasId)
-import Util.Update exposing (addMarkerToPlayer, setNominationCountdownRunning, setStealthMode)
+import Util.Update exposing (addMarkerToPlayer, removeMarkersFromAllPlayers, setNominationCountdownRunning, setStealthMode)
 import Uuid exposing (Uuid, uuidGenerator)
 
 
@@ -97,6 +97,7 @@ updateState action state =
 
         KillPlayer id ->
             { state | players = updateIf (hasId id) (\p -> { p | alive = False }) state.players }
+                |> cleanupAfterKill
 
         EndGame ->
             { state | currentPhase = Phase firstPhase, currentStepIndex = 0 }
@@ -119,6 +120,15 @@ updateState action state =
 
         NominationCountdownFinished ->
             stepForward
+
+
+cleanupAfterKill : State -> State
+cleanupAfterKill state =
+    if (unwrapStep muter).mode state == Skip then
+        removeMarkersFromAllPlayers ((==) Muted) state
+
+    else
+        state
 
 
 getNextStep : ( Phase, Int ) -> State -> ( Phase, Int )

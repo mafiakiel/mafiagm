@@ -1,16 +1,41 @@
-module Phases.Common exposing (announcement, gameView, instruction, killPlayerControl)
+module Phases.Common exposing
+    ( addKillMarkerPlayerControl
+    , announcement
+    , gameView
+    , instruction
+    , killPlayerControl
+    , mafiaStep
+    , silenceWarning
+    , warning
+    )
 
 import Bootstrap.Alert as Alert
 import Bootstrap.Badge as Badge
 import Bootstrap.Button as Button
 import Bootstrap.ListGroup as ListGroup
 import Bootstrap.Utilities.Spacing as Spacing
-import FontAwesome exposing (bullhorn, icon, skull, tasks)
+import Data.Strings exposing (partyToString)
+import FontAwesome exposing (bullhorn, crosshairs, exclamationTriangle, icon, skull, tasks)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (id)
 import List exposing (length, map, range)
-import Types exposing (Action(..), Msg, Player, PlayerControl, State, StepMode(..))
-import Util.Phases exposing (stepAt, unwrapPhase, unwrapStep)
+import Phases.Abstract exposing (abstractStep)
+import Types
+    exposing
+        ( Action(..)
+        , Marker(..)
+        , Msg
+        , Party(..)
+        , Player
+        , PlayerControl
+        , Role(..)
+        , State
+        , Step
+        , StepMode(..)
+        )
+import Util.Condition exposing (any)
+import Util.Phases exposing (combineStepModes, stepAt, stepModeByParty, stepModeByRole, unwrapPhase, unwrapStep)
+import Util.Player exposing (hasParty, hasRole)
 
 
 gameView : List (Html Msg) -> State -> Html Msg
@@ -49,7 +74,10 @@ stepList state =
                         []
 
                 badges =
-                    if step.mode state == Fake then
+                    if step.mode state == Fake && stepIndex == state.currentStepIndex then
+                        [ Badge.badgeDanger [ Spacing.ml1 ] [ text "fake" ] ]
+
+                    else if step.mode state == Fake then
                         [ Badge.badgeSecondary [ Spacing.ml1 ] [ text "fake" ] ]
 
                     else
@@ -76,10 +104,40 @@ instruction content =
         ]
 
 
+warning : String -> Html Msg
+warning content =
+    Alert.simpleDanger []
+        [ Alert.h4 [] [ icon exclamationTriangle, text " Achtung!" ]
+        , text content
+        ]
+
+
+silenceWarning : Html Msg
+silenceWarning =
+    warning "Das Ergebnis nicht ansagen, sondern per Handzeichen darstellen."
+
+
 killPlayerControl : (Player -> Bool) -> PlayerControl
 killPlayerControl condition =
     { label = icon skull
     , action = \player -> KillPlayer player.id
     , options = always [ Button.danger ]
     , condition = condition
+    }
+
+
+addKillMarkerPlayerControl : (Player -> Bool) -> PlayerControl
+addKillMarkerPlayerControl condition =
+    { label = icon crosshairs
+    , action = \player -> AddMarker player.id Kill
+    , options = always [ Button.danger ]
+    , condition = condition
+    }
+
+
+mafiaStep =
+    { abstractStep
+        | name = partyToString Mafia
+        , isPlayerActive = always <| any [ hasParty Mafia, hasRole Devil ]
+        , mode = combineStepModes [ stepModeByParty Mafia, stepModeByRole Devil ]
     }

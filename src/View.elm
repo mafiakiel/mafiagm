@@ -9,7 +9,7 @@ import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString, roleToString)
-import FontAwesome exposing (angleRight, award, exclamationTriangle, eye, eyeSlash, heart, icon, plus, redo, timesCircle, undo)
+import FontAwesome exposing (angleRight, award, bed, crosshairs, exclamationTriangle, eye, eyeSlash, heart, icon, plus, redo, ribbon, shieldAlt, timesCircle, undo, volumeMute)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (class, href, id, rel, style)
 import List exposing (filter, length, map)
@@ -165,10 +165,13 @@ renderMarker marker =
     in
     case marker of
         Kill ->
-            Badge.pillDanger options [ text "KILL" ]
+            Badge.pillDanger options [ icon crosshairs ]
+
+        DevilKill ->
+            Badge.pillDanger options [ text "Teufel ", icon crosshairs ]
 
         Protected ->
-            Badge.pillSuccess options [ text "PROTECC" ]
+            Badge.pillSuccess options [ icon shieldAlt ]
 
         Nominated position ->
             Badge.pillInfo publicOptions [ icon award, text " ", text (String.fromInt position) ]
@@ -178,6 +181,15 @@ renderMarker marker =
 
         InLove ->
             Badge.pillSecondary options [ icon heart ]
+
+        VisitedByHilda ->
+            Badge.badgeInfo options [ icon bed ]
+
+        Muted ->
+            Badge.pillDark publicOptions [ icon volumeMute ]
+
+        Alibi ->
+            Badge.pillSuccess options [ icon ribbon ]
 
 
 phaseContent : State -> Html Msg

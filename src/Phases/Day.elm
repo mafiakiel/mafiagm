@@ -12,11 +12,17 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (announcement, gameView, instruction, killPlayerControl)
-import Types exposing (Action(..), Msg(..), Phase(..), PlayerControl, State, Step(..))
-import Util.Condition exposing (both)
+import Types exposing (Action(..), Marker(..), Msg(..), Phase(..), PlayerControl, State, Step(..))
+import Util.Condition exposing (all, any, both)
 import Util.Marker exposing (isNominatedMarker)
-import Util.Player exposing (isAlive, isNominated)
-import Util.Update exposing (removeMarkersFromAllPlayers, resetNextNominationPostion, setNominationCountdownRunning, setStealthMode)
+import Util.Player exposing (hasMarker, isAlive, isNominated)
+import Util.Update
+    exposing
+        ( removeMarkersFromAllPlayers
+        , resetNextNominationPosition
+        , setNominationCountdownRunning
+        , setStealthMode
+        )
 
 
 day : Phase
@@ -44,7 +50,7 @@ nomination =
                         ]
                         state
             , playerControls = [ nominatePlayerControl ]
-            , init = resetNextNominationPostion >> setStealthMode True
+            , init = resetNextNominationPosition >> setStealthMode True
             , cleanup = setNominationCountdownRunning False
         }
 
@@ -61,7 +67,6 @@ nominatePlayerControl =
 nominationCountdown : State -> Html Msg
 nominationCountdown state =
     let
-        {- A custom element is used so that the countdown state does not interfere with undo/redo -}
         remainingTime =
             Html.node "x-countdown"
                 [ property "duration" <| Encode.int state.nominationCountdownDuration
@@ -122,7 +127,8 @@ hanging =
                     , announcement "... wurde gehängt. Er/sie war ..."
                     , announcement "Alle schlafen ein."
                     ]
-            , playerControls = [ killPlayerControl (both isNominated isAlive) ]
+            , playerControls = [ killPlayerControl <| all [ isAlive, isNominated, not << hasMarker Alibi ] ]
             , isPlayerActive = always isNominated
-            , cleanup = removeMarkersFromAllPlayers isNominatedMarker >> setStealthMode False
+            , init = setStealthMode False
+            , cleanup = removeMarkersFromAllPlayers <| any [ isNominatedMarker, (==) Alibi ]
         }
