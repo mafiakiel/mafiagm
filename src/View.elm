@@ -9,7 +9,7 @@ import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString, roleToString)
-import FontAwesome exposing (angleRight, award, bed, crosshairs, exclamationTriangle, eye, eyeSlash, heart, icon, plus, redo, ribbon, shieldAlt, timesCircle, undo, volumeMute)
+import FontAwesome exposing (angleRight, award, bed, crosshairs, exclamation, exclamationTriangle, eye, eyeSlash, heart, icon, plus, redo, ribbon, shieldAlt, timesCircle, undo, volumeMute)
 import Html exposing (Html, div, h1, h2, node, text)
 import Html.Attributes exposing (class, href, id, rel, style)
 import List exposing (filter, length, map)
@@ -168,7 +168,7 @@ renderMarker marker =
             Badge.pillDanger options [ icon crosshairs ]
 
         DevilKill ->
-            Badge.pillDanger options [ text "Teufel ", icon crosshairs ]
+            Badge.pillDanger options [ icon crosshairs, text " ", icon exclamation ]
 
         Protected ->
             Badge.pillSuccess options [ icon shieldAlt ]
