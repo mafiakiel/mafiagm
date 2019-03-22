@@ -11,7 +11,7 @@ import Data.Strings exposing (..)
 import FontAwesome exposing (icon, minus, plus, trash)
 import Html exposing (Html, div, h2, small, span, text)
 import Html.Attributes exposing (class)
-import List exposing (drop, filter, length, map, member, sum)
+import List exposing (filter, length, map, member, sum)
 import List.Extra exposing (count, notMember, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (instruction)
@@ -59,8 +59,8 @@ pool =
             , view = poolView
             , stepForwardVeto =
                 \state ->
-                    if length state.players > length state.pool then
-                        Just "Es sind weniger Karten im Pool, als es Spieler gibt."
+                    if length state.players /= length state.pool then
+                        Just "Es müssen genau so viele Karten im Pool sein, wie es Spieler gibt."
 
                     else
                         Nothing
@@ -102,19 +102,23 @@ poolView state =
             else
                 []
 
+        fakeButton =
+            Button.button [ Button.outlineDark ] [ text "Fake" ]
+
         cardToBootstrapCard card =
             BCard.config ([ BCard.attrs [ class "pool-card" ] ] ++ cardOptions card)
                 |> BCard.headerH5 [] [ text (cardTitle card) ]
                 |> BCard.block [] [ BCardBlock.text [] [ text card.text ] ]
                 |> BCard.footer []
                     [ Button.button
-                        [ Button.secondary
+                        [ Button.dark
                         , Button.onClick <| Action <| RemoveCardFromPool card
                         , Button.disabled <| notMember card state.pool
                         ]
                         [ icon minus ]
                     , span [ class "pool-card-amount" ] [ text <| String.fromInt <| amountInPool card ]
-                    , Button.button [ Button.secondary, Button.onClick <| Action <| AddCardToPool card ] [ icon plus ]
+                    , Button.button [ Button.dark, Button.onClick <| Action <| AddCardToPool card ] [ icon plus ]
+                    , fakeButton
                     ]
 
         selectCategoryAction category =
@@ -160,5 +164,4 @@ dealCardsInit state =
     { state
         | seed = newSeed
         , players = map dealCardToPlayer cardPlayerPairs
-        , undealtPool = drop (length cardPlayerPairs) shuffledPool
     }
