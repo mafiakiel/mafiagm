@@ -1,10 +1,20 @@
-module Model exposing (init)
+module Model exposing (init, initCustomCardModal)
 
+import Bootstrap.Modal as Modal
 import Bootstrap.Tab as Tab
 import Phases.Configuration exposing (configuration)
 import Random
-import Types exposing (Action, Flags, Model, Msg, State, Step(..))
+import Types exposing (Action, CustomCardModal, Flags, Model, Msg, Party(..), State, Step(..))
 import UndoList exposing (UndoList)
+
+
+initCustomCardModal : CustomCardModal
+initCustomCardModal =
+    { visibility = Modal.hidden
+    , role = ""
+    , party = Villagers
+    , steps = []
+    }
 
 
 initState : Flags -> State
@@ -22,6 +32,7 @@ initState flags =
     , nominationCountdownDuration = 10
     , nominationCountdownRunning = False
     , customCards = []
+    , customCardModal = initCustomCardModal
     }
 
 

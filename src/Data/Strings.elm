@@ -1,6 +1,16 @@
-module Data.Strings exposing (cardTitle, partyToString, roleToString)
+module Data.Strings exposing
+    ( cardTitle
+    , customCardStepDictionary
+    , customCardText
+    , partyDictionary
+    , partyToString
+    , roleToString
+    )
 
+import List exposing (length, map)
+import String exposing (join)
 import Types exposing (..)
+import Util.Dictionary as Dictionary exposing (Dictionary)
 
 
 roleToString : Role -> String
@@ -111,24 +121,23 @@ roleToString role =
         Noips ->
             "noipS"
 
+        CustomRole name ->
+            name
+
 
 partyToString : Party -> String
-partyToString party =
-    case party of
-        Villagers ->
-            "Bürger"
+partyToString =
+    Dictionary.getString partyDictionary
 
-        Mafia ->
-            "Mafia"
 
-        Vampires ->
-            "Vampire"
-
-        TheEvil ->
-            "Das Böse"
-
-        Zombies ->
-            "Zombies"
+partyDictionary : Dictionary Party
+partyDictionary =
+    [ ( Villagers, "Bürger" )
+    , ( Mafia, "Mafia" )
+    , ( Vampires, "Vampire" )
+    , ( TheEvil, "Das Böse" )
+    , ( Zombies, "Zombies" )
+    ]
 
 
 cardTitle : Card -> String
@@ -155,3 +164,23 @@ cardTitle card =
 
     else
         roleToString card.role
+
+
+customCardStepDictionary : Dictionary CustomCardStep
+customCardStepDictionary =
+    [ ( WakeUpAtFirstNight, "in der ersten Nacht" )
+    , ( WakeUpAtNight, "in der Nacht" )
+    , ( WakeUpAtDawn, "am Morgen" )
+    ]
+
+
+customCardText : CustomCardModal -> String
+customCardText card =
+    "Partei: "
+        ++ partyToString card.party
+        ++ (if length card.steps == 0 then
+                "\n\nWacht nicht auf."
+
+            else
+                "\n\nWacht auf: " ++ join ", " (map (Dictionary.getString customCardStepDictionary) card.steps)
+           )

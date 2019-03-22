@@ -2,6 +2,9 @@ module Types exposing
     ( Action(..)
     , Card
     , CardCategory
+    , CardType(..)
+    , CustomCardModal
+    , CustomCardStep(..)
     , Flags
     , Marker(..)
     , Model
@@ -19,6 +22,7 @@ module Types exposing
 -- All types are defined here in a central place because Elm doesn't allow circular file dependencies.
 
 import Bootstrap.Button as Button
+import Bootstrap.Modal as Modal
 import Bootstrap.Tab as Tab
 import Html exposing (Html)
 import Random
@@ -48,6 +52,7 @@ type alias State =
     , nominationCountdownDuration : Int
     , nominationCountdownRunning : Bool
     , customCards : List Card
+    , customCardModal : CustomCardModal
     }
 
 
@@ -133,13 +138,26 @@ type Role
     | Satanist
     | Copier
     | Noips
+    | CustomRole String
 
 
 type alias Card =
     { party : Party
     , role : Role
     , text : String
+    , cardType : CardType
     }
+
+
+type CardType
+    = BuiltInCard
+    | CustomCard (List CustomCardStep)
+
+
+type CustomCardStep
+    = WakeUpAtFirstNight
+    | WakeUpAtNight
+    | WakeUpAtDawn
 
 
 type alias CardCategory =
@@ -168,6 +186,14 @@ type Marker
     | Alibi
 
 
+type alias CustomCardModal =
+    { visibility : Modal.Visibility
+    , role : String
+    , party : Party
+    , steps : List CustomCardStep
+    }
+
+
 type alias Flags =
     { seed : Int }
 
@@ -194,6 +220,8 @@ type Action
     | SetNominationCountdownDuration Int
     | SetNominationCountdownRunning Bool
     | NominationCountdownFinished
+    | SetCustomCardModal CustomCardModal
+    | CreateCustomCard
 
 
 type Msg

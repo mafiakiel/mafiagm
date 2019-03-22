@@ -1,6 +1,6 @@
 module Data.Cards exposing (cardCategories, customCategoryName)
 
-import Types exposing (Card, CardCategory, Party(..), Role(..), State)
+import Types exposing (Card, CardCategory, CardType(..), Party(..), Role(..), State)
 
 
 {-| This is used to identify the category where the "add card" button should be displayed.
@@ -185,4 +185,5 @@ createCard party role text =
     { party = party
     , role = role
     , text = text
+    , cardType = BuiltInCard
     }
