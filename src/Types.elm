@@ -42,7 +42,7 @@ type alias State =
     , currentStepIndex : Int
     , pool : List Card --the same card can be added to the pool multiple times
     , selectedCardCategory : Tab.State
-    , undealtPool : List Card
+    , fakePool : List Card
     , nextNominationPosition : Int
     , stealthMode : Bool
     , nominationCountdownDuration : Int
@@ -183,6 +183,8 @@ type Action
     | SelectCardCategory Tab.State
     | AddCardToPool Card
     | RemoveCardFromPool Card
+    | AddCardToFakePool Card
+    | RemoveCardFromFakePool Card
     | AddMarker Uuid Marker
     | KillPlayer Uuid
     | EndGame

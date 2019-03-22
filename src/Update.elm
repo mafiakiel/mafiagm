@@ -1,6 +1,6 @@
 module Update exposing (update)
 
-import List exposing (length)
+import List exposing (filter, length)
 import List.Extra exposing (filterNot, remove, updateIf)
 import Phases.Configuration exposing (configuration)
 import Phases.Dawn exposing (muter)
@@ -91,6 +91,12 @@ updateState action state =
 
         RemoveCardFromPool card ->
             { state | pool = remove card state.pool }
+
+        AddCardToFakePool card ->
+            { state | pool = filter ((/=) card) state.pool, fakePool = card :: state.fakePool }
+
+        RemoveCardFromFakePool card ->
+            { state | fakePool = remove card state.fakePool }
 
         AddMarker playerId marker ->
             addMarkerToPlayer playerId marker state

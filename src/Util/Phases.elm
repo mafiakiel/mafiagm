@@ -70,13 +70,13 @@ stepModeByRole role state =
                 |> filter isAlive
                 |> map (\player -> player.role)
 
-        poolRoles =
-            map (\card -> card.role) state.undealtPool
+        fakeRoles =
+            map (\card -> card.role) state.fakePool
     in
     if member role playerRoles then
         Execute
 
-    else if member role poolRoles then
+    else if member role fakeRoles then
         Fake
 
     else
@@ -91,13 +91,13 @@ stepModeByParty party state =
                 |> filter isAlive
                 |> map (\player -> player.party)
 
-        poolParties =
-            map (\card -> card.party) state.undealtPool
+        fakeParties =
+            map (\card -> card.party) state.fakePool
     in
     if member party playerParties then
         Execute
 
-    else if member party poolParties then
+    else if member party fakeParties then
         Fake
 
     else
@@ -113,7 +113,7 @@ stepModeByPartyAndRole party role state =
     if any match state.players then
         Execute
 
-    else if any match state.undealtPool then
+    else if any match state.fakePool then
         Fake
 
     else

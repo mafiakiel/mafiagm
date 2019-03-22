@@ -8,16 +8,17 @@ import Bootstrap.Tab as Tab
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Cards exposing (cardCategories)
 import Data.Strings exposing (..)
-import FontAwesome exposing (icon, minus, plus, trash)
+import FontAwesome exposing (check, icon, minus, plus, trash)
 import Html exposing (Html, div, h2, small, span, text)
 import Html.Attributes exposing (class)
-import List exposing (drop, filter, length, map, member, sum)
+import List exposing (filter, length, map, member, sum)
 import List.Extra exposing (count, notMember, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (instruction)
 import Random
 import Random.List exposing (shuffle)
 import Types exposing (Action(..), Msg(..), Party(..), Phase(..), PlayerControl, Role(..), State, Step(..))
+import Util.Condition exposing (conditionalList)
 
 
 configuration : Phase
@@ -59,8 +60,8 @@ pool =
             , view = poolView
             , stepForwardVeto =
                 \state ->
-                    if length state.players > length state.pool then
-                        Just "Es sind weniger Karten im Pool, als es Spieler gibt."
+                    if length state.players /= length state.pool then
+                        Just "Es müssen genau so viele Karten im Pool sein, wie es Spieler gibt."
 
                     else
                         Nothing
@@ -76,14 +77,16 @@ poolView state =
                 |> map length
                 |> sum
 
-        categoryTabLabel category =
-            if cardsInPool category > 0 then
-                [ text category.name
-                , Badge.pillPrimary [ Spacing.ml1 ] [ text <| String.fromInt <| cardsInPool category ]
-                ]
+        cardsInFakePool category =
+            filter (\c -> member c state.fakePool) category.cards
+                |> length
 
-            else
-                [ text category.name ]
+        categoryTabLabel category =
+            conditionalList
+                [ ( True, text category.name )
+                , ( cardsInPool category > 0, Badge.pillSuccess [ Spacing.ml1 ] [ text <| String.fromInt <| cardsInPool category ] )
+                , ( cardsInFakePool category > 0, Badge.pillDark [ Spacing.ml1 ] [ text <| String.fromInt <| cardsInFakePool category ] )
+                ]
 
         categoryToTab category =
             Tab.item
@@ -99,8 +102,19 @@ poolView state =
             if member card state.pool then
                 [ BCard.outlineSuccess ]
 
+            else if member card state.fakePool then
+                [ BCard.outlineDark ]
+
             else
                 []
+
+        fakeButton card =
+            if member card state.fakePool then
+                Button.button [ Button.dark, Button.onClick <| Action <| RemoveCardFromFakePool card ]
+                    [ icon check, text " Fake" ]
+
+            else
+                Button.button [ Button.outlineDark, Button.onClick <| Action <| AddCardToFakePool card ] [ text "Fake" ]
 
         cardToBootstrapCard card =
             BCard.config ([ BCard.attrs [ class "pool-card" ] ] ++ cardOptions card)
@@ -108,13 +122,19 @@ poolView state =
                 |> BCard.block [] [ BCardBlock.text [] [ text card.text ] ]
                 |> BCard.footer []
                     [ Button.button
-                        [ Button.secondary
+                        [ Button.dark
                         , Button.onClick <| Action <| RemoveCardFromPool card
                         , Button.disabled <| notMember card state.pool
                         ]
                         [ icon minus ]
                     , span [ class "pool-card-amount" ] [ text <| String.fromInt <| amountInPool card ]
-                    , Button.button [ Button.secondary, Button.onClick <| Action <| AddCardToPool card ] [ icon plus ]
+                    , Button.button
+                        [ Button.dark
+                        , Button.onClick <| Action <| AddCardToPool card
+                        , Button.disabled <| member card state.fakePool
+                        ]
+                        [ icon plus ]
+                    , fakeButton card
                     ]
 
         selectCategoryAction category =
@@ -160,5 +180,4 @@ dealCardsInit state =
     { state
         | seed = newSeed
         , players = map dealCardToPlayer cardPlayerPairs
-        , undealtPool = drop (length cardPlayerPairs) shuffledPool
     }

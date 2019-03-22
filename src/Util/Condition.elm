@@ -1,6 +1,6 @@
-module Util.Condition exposing (all, any, both)
+module Util.Condition exposing (all, any, both, conditionalList)
 
-import List exposing (map, member)
+import List exposing (filter, map, member)
 import Util.Misc exposing (apply)
 
 
@@ -26,3 +26,12 @@ any : List (a -> Bool) -> a -> Bool
 any conditions value =
     map (apply value) conditions
         |> member True
+
+
+{-| Takes a list of condition/value tuples and returns a list of all values where the condition returns true.
+-}
+conditionalList : List ( Bool, a ) -> List a
+conditionalList list =
+    list
+        |> filter (\( condition, _ ) -> condition)
+        |> map (\( _, value ) -> value)
