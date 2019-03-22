@@ -18,6 +18,7 @@ import Phases.Common exposing (instruction)
 import Random
 import Random.List exposing (shuffle)
 import Types exposing (Action(..), Msg(..), Party(..), Phase(..), PlayerControl, Role(..), State, Step(..))
+import Util.Condition exposing (conditionalList)
 
 
 configuration : Phase
@@ -76,14 +77,16 @@ poolView state =
                 |> map length
                 |> sum
 
-        categoryTabLabel category =
-            if cardsInPool category > 0 then
-                [ text category.name
-                , Badge.pillPrimary [ Spacing.ml1 ] [ text <| String.fromInt <| cardsInPool category ]
-                ]
+        cardsInFakePool category =
+            filter (\c -> member c state.fakePool) category.cards
+                |> length
 
-            else
-                [ text category.name ]
+        categoryTabLabel category =
+            conditionalList
+                [ ( True, text category.name )
+                , ( cardsInPool category > 0, Badge.pillSuccess [ Spacing.ml1 ] [ text <| String.fromInt <| cardsInPool category ] )
+                , ( cardsInFakePool category > 0, Badge.pillDark [ Spacing.ml1 ] [ text <| String.fromInt <| cardsInFakePool category ] )
+                ]
 
         categoryToTab category =
             Tab.item
