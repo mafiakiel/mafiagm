@@ -183,6 +183,8 @@ type Action
     | SelectCardCategory Tab.State
     | AddCardToPool Card
     | RemoveCardFromPool Card
+    | AddCardToFakePool Card
+    | RemoveCardFromFakePool Card
     | AddMarker Uuid Marker
     | KillPlayer Uuid
     | EndGame

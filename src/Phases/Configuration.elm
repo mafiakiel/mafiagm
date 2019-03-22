@@ -8,7 +8,7 @@ import Bootstrap.Tab as Tab
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Cards exposing (cardCategories)
 import Data.Strings exposing (..)
-import FontAwesome exposing (icon, minus, plus, trash)
+import FontAwesome exposing (check, icon, minus, plus, trash)
 import Html exposing (Html, div, h2, small, span, text)
 import Html.Attributes exposing (class)
 import List exposing (filter, length, map, member, sum)
@@ -99,11 +99,19 @@ poolView state =
             if member card state.pool then
                 [ BCard.outlineSuccess ]
 
+            else if member card state.fakePool then
+                [ BCard.outlineDark ]
+
             else
                 []
 
-        fakeButton =
-            Button.button [ Button.outlineDark ] [ text "Fake" ]
+        fakeButton card =
+            if member card state.fakePool then
+                Button.button [ Button.dark, Button.onClick <| Action <| RemoveCardFromFakePool card ]
+                    [ icon check, text " Fake" ]
+
+            else
+                Button.button [ Button.outlineDark, Button.onClick <| Action <| AddCardToFakePool card ] [ text "Fake" ]
 
         cardToBootstrapCard card =
             BCard.config ([ BCard.attrs [ class "pool-card" ] ] ++ cardOptions card)
@@ -117,8 +125,13 @@ poolView state =
                         ]
                         [ icon minus ]
                     , span [ class "pool-card-amount" ] [ text <| String.fromInt <| amountInPool card ]
-                    , Button.button [ Button.dark, Button.onClick <| Action <| AddCardToPool card ] [ icon plus ]
-                    , fakeButton
+                    , Button.button
+                        [ Button.dark
+                        , Button.onClick <| Action <| AddCardToPool card
+                        , Button.disabled <| member card state.fakePool
+                        ]
+                        [ icon plus ]
+                    , fakeButton card
                     ]
 
         selectCategoryAction category =
