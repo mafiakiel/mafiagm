@@ -21,6 +21,7 @@ initState flags =
     , stealthMode = False
     , nominationCountdownDuration = 10
     , nominationCountdownRunning = False
+    , customCards = []
     }
 
 

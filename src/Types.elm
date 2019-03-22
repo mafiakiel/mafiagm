@@ -47,6 +47,7 @@ type alias State =
     , stealthMode : Bool
     , nominationCountdownDuration : Int
     , nominationCountdownRunning : Bool
+    , customCards : List Card
     }
 
 

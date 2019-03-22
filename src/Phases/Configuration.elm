@@ -1,4 +1,4 @@
-module Phases.Configuration exposing (configuration, rules)
+module Phases.Configuration exposing (configuration)
 
 import Bootstrap.Badge as Badge
 import Bootstrap.Button as Button
@@ -6,10 +6,10 @@ import Bootstrap.Card as BCard
 import Bootstrap.Card.Block as BCardBlock
 import Bootstrap.Tab as Tab
 import Bootstrap.Utilities.Spacing as Spacing
-import Data.Cards exposing (cardCategories)
+import Data.Cards exposing (cardCategories, customCategoryName)
 import Data.Strings exposing (..)
 import FontAwesome exposing (check, icon, minus, plus, trash)
-import Html exposing (Html, div, h2, small, span, text)
+import Html exposing (Html, br, div, h2, small, span, text)
 import Html.Attributes exposing (class)
 import List exposing (filter, length, map, member, sum)
 import List.Extra exposing (count, notMember, zip)
@@ -43,13 +43,15 @@ deletePlayerControl =
     }
 
 
-rules : Step
-rules =
-    Step
-        { abstractStep
-            | name = "Regeln"
-            , view = always <| text "Hier könnten Ihre Regeln stehen!"
-        }
+
+{- rules : Step
+   rules =
+       Step
+           { abstractStep
+               | name = "Regeln"
+               , view = always <| text "Hier könnten Ihre Regeln stehen!"
+           }
+-}
 
 
 pool : Step
@@ -88,11 +90,27 @@ poolView state =
                 , ( cardsInFakePool category > 0, Badge.pillDark [ Spacing.ml1 ] [ text <| String.fromInt <| cardsInFakePool category ] )
                 ]
 
+        additionalTabContent category =
+            if category.name == customCategoryName then
+                [ BCard.config []
+                    |> BCard.block []
+                        [ BCardBlock.text []
+                            [ text "Hier kannst du eigene Karten erstellen."
+                            , br [] []
+                            , br [] []
+                            , Button.button [ Button.primary ] [ icon plus, text " Karte hinzufügen" ]
+                            ]
+                        ]
+                ]
+
+            else
+                []
+
         categoryToTab category =
             Tab.item
                 { id = category.name
                 , link = Tab.link [] <| categoryTabLabel category
-                , pane = Tab.pane [ Spacing.mt3 ] [ BCard.columns (map cardToBootstrapCard category.cards) ]
+                , pane = Tab.pane [ Spacing.mt3 ] [ BCard.columns (map cardToBootstrapCard category.cards ++ additionalTabContent category) ]
                 }
 
         amountInPool card =
@@ -147,7 +165,7 @@ poolView state =
                 [ text " (nicht verteilte Karten werden gefaket)" ]
             ]
         , Tab.config selectCategoryAction
-            |> Tab.items (map categoryToTab cardCategories)
+            |> Tab.items (map categoryToTab (cardCategories state))
             |> Tab.view state.selectedCardCategory
         ]
 
