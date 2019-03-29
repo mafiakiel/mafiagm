@@ -4,8 +4,8 @@ import Bootstrap.Button as Button
 import Data.Strings exposing (roleToString)
 import FontAwesome exposing (icon, ribbon, volumeMute)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Phases.Common exposing (announcement, gameView, silenceWarning)
-import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..), StepMode(..))
+import Phases.Common exposing (customCardsStep, gameView, silenceWarning, simpleAnnouncement)
+import Types exposing (Action(..), CustomCardStep(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..), StepMode(..))
 import Util.Condition exposing (all, both)
 import Util.Phases exposing (stepModeByPartyAndRole, stepModeByRole)
 import Util.Player exposing (hasMarker, hasParty, hasRole, isAlive)
@@ -27,6 +27,7 @@ dawn =
                 , crackWhore
                 , pathologist
                 , crimeSceneCleaner
+                , customCardsStep WakeUpAtDawn
                 ]
             , backgroundImage = "%PUBLIC_URL%/img/dawn.jpg"
             , textColor = "white"
@@ -40,7 +41,7 @@ detective =
             | name = roleToString Detective
             , view =
                 gameView
-                    [ announcement "Der Detektiv darf aufwachen und jemanden überprüfen." ]
+                    [ simpleAnnouncement "Der Detektiv darf aufwachen und jemanden überprüfen." ]
             , mode = stepModeByRole Detective
             , isPlayerActive = always (hasRole Detective)
         }
@@ -53,7 +54,7 @@ privateDetective =
             | name = roleToString PrivateDetective
             , view =
                 gameView
-                    [ announcement "Der Privatdetektiv darf aufwachen und jemanden überprüfen.", silenceWarning ]
+                    [ simpleAnnouncement "Der Privatdetektiv darf aufwachen und jemanden überprüfen.", silenceWarning ]
             , mode = stepModeByRole PrivateDetective
             , isPlayerActive = always (hasRole PrivateDetective)
         }
@@ -66,7 +67,7 @@ inspector =
             | name = roleToString Inspector
             , view =
                 gameView
-                    [ announcement "Der Inspektor darf aufwachen und jemanden überprüfen." ]
+                    [ simpleAnnouncement "Der Inspektor darf aufwachen und jemanden überprüfen." ]
             , mode = stepModeByRole Inspector
             , isPlayerActive = always (hasRole Inspector)
         }
@@ -79,7 +80,7 @@ villagerSpy =
             | name = "Bürger-Spion"
             , view =
                 gameView
-                    [ announcement "Der Bürger-Spion darf aufwachen und jemanden überprüfen.", silenceWarning ]
+                    [ simpleAnnouncement "Der Bürger-Spion darf aufwachen und jemanden überprüfen.", silenceWarning ]
             , mode = stepModeByPartyAndRole Villagers Spy
             , isPlayerActive = always <| both (hasRole Spy) (hasParty Villagers)
         }
@@ -92,7 +93,7 @@ mafiaSpy =
             | name = "Mafia-Spion"
             , view =
                 gameView
-                    [ announcement "Der Mafia-Spion darf aufwachen und jemanden überprüfen.", silenceWarning ]
+                    [ simpleAnnouncement "Der Mafia-Spion darf aufwachen und jemanden überprüfen.", silenceWarning ]
             , mode = stepModeByPartyAndRole Mafia Spy
             , isPlayerActive = always <| both (hasRole Spy) (hasParty Mafia)
         }
@@ -105,7 +106,7 @@ muter =
             | name = roleToString Muter
             , view =
                 gameView
-                    [ announcement "Der Muter darf aufwachen und jemanden muten." ]
+                    [ simpleAnnouncement "Der Muter darf aufwachen und jemanden muten." ]
             , mode = stepModeByRole Muter
             , isPlayerActive = always (hasRole Muter)
             , playerControls = [ muterPlayerControl ]
@@ -129,7 +130,7 @@ crackWhore =
             | name = roleToString CrackWhore
             , view =
                 gameView
-                    [ announcement "Die Nutte darf aufwachen und jemandem ein Alibi geben." ]
+                    [ simpleAnnouncement "Die Nutte darf aufwachen und jemandem ein Alibi geben." ]
             , mode = stepModeByRole CrackWhore
             , isPlayerActive = always (hasRole CrackWhore)
             , playerControls = [ crackWhorePlayerControl ]

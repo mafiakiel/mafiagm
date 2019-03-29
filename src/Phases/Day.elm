@@ -11,7 +11,7 @@ import Html.Events exposing (on)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Phases.Common exposing (announcement, gameView, instruction, killPlayerControl)
+import Phases.Common exposing (gameView, killPlayerControl, simpleAnnouncement, simpleInstruction)
 import Types exposing (Action(..), Marker(..), Msg(..), Phase(..), PlayerControl, State, Step(..))
 import Util.Condition exposing (all, any, both)
 import Util.Marker exposing (isNominatedMarker)
@@ -44,8 +44,8 @@ nomination =
             , view =
                 \state ->
                     gameView
-                        [ announcement "Alle wachen auf."
-                        , instruction "Nimm Nominierungen entgegen."
+                        [ simpleAnnouncement "Alle wachen auf."
+                        , simpleInstruction "Nimm Nominierungen entgegen."
                         , nominationCountdown state
                         ]
                         state
@@ -111,7 +111,7 @@ election =
         { abstractStep
             | name = "Abstimmung"
             , view =
-                gameView [ instruction "Führe die Abstimmung durch." ]
+                gameView [ simpleInstruction "Führe die Abstimmung durch." ]
             , isPlayerActive = always isNominated
         }
 
@@ -123,9 +123,9 @@ hanging =
             | name = "Hinrichtung"
             , view =
                 gameView
-                    [ instruction "Markiere den Spieler, der gehängt werden soll."
-                    , announcement "... wurde gehängt. Er/sie war ..."
-                    , announcement "Alle schlafen ein."
+                    [ simpleInstruction "Markiere den Spieler, der gehängt werden soll."
+                    , simpleAnnouncement "... wurde gehängt. Er/sie war ..."
+                    , simpleAnnouncement "Alle schlafen ein."
                     ]
             , playerControls = [ killPlayerControl <| all [ isAlive, isNominated, not << hasMarker Alibi ] ]
             , isPlayerActive = always isNominated

@@ -5,8 +5,8 @@ import Data.Strings exposing (partyToString, roleToString)
 import FontAwesome exposing (bed, crosshairs, exclamation, icon, shieldAlt)
 import Html exposing (span, text)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Phases.Common exposing (addKillMarkerPlayerControl, announcement, gameView, instruction, killPlayerControl, mafiaStep)
-import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..), StepMode(..))
+import Phases.Common exposing (addKillMarkerPlayerControl, customCardsStep, gameView, killPlayerControl, mafiaStep, simpleAnnouncement, simpleInstruction)
+import Types exposing (Action(..), CustomCardStep(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..), StepMode(..))
 import Util.Condition exposing (all, any, both)
 import Util.Phases exposing (stepModeByRole)
 import Util.Player exposing (hasMarker, hasRole, isAlive)
@@ -30,6 +30,7 @@ night =
                 , zombies
                 , witch
                 , shoemaker
+                , customCardsStep WakeUpAtNight
                 , deaths -- needs to stay at the end!
                 ]
             , backgroundImage = "%PUBLIC_URL%/img/night.jpg"
@@ -44,8 +45,8 @@ deaths =
             | name = "Tode"
             , view =
                 gameView
-                    [ announcement "Gestorben sind: ..."
-                    , instruction "Markiere Spieler, die diese Nacht gestorben sind!"
+                    [ simpleAnnouncement "Gestorben sind: ..."
+                    , simpleInstruction "Markiere Spieler, die diese Nacht gestorben sind!"
                     ]
             , playerControls = [ killPlayerControl isAlive ]
             , cleanup =
@@ -66,7 +67,7 @@ wildHilda =
             | name = roleToString WildHilda
             , view =
                 gameView
-                    [ announcement "Die Wilde Hilde darf aufwachen und jemanden besuchen." ]
+                    [ simpleAnnouncement "Die Wilde Hilde darf aufwachen und jemanden besuchen." ]
             , mode = stepModeByRole WildHilda
             , isPlayerActive = always (hasRole WildHilda)
             , playerControls = [ wildHildaPlayerControl ]
@@ -89,7 +90,7 @@ guardianAngel =
             | name = roleToString GuardianAngel
             , view =
                 gameView
-                    [ announcement "Der Schutzengel darf aufwachen und jemanden schützen." ]
+                    [ simpleAnnouncement "Der Schutzengel darf aufwachen und jemanden schützen." ]
             , mode = stepModeByRole GuardianAngel
             , isPlayerActive = always (hasRole GuardianAngel)
             , playerControls = [ guardianAngelPlayerControl ]
@@ -118,7 +119,7 @@ mafia : Step
 mafia =
     Step
         { mafiaStep
-            | view = gameView [ announcement "Die Mafia darf aufwachen und jemanden töten." ]
+            | view = gameView [ simpleAnnouncement "Die Mafia darf aufwachen und jemanden töten." ]
             , playerControls = [ addKillMarkerPlayerControl isAlive ]
         }
 
@@ -130,7 +131,7 @@ devil =
             | name = roleToString Devil
             , view =
                 gameView
-                    [ announcement "Der Teufel darf aufwachen und jemanden töten." ]
+                    [ simpleAnnouncement "Der Teufel darf aufwachen und jemanden töten." ]
             , mode = stepModeByRole Devil
             , isPlayerActive = always (hasRole Devil)
             , playerControls = [ devilPlayerControl ]

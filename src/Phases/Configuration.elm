@@ -18,7 +18,7 @@ import Html.Attributes exposing (class)
 import List exposing (filter, length, map, member, sum)
 import List.Extra exposing (count, notMember, remove, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Phases.Common exposing (instruction)
+import Phases.Common exposing (simpleInstruction)
 import Random
 import Random.List exposing (shuffle)
 import Types exposing (Action(..), CustomCardModal, CustomCardStep(..), Msg(..), Party(..), Phase(..), PlayerControl, Role(..), State, Step(..))
@@ -215,7 +215,7 @@ customCardModalView customCardModal =
         |> Modal.h3 [] [ text "Karte erstellen" ]
         |> Modal.body []
             [ Form.form []
-                [ Form.group [] [ Form.label [] [ text "Rolle" ], Input.text [ Input.onInput setRole ] ]
+                [ Form.group [] [ Form.label [] [ text "Rolle" ], Input.text [ Input.value customCardModal.role, Input.onInput setRole ] ]
                 , Form.group [] [ Form.label [] [ text "Partei" ], Dictionary.toBootstrapSelect partyDictionary setParty Villagers ]
                 , Form.group [] ([ Form.label [] [ text "Aufwachen?" ] ] ++ stepCheckboxes)
                 ]
@@ -237,7 +237,7 @@ dealCards =
     Step
         { abstractStep
             | name = "Karten verteilen"
-            , view = always <| instruction "Verteile die Karten"
+            , view = always <| simpleInstruction "Verteile die Karten"
             , init = dealCardsInit
         }
 
