@@ -1,10 +1,16 @@
-module Data.Cards exposing (cardCategories)
+module Data.Cards exposing (cardCategories, customCategoryName)
 
-import Types exposing (Card, CardCategory, Party(..), Role(..))
+import Types exposing (Card, CardCategory, CardType(..), Party(..), Role(..), State)
 
 
-cardCategories : List CardCategory
-cardCategories =
+{-| This is used to identify the category where the "add card" button should be displayed.
+-}
+customCategoryName =
+    "Custom"
+
+
+cardCategories : State -> List CardCategory
+cardCategories state =
     [ { name = "Bürger"
       , cards =
             [ createCard Villagers
@@ -168,6 +174,9 @@ cardCategories =
                 """Der Nerd wird dem Detektiv als Zombie angezeigt, obwohl er ein Bürger ist. Inspektor und Spione erkennen ihn als unschuldigen Nerd."""
             ]
       }
+    , { name = customCategoryName
+      , cards = state.customCards
+      }
     ]
 
 
@@ -176,4 +185,5 @@ createCard party role text =
     { party = party
     , role = role
     , text = text
+    , cardType = BuiltInCard
     }

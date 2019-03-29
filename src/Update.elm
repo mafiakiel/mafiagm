@@ -1,26 +1,16 @@
 module Update exposing (update)
 
+import Data.Strings exposing (customCardText)
 import List exposing (filter, length)
 import List.Extra exposing (filterNot, remove, updateIf)
+import Model exposing (initCustomCardModal)
 import Phases.Configuration exposing (configuration)
 import Phases.Dawn exposing (muter)
 import Phases.Day
 import Phases.FirstNight
 import Phases.Night
 import Random
-import Types
-    exposing
-        ( Action(..)
-        , Marker(..)
-        , Model
-        , Msg(..)
-        , Party(..)
-        , Phase(..)
-        , Role(..)
-        , State
-        , Step(..)
-        , StepMode(..)
-        )
+import Types exposing (Action(..), CardType(..), Marker(..), Model, Msg(..), Party(..), Phase(..), Role(..), State, Step(..), StepMode(..))
 import UndoList exposing (UndoList)
 import Util.Phases exposing (stepAt, unwrapPhase, unwrapStep)
 import Util.Player exposing (hasId)
@@ -69,6 +59,13 @@ updateState action state =
             { state | currentPhase = nextPhase, currentStepIndex = nextStepIndex }
                 |> currentStep.cleanup
                 |> nextStep.init
+
+        createCustomCardFromModal =
+            { party = state.customCardModal.party
+            , role = CustomRole state.customCardModal.role
+            , text = customCardText state.customCardModal
+            , cardType = CustomCard state.customCardModal.steps
+            }
     in
     case action of
         SetNewPlayerName name ->
@@ -126,6 +123,12 @@ updateState action state =
 
         NominationCountdownFinished ->
             stepForward
+
+        SetCustomCardModal customCardModal ->
+            { state | customCardModal = customCardModal }
+
+        CreateCustomCard ->
+            { state | customCards = state.customCards ++ [ createCustomCardFromModal ], customCardModal = initCustomCardModal }
 
 
 cleanupAfterKill : State -> State

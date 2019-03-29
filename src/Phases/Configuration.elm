@@ -1,24 +1,29 @@
-module Phases.Configuration exposing (configuration, rules)
+module Phases.Configuration exposing (configuration)
 
 import Bootstrap.Badge as Badge
 import Bootstrap.Button as Button
 import Bootstrap.Card as BCard
 import Bootstrap.Card.Block as BCardBlock
+import Bootstrap.Form as Form
+import Bootstrap.Form.Checkbox as Checkbox
+import Bootstrap.Form.Input as Input
+import Bootstrap.Modal as Modal
 import Bootstrap.Tab as Tab
 import Bootstrap.Utilities.Spacing as Spacing
-import Data.Cards exposing (cardCategories)
+import Data.Cards exposing (cardCategories, customCategoryName)
 import Data.Strings exposing (..)
 import FontAwesome exposing (check, icon, minus, plus, trash)
-import Html exposing (Html, div, h2, small, span, text)
+import Html exposing (Html, br, div, h2, p, span, text)
 import Html.Attributes exposing (class)
 import List exposing (filter, length, map, member, sum)
-import List.Extra exposing (count, notMember, zip)
+import List.Extra exposing (count, notMember, remove, zip)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Phases.Common exposing (instruction)
+import Phases.Common exposing (simpleInstruction)
 import Random
 import Random.List exposing (shuffle)
-import Types exposing (Action(..), Msg(..), Party(..), Phase(..), PlayerControl, Role(..), State, Step(..))
+import Types exposing (Action(..), CustomCardModal, CustomCardStep(..), Msg(..), Party(..), Phase(..), PlayerControl, Role(..), State, Step(..))
 import Util.Condition exposing (conditionalList)
+import Util.Dictionary as Dictionary
 
 
 configuration : Phase
@@ -43,13 +48,15 @@ deletePlayerControl =
     }
 
 
-rules : Step
-rules =
-    Step
-        { abstractStep
-            | name = "Regeln"
-            , view = always <| text "Hier könnten Ihre Regeln stehen!"
-        }
+
+{- rules : Step
+   rules =
+       Step
+           { abstractStep
+               | name = "Regeln"
+               , view = always <| text "Hier könnten Ihre Regeln stehen!"
+           }
+-}
 
 
 pool : Step
@@ -88,11 +95,33 @@ poolView state =
                 , ( cardsInFakePool category > 0, Badge.pillDark [ Spacing.ml1 ] [ text <| String.fromInt <| cardsInFakePool category ] )
                 ]
 
+        customCardModal =
+            state.customCardModal
+
+        openCustomCardModal =
+            Action <| SetCustomCardModal { customCardModal | visibility = Modal.shown }
+
+        additionalTabContent category =
+            if category.name == customCategoryName then
+                [ BCard.config []
+                    |> BCard.block []
+                        [ BCardBlock.text []
+                            [ text "Hier kannst du eigene Karten erstellen."
+                            , br [] []
+                            , br [] []
+                            , Button.button [ Button.primary, Button.onClick openCustomCardModal ] [ icon plus, text " Karte hinzufügen" ]
+                            ]
+                        ]
+                ]
+
+            else
+                []
+
         categoryToTab category =
             Tab.item
                 { id = category.name
                 , link = Tab.link [] <| categoryTabLabel category
-                , pane = Tab.pane [ Spacing.mt3 ] [ BCard.columns (map cardToBootstrapCard category.cards) ]
+                , pane = Tab.pane [ Spacing.mt3 ] [ BCard.columns (map cardToBootstrapCard category.cards ++ additionalTabContent category) ]
                 }
 
         amountInPool card =
@@ -142,14 +171,65 @@ poolView state =
     in
     div []
         [ h2 []
-            [ text <| "Karten: " ++ String.fromInt (length state.pool)
-            , small [ class "text-muted" ]
-                [ text " (nicht verteilte Karten werden gefaket)" ]
-            ]
+            [ text <| "Karten: " ++ String.fromInt (length state.pool) ]
         , Tab.config selectCategoryAction
-            |> Tab.items (map categoryToTab cardCategories)
+            |> Tab.items (map categoryToTab (cardCategories state))
             |> Tab.view state.selectedCardCategory
+        , customCardModalView state.customCardModal
         ]
+
+
+customCardModalView : CustomCardModal -> Html Msg
+customCardModalView customCardModal =
+    let
+        closeCustomCardModal =
+            Action <| SetCustomCardModal { customCardModal | visibility = Modal.hidden }
+
+        setStepChecked step checked =
+            if checked then
+                Action <| SetCustomCardModal <| { customCardModal | steps = step :: customCardModal.steps }
+
+            else
+                Action <| SetCustomCardModal <| { customCardModal | steps = remove step customCardModal.steps }
+
+        stepCheckboxes =
+            map
+                (\( step, label ) ->
+                    Checkbox.checkbox
+                        [ Checkbox.checked <| member step customCardModal.steps
+                        , Checkbox.onCheck <| setStepChecked step
+                        ]
+                        label
+                )
+                customCardStepDictionary
+
+        setRole role =
+            Action <| SetCustomCardModal <| { customCardModal | role = role }
+
+        setParty party =
+            Action <| SetCustomCardModal <| { customCardModal | party = party }
+    in
+    Modal.config closeCustomCardModal
+        |> Modal.small
+        |> Modal.hideOnBackdropClick True
+        |> Modal.h3 [] [ text "Karte erstellen" ]
+        |> Modal.body []
+            [ Form.form []
+                [ Form.group [] [ Form.label [] [ text "Rolle" ], Input.text [ Input.value customCardModal.role, Input.onInput setRole ] ]
+                , Form.group [] [ Form.label [] [ text "Partei" ], Dictionary.toBootstrapSelect partyDictionary setParty Villagers ]
+                , Form.group [] ([ Form.label [] [ text "Aufwachen?" ] ] ++ stepCheckboxes)
+                ]
+            ]
+        |> Modal.footer []
+            [ Button.button [ Button.onClick closeCustomCardModal ] [ text "Abbrechen" ]
+            , Button.button
+                [ Button.primary
+                , Button.disabled <| customCardModal.role == ""
+                , Button.onClick <| Action CreateCustomCard
+                ]
+                [ text "OK" ]
+            ]
+        |> Modal.view customCardModal.visibility
 
 
 dealCards : Step
@@ -157,7 +237,7 @@ dealCards =
     Step
         { abstractStep
             | name = "Karten verteilen"
-            , view = always <| instruction "Verteile die Karten"
+            , view = always <| simpleInstruction "Verteile die Karten"
             , init = dealCardsInit
         }
 

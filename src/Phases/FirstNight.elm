@@ -4,8 +4,8 @@ import Data.Strings exposing (roleToString)
 import FontAwesome exposing (heart, icon)
 import List.Extra exposing (notMember)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Phases.Common exposing (announcement, gameView, mafiaStep)
-import Types exposing (Action(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..), StepMode(..))
+import Phases.Common exposing (customCardsStep, gameView, mafiaStep, simpleAnnouncement)
+import Types exposing (Action(..), CustomCardStep(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..), StepMode(..))
 import Util.Phases exposing (stepModeByRole)
 import Util.Player exposing (hasRole, isInChurch)
 
@@ -15,7 +15,7 @@ firstNight =
     Phase
         { abstractPhase
             | name = "Erste Nacht"
-            , steps = [ mafia, church, cupid ]
+            , steps = [ mafia, church, cupid, customCardsStep WakeUpAtFirstNight ]
             , backgroundImage = "%PUBLIC_URL%/img/night.jpg"
             , textColor = "white"
         }
@@ -25,7 +25,7 @@ mafia : Step
 mafia =
     Step
         { mafiaStep
-            | view = gameView [ announcement "Die Mafia darf aufwachen und sich erkennen. 😏" ]
+            | view = gameView [ simpleAnnouncement "Die Mafia darf aufwachen und sich erkennen. 😏" ]
         }
 
 
@@ -34,7 +34,7 @@ church =
     Step
         { abstractStep
             | name = "Kirche"
-            , view = gameView [ announcement "Die Kirche darf aufwachen und sich erkennen. 😏" ]
+            , view = gameView [ simpleAnnouncement "Die Kirche darf aufwachen und sich erkennen. 😏" ]
             , isPlayerActive = always isInChurch
             , mode = always Skip
         }
@@ -45,7 +45,7 @@ cupid =
     Step
         { abstractStep
             | name = roleToString Cupid
-            , view = gameView [ announcement "Amor darf aufwachen und zwei Mitspieler verlieben." ]
+            , view = gameView [ simpleAnnouncement "Amor darf aufwachen und zwei Mitspieler verlieben." ]
             , isPlayerActive = always (hasRole Cupid)
             , playerControls = cupidPlayerControls
             , mode = stepModeByRole Cupid
