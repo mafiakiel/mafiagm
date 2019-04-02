@@ -1,5 +1,6 @@
 module Util.Update exposing
     ( addMarkerToPlayer
+    , removeMarkerFromPlayer
     , removeMarkersFromAllPlayers
     , resetNextNominationPosition
     , setNominationCountdownRunning
@@ -7,7 +8,7 @@ module Util.Update exposing
     )
 
 import List exposing (map)
-import List.Extra exposing (filterNot, updateIf)
+import List.Extra exposing (filterNot, remove, updateIf)
 import Types exposing (Marker, State)
 import Util.Player exposing (hasId)
 import Uuid exposing (Uuid)
@@ -16,6 +17,11 @@ import Uuid exposing (Uuid)
 addMarkerToPlayer : Uuid -> Marker -> State -> State
 addMarkerToPlayer playerId marker state =
     { state | players = updateIf (hasId playerId) (\p -> { p | markers = p.markers ++ [ marker ] }) state.players }
+
+
+removeMarkerFromPlayer : Uuid -> Marker -> State -> State
+removeMarkerFromPlayer playerId marker state =
+    { state | players = updateIf (hasId playerId) (\p -> { p | markers = remove marker p.markers }) state.players }
 
 
 removeMarkersFromAllPlayers : (Marker -> Bool) -> State -> State

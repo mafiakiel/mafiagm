@@ -6,17 +6,45 @@ import Bootstrap.Button as Button
 import Bootstrap.CDN as CDN
 import Bootstrap.Form.Input as Input
 import Bootstrap.Form.InputGroup as InputGroup
+import Bootstrap.Modal as Modal
 import Bootstrap.Table as Table
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString, roleToString)
-import FontAwesome exposing (angleRight, award, bed, crosshairs, exclamation, exclamationTriangle, eye, eyeSlash, heart, icon, plus, redo, ribbon, shieldAlt, timesCircle, undo, volumeMute)
-import Html exposing (Html, div, h1, h2, node, text)
+import FontAwesome
+    exposing
+        ( angleRight
+        , award
+        , bed
+        , crosshairs
+        , exclamation
+        , exclamationTriangle
+        , eye
+        , eyeSlash
+        , heart
+        , icon
+        , pen
+        , plus
+        , redo
+        , ribbon
+        , shieldAlt
+        , skull
+        , timesCircle
+        , undo
+        , volumeMute
+        )
+import Html exposing (Html, div, h1, h2, h4, node, p, span, text)
 import Html.Attributes exposing (class, href, id, rel, style)
-import List exposing (filter, length, map)
-import Maybe.Extra exposing (isJust)
-import Types exposing (Action(..), Marker(..), Model, Msg(..), Phase(..), State, Step(..))
+import Html.Events exposing (onClick)
+import List exposing (filter, length, map, member)
+import List.Extra exposing (filterNot)
+import Maybe exposing (withDefault)
+import Maybe.Extra exposing (isJust, join)
+import Types exposing (Action(..), Marker(..), Model, Msg(..), Phase(..), PlayerControl, State, Step(..))
 import UndoList exposing (UndoList)
+import Util.Condition exposing (conditionalList)
+import Util.Marker exposing (manuallyAddableMarkers)
 import Util.Phases exposing (getCurrentStep)
+import Util.Player exposing (initPlayer, isAlive, playerById)
 
 
 view : Model -> Html Msg
@@ -29,6 +57,7 @@ view model =
             [ playerList model.present
             , phaseContent model.present
             ]
+        , editPlayerModalView model.present
         ]
 
 
@@ -130,6 +159,7 @@ playerList state =
                 , Table.td sensitiveCellOptions [ text <| partyToString player.party ]
                 , Table.td sensitiveCellOptions (map renderMarker player.markers)
                 , Table.td [] (filter (\c -> c.condition player) playerControls |> map (playerControlToButton player))
+                , Table.td [] [ playerControlToButton player editPlayerControl ]
                 ]
     in
     div [ id "players" ]
@@ -143,6 +173,7 @@ playerList state =
                     , Table.th [] [ text "Partei" ]
                     , Table.th [] [ text "Marker" ]
                     , Table.th [] [ text "Aktionen" ]
+                    , Table.th [] []
                     ]
             , tbody = Table.tbody [] (map playerToTableRow state.players)
             }
@@ -190,6 +221,63 @@ renderMarker marker =
 
         Alibi ->
             Badge.pillSuccess options [ icon ribbon ]
+
+
+editPlayerControl : PlayerControl
+editPlayerControl =
+    { label = icon pen
+    , action = \player -> EditPlayer player.id
+    , options = always [ Button.light ]
+    , condition = always True
+    }
+
+
+editPlayerModalView : State -> Html Msg
+editPlayerModalView state =
+    let
+        visibility =
+            if isJust state.editedPlayerId then
+                Modal.shown
+
+            else
+                Modal.hidden
+
+        player =
+            Maybe.map (playerById state.players) state.editedPlayerId
+                |> join
+                |> withDefault initPlayer
+
+        addableMarkers =
+            filterNot (\marker -> member marker player.markers) manuallyAddableMarkers
+
+        renderRemovableMarker marker =
+            span [ onClick <| Action <| RemoveMarker player.id marker, style "cursor" "pointer" ] [ renderMarker marker ]
+
+        renderAddableMarker marker =
+            span [ onClick <| Action <| AddMarker player.id marker, style "cursor" "pointer" ] [ renderMarker marker ]
+    in
+    Modal.config (Action StopEditingPlayer)
+        |> Modal.small
+        |> Modal.hideOnBackdropClick True
+        |> Modal.h3 [] [ text "Spieler bearbeiten" ]
+        |> Modal.body []
+            (conditionalList
+                [ ( length player.markers > 0, h4 [] [ text "Marker entfernen" ] )
+                , ( True, p [] (map renderRemovableMarker player.markers) )
+                , ( length addableMarkers > 0, h4 [] [ text "Marker hinzufügen" ] )
+                , ( True, p [] (map renderAddableMarker addableMarkers) )
+                ]
+            )
+        |> Modal.footer []
+            [ Button.button
+                [ Button.onClick <| Action <| KillPlayer player.id
+                , Button.danger
+                , Button.disabled <| not <| isAlive player
+                ]
+                [ icon skull, text " Töten" ]
+            , Button.button [ Button.onClick <| Action StopEditingPlayer ] [ text "Schließen" ]
+            ]
+        |> Modal.view visibility
 
 
 phaseContent : State -> Html Msg
