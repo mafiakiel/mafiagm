@@ -1,6 +1,16 @@
-module Util.Player exposing (hasId, hasMarker, hasParty, hasRole, initPlayer, isAlive, isInChurch, isNominated)
+module Util.Player exposing
+    ( hasId
+    , hasMarker
+    , hasParty
+    , hasRole
+    , initPlayer
+    , isAlive
+    , isInChurch
+    , isNominated
+    , playerById
+    )
 
-import List exposing (any, member)
+import List exposing (any, filter, head, member)
 import Random exposing (initialSeed)
 import Types exposing (Marker(..), Party(..), Player, Role(..))
 import Util.Marker exposing (isNominatedMarker)
@@ -55,3 +65,9 @@ initPlayer =
             Random.step uuidGenerator <| initialSeed 0
     in
     { id = id, name = "New Player", role = None, party = Villagers, markers = [], alive = False }
+
+
+playerById : List Player -> Uuid -> Maybe Player
+playerById players id =
+    filter (\p -> p.id == id) players
+        |> head

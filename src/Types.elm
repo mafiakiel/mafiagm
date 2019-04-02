@@ -53,7 +53,7 @@ type alias State =
     , nominationCountdownRunning : Bool
     , customCards : List Card
     , customCardModal : CustomCardModal
-    , editedPlayer : Maybe Player
+    , editedPlayerId : Maybe Uuid
     }
 
 
@@ -214,6 +214,7 @@ type Action
     | AddCardToFakePool Card
     | RemoveCardFromFakePool Card
     | AddMarker Uuid Marker
+    | RemoveMarker Uuid Marker
     | KillPlayer Uuid
     | EndGame
     | NominatePlayer Uuid
@@ -223,7 +224,7 @@ type Action
     | NominationCountdownFinished
     | SetCustomCardModal CustomCardModal
     | CreateCustomCard
-    | EditPlayer Player
+    | EditPlayer Uuid
     | StopEditingPlayer
 
 

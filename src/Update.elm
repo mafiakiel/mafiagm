@@ -14,7 +14,7 @@ import Types exposing (Action(..), CardType(..), Marker(..), Model, Msg(..), Par
 import UndoList exposing (UndoList)
 import Util.Phases exposing (stepAt, unwrapPhase, unwrapStep)
 import Util.Player exposing (hasId, initPlayer)
-import Util.Update exposing (addMarkerToPlayer, removeMarkersFromAllPlayers, setNominationCountdownRunning, setStealthMode)
+import Util.Update exposing (addMarkerToPlayer, removeMarkerFromPlayer, removeMarkersFromAllPlayers, setNominationCountdownRunning, setStealthMode)
 import Uuid exposing (Uuid, uuidGenerator)
 
 
@@ -98,6 +98,9 @@ updateState action state =
         AddMarker playerId marker ->
             addMarkerToPlayer playerId marker state
 
+        RemoveMarker playerId marker ->
+            removeMarkerFromPlayer playerId marker state
+
         KillPlayer id ->
             { state | players = updateIf (hasId id) (\p -> { p | alive = False }) state.players }
                 |> stopEditingPlayer
@@ -131,8 +134,8 @@ updateState action state =
         CreateCustomCard ->
             { state | customCards = state.customCards ++ [ createCustomCardFromModal ], customCardModal = initCustomCardModal }
 
-        EditPlayer player ->
-            { state | editedPlayer = Just player }
+        EditPlayer id ->
+            { state | editedPlayerId = Just id }
 
         StopEditingPlayer ->
             stopEditingPlayer state
@@ -140,7 +143,7 @@ updateState action state =
 
 stopEditingPlayer : State -> State
 stopEditingPlayer state =
-    { state | editedPlayer = Nothing }
+    { state | editedPlayerId = Nothing }
 
 
 cleanupAfterKill : State -> State

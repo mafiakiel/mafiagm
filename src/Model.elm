@@ -33,7 +33,7 @@ initState flags =
     , nominationCountdownRunning = False
     , customCards = []
     , customCardModal = initCustomCardModal
-    , editedPlayer = Nothing
+    , editedPlayerId = Nothing
     }
 
 
