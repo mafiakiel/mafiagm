@@ -13,7 +13,7 @@ import Random
 import Types exposing (Action(..), CardType(..), Marker(..), Model, Msg(..), Party(..), Phase(..), Role(..), State, Step(..), StepMode(..))
 import UndoList exposing (UndoList)
 import Util.Phases exposing (stepAt, unwrapPhase, unwrapStep)
-import Util.Player exposing (hasId)
+import Util.Player exposing (hasId, initPlayer)
 import Util.Update exposing (addMarkerToPlayer, removeMarkersFromAllPlayers, setNominationCountdownRunning, setStealthMode)
 import Uuid exposing (Uuid, uuidGenerator)
 
@@ -47,7 +47,7 @@ updateState action state =
             stepAt (unwrapPhase nextPhase).steps nextStepIndex |> unwrapStep
 
         newPlayer =
-            { id = uuid, name = state.newPlayerName, role = None, party = Villagers, markers = [], alive = False }
+            { initPlayer | id = uuid, name = state.newPlayerName }
 
         firstPhase =
             unwrapPhase configuration
@@ -100,6 +100,7 @@ updateState action state =
 
         KillPlayer id ->
             { state | players = updateIf (hasId id) (\p -> { p | alive = False }) state.players }
+                |> stopEditingPlayer
                 |> cleanupAfterKill
 
         EndGame ->
@@ -129,6 +130,17 @@ updateState action state =
 
         CreateCustomCard ->
             { state | customCards = state.customCards ++ [ createCustomCardFromModal ], customCardModal = initCustomCardModal }
+
+        EditPlayer player ->
+            { state | editedPlayer = Just player }
+
+        StopEditingPlayer ->
+            stopEditingPlayer state
+
+
+stopEditingPlayer : State -> State
+stopEditingPlayer state =
+    { state | editedPlayer = Nothing }
 
 
 cleanupAfterKill : State -> State

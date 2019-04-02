@@ -53,6 +53,7 @@ type alias State =
     , nominationCountdownRunning : Bool
     , customCards : List Card
     , customCardModal : CustomCardModal
+    , editedPlayer : Maybe Player
     }
 
 
@@ -222,6 +223,8 @@ type Action
     | NominationCountdownFinished
     | SetCustomCardModal CustomCardModal
     | CreateCustomCard
+    | EditPlayer Player
+    | StopEditingPlayer
 
 
 type Msg
