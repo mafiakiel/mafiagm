@@ -185,6 +185,7 @@ type Marker
     | VisitedByHilda
     | Muted
     | Alibi
+    | CustomMarker String Bool
 
 
 type alias CustomCardModal =

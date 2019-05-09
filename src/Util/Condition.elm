@@ -1,4 +1,4 @@
-module Util.Condition exposing (all, any, both, conditionalList)
+module Util.Condition exposing (all, any, both, conditionalList, ifThenElse)
 
 import List exposing (filter, map, member)
 import Util.Misc exposing (apply)
@@ -35,3 +35,14 @@ conditionalList list =
     list
         |> filter (\( condition, _ ) -> condition)
         |> map (\( _, value ) -> value)
+
+
+{-| Inline if/else which is not destroyed by elm-format...
+-}
+ifThenElse : Bool -> a -> a -> a
+ifThenElse condition a b =
+    if condition then
+        a
+
+    else
+        b

@@ -41,7 +41,7 @@ import Maybe exposing (withDefault)
 import Maybe.Extra exposing (isJust, join)
 import Types exposing (Action(..), Marker(..), Model, Msg(..), Phase(..), PlayerControl, State, Step(..))
 import UndoList exposing (UndoList)
-import Util.Condition exposing (conditionalList)
+import Util.Condition exposing (conditionalList, ifThenElse)
 import Util.Marker exposing (manuallyAddableMarkers)
 import Util.Phases exposing (getCurrentStep)
 import Util.Player exposing (initPlayer, isAlive, playerById)
@@ -223,6 +223,9 @@ renderMarker marker =
 
         Alibi ->
             Badge.pillSuccess options [ icon ribbon ]
+
+        CustomMarker label public ->
+            Badge.pillSecondary (ifThenElse public publicOptions options) [ text label ]
 
 
 editPlayerControl : PlayerControl
