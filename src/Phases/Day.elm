@@ -12,7 +12,7 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (gameView, killPlayerControl, simpleAnnouncement, simpleInstruction)
-import Types exposing (Action(..), Marker(..), Msg(..), Phase(..), PlayerControl, State, Step(..))
+import Types exposing (Action(..), Marker(..), Phase(..), PlayerControl, State, Step(..))
 import Util.Condition exposing (all, any, both)
 import Util.Marker exposing (isNominatedMarker)
 import Util.Player exposing (hasMarker, isAlive, isNominated)
@@ -64,14 +64,14 @@ nominatePlayerControl =
     }
 
 
-nominationCountdown : State -> Html Msg
+nominationCountdown : State -> Html Action
 nominationCountdown state =
     let
         remainingTime =
             Html.node "x-countdown"
                 [ property "duration" <| Encode.int state.nominationCountdownDuration
                 , property "running" <| Encode.bool state.nominationCountdownRunning
-                , on "finished" <| Decode.succeed <| Action NominationCountdownFinished
+                , on "finished" <| Decode.succeed NominationCountdownFinished
                 ]
                 []
     in
@@ -83,19 +83,19 @@ nominationCountdown state =
                     [ remainingTime
                     , Button.button
                         [ Button.attrs [ Spacing.mr1 ]
-                        , Button.onClick <| Action <| SetNominationCountdownDuration <| state.nominationCountdownDuration - 5
+                        , Button.onClick <| SetNominationCountdownDuration <| state.nominationCountdownDuration - 5
                         , Button.disabled (state.nominationCountdownRunning || state.nominationCountdownDuration <= 5)
                         ]
                         [ text "-5" ]
                     , Button.button
                         [ Button.attrs [ Spacing.mr1 ]
-                        , Button.onClick <| Action <| SetNominationCountdownDuration <| state.nominationCountdownDuration + 5
+                        , Button.onClick <| SetNominationCountdownDuration <| state.nominationCountdownDuration + 5
                         , Button.disabled state.nominationCountdownRunning
                         ]
                         [ text "+5" ]
                     , Button.button
                         [ Button.primary
-                        , Button.onClick <| Action <| SetNominationCountdownRunning True
+                        , Button.onClick <| SetNominationCountdownRunning True
                         , Button.disabled state.nominationCountdownRunning
                         ]
                         [ text "Starten" ]

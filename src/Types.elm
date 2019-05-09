@@ -79,7 +79,7 @@ type Phase
 type Step
     = Step
         { name : String
-        , view : State -> Html Msg
+        , view : State -> Html Action
         , init : State -> State
         , cleanup : State -> State
         , stepForwardVeto : State -> Maybe String
@@ -168,9 +168,9 @@ type alias CardCategory =
 
 
 type alias PlayerControl =
-    { label : Html Msg
+    { label : Html Action
     , action : Player -> Action
-    , options : Player -> List (Button.Option Msg)
+    , options : Player -> List (Button.Option Action)
     , condition : Player -> Bool
     }
 

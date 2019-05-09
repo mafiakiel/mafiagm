@@ -27,7 +27,6 @@ import Types
         , CardType(..)
         , CustomCardStep
         , Marker(..)
-        , Msg
         , Party(..)
         , Player
         , PlayerControl
@@ -50,7 +49,7 @@ import Util.Phases
 import Util.Player exposing (hasParty, hasRole)
 
 
-gameView : List (Html Msg) -> State -> Html Msg
+gameView : List (Html Action) -> State -> Html Action
 gameView children state =
     div [ id "game-container" ]
         [ div [ id "game-main" ] children
@@ -58,7 +57,7 @@ gameView children state =
         ]
 
 
-stepList : State -> Html Msg
+stepList : State -> Html Action
 stepList state =
     let
         stepsInPhase =
@@ -97,7 +96,7 @@ stepList state =
     ListGroup.ul (map stepIndexToListItem stepsInPhaseIndices)
 
 
-simpleAnnouncement : String -> Html Msg
+simpleAnnouncement : String -> Html Action
 simpleAnnouncement content =
     Alert.simplePrimary []
         [ Alert.h4 [] [ icon bullhorn, text " Ansage" ]
@@ -105,12 +104,12 @@ simpleAnnouncement content =
         ]
 
 
-simpleInstruction : String -> Html Msg
+simpleInstruction : String -> Html Action
 simpleInstruction content =
     instruction [ text content ]
 
 
-instruction : List (Html Msg) -> Html Msg
+instruction : List (Html Action) -> Html Action
 instruction content =
     Alert.simpleWarning []
         ([ Alert.h4 [] [ icon tasks, text " Aufgabe" ]
@@ -119,7 +118,7 @@ instruction content =
         )
 
 
-simpleWarning : String -> Html Msg
+simpleWarning : String -> Html Action
 simpleWarning content =
     Alert.simpleDanger []
         [ Alert.h4 [] [ icon exclamationTriangle, text " Achtung!" ]
@@ -127,7 +126,7 @@ simpleWarning content =
         ]
 
 
-silenceWarning : Html Msg
+silenceWarning : Html Action
 silenceWarning =
     simpleWarning "Das Ergebnis nicht ansagen, sondern per Handzeichen darstellen."
 

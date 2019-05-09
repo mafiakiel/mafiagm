@@ -3,7 +3,7 @@ module Util.Dictionary exposing (Dictionary, getString, getValue, toBootstrapSel
 import Bootstrap.Form.Select as Select
 import Html exposing (Html, text)
 import List exposing (filter, head, map)
-import Types exposing (Msg)
+import Types exposing (Action)
 
 
 type alias Dictionary a =
@@ -38,7 +38,7 @@ getValue dictionary string =
             Nothing
 
 
-toBootstrapSelect : Dictionary a -> (a -> Msg) -> a -> Html Msg
+toBootstrapSelect : Dictionary a -> (a -> Action) -> a -> Html Action
 toBootstrapSelect dictionary callback defaultValue =
     let
         entryToItem ( _, label ) =

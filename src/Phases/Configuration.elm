@@ -21,7 +21,7 @@ import Phases.Abstract exposing (abstractPhase, abstractStep)
 import Phases.Common exposing (simpleInstruction)
 import Random
 import Random.List exposing (shuffle)
-import Types exposing (Action(..), CustomCardModal, CustomCardStep(..), Msg(..), Party(..), Phase(..), PlayerControl, Role(..), State, Step(..))
+import Types exposing (Action(..), CustomCardModal, CustomCardStep(..), Party(..), Phase(..), PlayerControl, Role(..), State, Step(..))
 import Util.Condition exposing (conditionalList)
 import Util.Dictionary as Dictionary
 
@@ -76,7 +76,7 @@ pool =
         }
 
 
-poolView : State -> Html Msg
+poolView : State -> Html Action
 poolView state =
     let
         cardsInPool category =
@@ -99,7 +99,7 @@ poolView state =
             state.customCardModal
 
         openCustomCardModal =
-            Action <| SetCustomCardModal { customCardModal | visibility = Modal.shown }
+            SetCustomCardModal { customCardModal | visibility = Modal.shown }
 
         additionalTabContent category =
             if category.name == customCategoryName then
@@ -139,11 +139,11 @@ poolView state =
 
         fakeButton card =
             if member card state.fakePool then
-                Button.button [ Button.dark, Button.onClick <| Action <| RemoveCardFromFakePool card ]
+                Button.button [ Button.dark, Button.onClick <| RemoveCardFromFakePool card ]
                     [ icon check, text " Fake" ]
 
             else
-                Button.button [ Button.outlineDark, Button.onClick <| Action <| AddCardToFakePool card ] [ text "Fake" ]
+                Button.button [ Button.outlineDark, Button.onClick <| AddCardToFakePool card ] [ text "Fake" ]
 
         cardToBootstrapCard card =
             BCard.config ([ BCard.attrs [ class "pool-card" ] ] ++ cardOptions card)
@@ -152,45 +152,42 @@ poolView state =
                 |> BCard.footer []
                     [ Button.button
                         [ Button.dark
-                        , Button.onClick <| Action <| RemoveCardFromPool card
+                        , Button.onClick <| RemoveCardFromPool card
                         , Button.disabled <| notMember card state.pool
                         ]
                         [ icon minus ]
                     , span [ class "pool-card-amount" ] [ text <| String.fromInt <| amountInPool card ]
                     , Button.button
                         [ Button.dark
-                        , Button.onClick <| Action <| AddCardToPool card
+                        , Button.onClick <| AddCardToPool card
                         , Button.disabled <| member card state.fakePool
                         ]
                         [ icon plus ]
                     , fakeButton card
                     ]
-
-        selectCategoryAction category =
-            Action (SelectCardCategory category)
     in
     div []
         [ h2 []
             [ text <| "Karten: " ++ String.fromInt (length state.pool) ]
-        , Tab.config selectCategoryAction
+        , Tab.config SelectCardCategory
             |> Tab.items (map categoryToTab (cardCategories state))
             |> Tab.view state.selectedCardCategory
         , customCardModalView state.customCardModal
         ]
 
 
-customCardModalView : CustomCardModal -> Html Msg
+customCardModalView : CustomCardModal -> Html Action
 customCardModalView customCardModal =
     let
         closeCustomCardModal =
-            Action <| SetCustomCardModal { customCardModal | visibility = Modal.hidden }
+            SetCustomCardModal { customCardModal | visibility = Modal.hidden }
 
         setStepChecked step checked =
             if checked then
-                Action <| SetCustomCardModal <| { customCardModal | steps = step :: customCardModal.steps }
+                SetCustomCardModal <| { customCardModal | steps = step :: customCardModal.steps }
 
             else
-                Action <| SetCustomCardModal <| { customCardModal | steps = remove step customCardModal.steps }
+                SetCustomCardModal <| { customCardModal | steps = remove step customCardModal.steps }
 
         stepCheckboxes =
             map
@@ -204,10 +201,10 @@ customCardModalView customCardModal =
                 customCardStepDictionary
 
         setRole role =
-            Action <| SetCustomCardModal <| { customCardModal | role = role }
+            SetCustomCardModal <| { customCardModal | role = role }
 
         setParty party =
-            Action <| SetCustomCardModal <| { customCardModal | party = party }
+            SetCustomCardModal <| { customCardModal | party = party }
     in
     Modal.config closeCustomCardModal
         |> Modal.small
@@ -225,7 +222,7 @@ customCardModalView customCardModal =
             , Button.button
                 [ Button.primary
                 , Button.disabled <| customCardModal.role == ""
-                , Button.onClick <| Action CreateCustomCard
+                , Button.onClick CreateCustomCard
                 ]
                 [ text "OK" ]
             ]
