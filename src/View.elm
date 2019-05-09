@@ -54,11 +54,16 @@ view model =
         , fontAwesome
         , header model
         , div [ id "content" ]
-            [ playerList model.present
-            , phaseContent model.present
+            [ playerList model.present |> htmlActionToMsg
+            , phaseContent model.present |> htmlActionToMsg
             ]
-        , editPlayerModalView model.present
+        , editPlayerModalView model.present |> htmlActionToMsg
         ]
+
+
+htmlActionToMsg : Html Action -> Html Msg
+htmlActionToMsg html =
+    Html.map (\action -> Action action) html
 
 
 header : Model -> Html Msg
@@ -123,17 +128,14 @@ header model =
         ]
 
 
-playerList : State -> Html Msg
+playerList : State -> Html Action
 playerList state =
     let
-        actionSetNewPlayerName name =
-            Action <| SetNewPlayerName name
-
         playerControls =
             (getCurrentStep state).playerControls
 
         playerControlToButton player control =
-            Button.button ([ Button.onClick <| Action <| control.action player, Button.small ] ++ control.options player) [ control.label ]
+            Button.button ([ Button.onClick <| control.action player, Button.small ] ++ control.options player) [ control.label ]
 
         playerTableRowOptions player =
             if not player.alive then
@@ -178,9 +180,9 @@ playerList state =
             , tbody = Table.tbody [] (map playerToTableRow state.players)
             }
         , InputGroup.config
-            (InputGroup.text [ Input.placeholder "Name", Input.value state.newPlayerName, Input.onInput actionSetNewPlayerName ])
+            (InputGroup.text [ Input.placeholder "Name", Input.value state.newPlayerName, Input.onInput SetNewPlayerName ])
             |> InputGroup.successors
-                [ InputGroup.button [ Button.success, Button.onClick <| Action AddPlayer, Button.disabled <| state.newPlayerName == "" ] [ icon plus ] ]
+                [ InputGroup.button [ Button.success, Button.onClick AddPlayer, Button.disabled <| state.newPlayerName == "" ] [ icon plus ] ]
             |> InputGroup.view
         , div [ class "spacer" ] []
         ]
@@ -232,7 +234,7 @@ editPlayerControl =
     }
 
 
-editPlayerModalView : State -> Html Msg
+editPlayerModalView : State -> Html Action
 editPlayerModalView state =
     let
         visibility =
@@ -251,12 +253,12 @@ editPlayerModalView state =
             filterNot (\marker -> member marker player.markers) manuallyAddableMarkers
 
         renderRemovableMarker marker =
-            span [ onClick <| Action <| RemoveMarker player.id marker, style "cursor" "pointer" ] [ renderMarker marker ]
+            span [ onClick <| RemoveMarker player.id marker, style "cursor" "pointer" ] [ renderMarker marker ]
 
         renderAddableMarker marker =
-            span [ onClick <| Action <| AddMarker player.id marker, style "cursor" "pointer" ] [ renderMarker marker ]
+            span [ onClick <| AddMarker player.id marker, style "cursor" "pointer" ] [ renderMarker marker ]
     in
-    Modal.config (Action StopEditingPlayer)
+    Modal.config StopEditingPlayer
         |> Modal.small
         |> Modal.hideOnBackdropClick True
         |> Modal.h3 [] [ text "Spieler bearbeiten" ]
@@ -270,17 +272,17 @@ editPlayerModalView state =
             )
         |> Modal.footer []
             [ Button.button
-                [ Button.onClick <| Action <| KillPlayer player.id
+                [ Button.onClick <| KillPlayer player.id
                 , Button.danger
                 , Button.disabled <| not <| isAlive player
                 ]
                 [ icon skull, text " Töten" ]
-            , Button.button [ Button.onClick <| Action StopEditingPlayer ] [ text "Schließen" ]
+            , Button.button [ Button.onClick StopEditingPlayer ] [ text "Schließen" ]
             ]
         |> Modal.view visibility
 
 
-phaseContent : State -> Html Msg
+phaseContent : State -> Html Action
 phaseContent state =
     div [ id "phase-viewport" ] [ (getCurrentStep state).view state ]
 
