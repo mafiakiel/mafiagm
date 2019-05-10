@@ -3,7 +3,9 @@ module View exposing (view)
 import Bootstrap.Alert as Alert
 import Bootstrap.Badge as Badge
 import Bootstrap.Button as Button
+import Bootstrap.ButtonGroup as ButtonGroup
 import Bootstrap.CDN as CDN
+import Bootstrap.Form as Form
 import Bootstrap.Form.Input as Input
 import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Modal as Modal
@@ -32,8 +34,8 @@ import FontAwesome
         , undo
         , volumeMute
         )
-import Html exposing (Html, div, h1, h2, h4, node, p, span, text)
-import Html.Attributes exposing (class, href, id, rel, style)
+import Html exposing (Html, div, h1, h2, h4, h5, node, p, span, text)
+import Html.Attributes exposing (class, href, id, placeholder, rel, style)
 import Html.Events exposing (onClick)
 import List exposing (filter, length, map, member)
 import List.Extra exposing (filterNot)
@@ -240,28 +242,37 @@ editPlayerControl =
 editPlayerModalView : State -> Html Action
 editPlayerModalView state =
     let
+        editPlayerModal =
+            state.editPlayerModal
+
         visibility =
-            if isJust state.editedPlayerId then
+            if isJust editPlayerModal.playerId then
                 Modal.shown
 
             else
                 Modal.hidden
 
         player =
-            Maybe.map (playerById state.players) state.editedPlayerId
+            Maybe.map (playerById state.players) editPlayerModal.playerId
                 |> join
                 |> withDefault initPlayer
 
         addableMarkers =
             filterNot (\marker -> member marker player.markers) manuallyAddableMarkers
 
+        addableCustomMarkers =
+            filterNot (\marker -> member marker player.markers) state.customMarkers
+
         renderRemovableMarker marker =
             span [ onClick <| RemoveMarker player.id marker, style "cursor" "pointer" ] [ renderMarker marker ]
 
         renderAddableMarker marker =
             span [ onClick <| AddMarker player.id marker, style "cursor" "pointer" ] [ renderMarker marker ]
+
+        stopEditingPlayer =
+            SetEditPlayerModal { editPlayerModal | playerId = Nothing }
     in
-    Modal.config StopEditingPlayer
+    Modal.config stopEditingPlayer
         |> Modal.small
         |> Modal.hideOnBackdropClick True
         |> Modal.h3 [] [ text "Spieler bearbeiten" ]
@@ -271,6 +282,9 @@ editPlayerModalView state =
                 , ( True, p [] (map renderRemovableMarker player.markers) )
                 , ( length addableMarkers > 0, h4 [] [ text "Marker hinzufügen" ] )
                 , ( True, p [] (map renderAddableMarker addableMarkers) )
+                , ( True, h5 [] [ text "Benutzerdefiniert" ] )
+                , ( True, customMarkerForm state )
+                , ( True, p [] (map renderAddableMarker addableCustomMarkers) )
                 ]
             )
         |> Modal.footer []
@@ -280,9 +294,46 @@ editPlayerModalView state =
                 , Button.disabled <| not <| isAlive player
                 ]
                 [ icon skull, text " Töten" ]
-            , Button.button [ Button.onClick StopEditingPlayer ] [ text "Schließen" ]
+            , Button.button [ Button.onClick stopEditingPlayer ] [ text "Schließen" ]
             ]
         |> Modal.view visibility
+
+
+customMarkerForm : State -> Html Action
+customMarkerForm state =
+    let
+        editPlayerModal =
+            state.editPlayerModal
+
+        setLabel label =
+            SetEditPlayerModal { editPlayerModal | customMarkerLabel = label }
+
+        setPublic public =
+            SetEditPlayerModal { editPlayerModal | customMarkerPublic = public }
+    in
+    Form.formInline []
+        [ ButtonGroup.radioButtonGroup []
+            [ ButtonGroup.radioButton
+                (editPlayerModal.customMarkerPublic == True)
+                [ Button.light, Button.onClick <| setPublic True ]
+                [ icon eye ]
+            , ButtonGroup.radioButton
+                (editPlayerModal.customMarkerPublic == False)
+                [ Button.light, Button.onClick <| setPublic False ]
+                [ icon eyeSlash ]
+            ]
+        , Input.text
+            [ Input.attrs [ placeholder "Beschriftung", style "width" "120px", class "ml-sm-2" ]
+            , Input.onInput setLabel
+            , Input.value editPlayerModal.customMarkerLabel
+            ]
+        , Button.button
+            [ Button.success
+            , Button.attrs [ class "ml-sm-2 my-2" ]
+            , Button.onClick CreateCustomMarker
+            ]
+            [ icon plus ]
+        ]
 
 
 phaseContent : State -> Html Action

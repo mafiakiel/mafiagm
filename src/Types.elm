@@ -5,6 +5,7 @@ module Types exposing
     , CardType(..)
     , CustomCardModal
     , CustomCardStep(..)
+    , EditPlayerModal
     , Flags
     , Marker(..)
     , Model
@@ -53,7 +54,8 @@ type alias State =
     , nominationCountdownRunning : Bool
     , customCards : List Card
     , customCardModal : CustomCardModal
-    , editedPlayerId : Maybe Uuid
+    , editPlayerModal : EditPlayerModal
+    , customMarkers : List Marker
     }
 
 
@@ -196,6 +198,13 @@ type alias CustomCardModal =
     }
 
 
+type alias EditPlayerModal =
+    { playerId : Maybe Uuid
+    , customMarkerLabel : String
+    , customMarkerPublic : Bool
+    }
+
+
 type alias Flags =
     { seed : Int }
 
@@ -226,7 +235,8 @@ type Action
     | SetCustomCardModal CustomCardModal
     | CreateCustomCard
     | EditPlayer Uuid
-    | StopEditingPlayer
+    | SetEditPlayerModal EditPlayerModal
+    | CreateCustomMarker
 
 
 type Msg
