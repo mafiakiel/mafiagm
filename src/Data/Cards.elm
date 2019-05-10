@@ -55,7 +55,7 @@ cardCategories state =
                 """Der Veganer kann nichts besonderes, muss aber jeden Tag mindestens einmal sagen, dass er Veganer ist, sonst stirbt er."""
             , createCard Villagers
                 Kidnapper
-                """Der Entführer darf zu beginn des Spiels einen SPieler entführen (der das Stockholm-Syndrom hat). Die Beiden sind, falls der Entführte kein Bürger ist, eine eigene Partei. Wenn einer von beiden stirbt, begeht der andere Selbstmord."""
+                """Der Entführer darf zu beginn des Spiels einen Spieler entführen (der das Stockholm-Syndrom hat). Die Beiden sind, falls der Entführte kein Bürger ist, eine eigene Partei. Wenn einer von beiden stirbt, begeht der andere Selbstmord."""
             , createCard Villagers
                 CrimeSceneCleaner
                 """Wenn der Tatortreiniger im Spiel ist wird von den Gestorbenen nur die Partei (wie vom Dedektiv gefunden) laut angesagt. Der Tatortreiniger kann ein mal aufdecken und dann werden alle Rollen angesagt."""

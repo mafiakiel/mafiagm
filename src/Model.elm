@@ -4,7 +4,7 @@ import Bootstrap.Modal as Modal
 import Bootstrap.Tab as Tab
 import Phases.Configuration exposing (configuration)
 import Random
-import Types exposing (Action, CustomCardModal, Flags, Model, Msg, Party(..), State, Step(..))
+import Types exposing (Action, CustomCardModal, EditPlayerModal, Flags, Model, Msg, Party(..), State, Step(..))
 import UndoList exposing (UndoList)
 
 
@@ -14,6 +14,14 @@ initCustomCardModal =
     , role = ""
     , party = Villagers
     , steps = []
+    }
+
+
+initEditPlayerModal : EditPlayerModal
+initEditPlayerModal =
+    { playerId = Nothing
+    , customMarkerLabel = ""
+    , customMarkerPublic = False
     }
 
 
@@ -33,7 +41,8 @@ initState flags =
     , nominationCountdownRunning = False
     , customCards = []
     , customCardModal = initCustomCardModal
-    , editedPlayerId = Nothing
+    , editPlayerModal = initEditPlayerModal
+    , customMarkers = []
     }
 
 

@@ -5,6 +5,7 @@ module Types exposing
     , CardType(..)
     , CustomCardModal
     , CustomCardStep(..)
+    , EditPlayerModal
     , Flags
     , Marker(..)
     , Model
@@ -53,7 +54,8 @@ type alias State =
     , nominationCountdownRunning : Bool
     , customCards : List Card
     , customCardModal : CustomCardModal
-    , editedPlayerId : Maybe Uuid
+    , editPlayerModal : EditPlayerModal
+    , customMarkers : List Marker
     }
 
 
@@ -185,6 +187,7 @@ type Marker
     | VisitedByHilda
     | Muted
     | Alibi
+    | CustomMarker String Bool
 
 
 type alias CustomCardModal =
@@ -192,6 +195,13 @@ type alias CustomCardModal =
     , role : String
     , party : Party
     , steps : List CustomCardStep
+    }
+
+
+type alias EditPlayerModal =
+    { playerId : Maybe Uuid
+    , customMarkerLabel : String
+    , customMarkerPublic : Bool
     }
 
 
@@ -225,7 +235,8 @@ type Action
     | SetCustomCardModal CustomCardModal
     | CreateCustomCard
     | EditPlayer Uuid
-    | StopEditingPlayer
+    | SetEditPlayerModal EditPlayerModal
+    | CreateCustomMarker
 
 
 type Msg

@@ -66,6 +66,9 @@ updateState action state =
             , text = customCardText state.customCardModal
             , cardType = CustomCard state.customCardModal.steps
             }
+
+        editPlayerModal =
+            state.editPlayerModal
     in
     case action of
         SetNewPlayerName name ->
@@ -135,15 +138,25 @@ updateState action state =
             { state | customCards = state.customCards ++ [ createCustomCardFromModal ], customCardModal = initCustomCardModal }
 
         EditPlayer id ->
-            { state | editedPlayerId = Just id }
+            { state | editPlayerModal = { editPlayerModal | playerId = Just id } }
 
-        StopEditingPlayer ->
-            stopEditingPlayer state
+        SetEditPlayerModal newEditPlayerModal ->
+            { state | editPlayerModal = newEditPlayerModal }
+
+        CreateCustomMarker ->
+            { state
+                | customMarkers = CustomMarker editPlayerModal.customMarkerLabel editPlayerModal.customMarkerPublic :: state.customMarkers
+                , editPlayerModal = { editPlayerModal | customMarkerLabel = "", customMarkerPublic = False }
+            }
 
 
 stopEditingPlayer : State -> State
 stopEditingPlayer state =
-    { state | editedPlayerId = Nothing }
+    let
+        editPlayerModal =
+            state.editPlayerModal
+    in
+    { state | editPlayerModal = { editPlayerModal | playerId = Nothing } }
 
 
 cleanupAfterKill : State -> State
