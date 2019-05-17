@@ -35,7 +35,7 @@ import Types
         , Step(..)
         , StepMode(..)
         )
-import Util.Condition exposing (any)
+import Util.Condition exposing (any, both)
 import Util.Phases
     exposing
         ( combineStepModes
@@ -46,7 +46,7 @@ import Util.Phases
         , unwrapPhase
         , unwrapStep
         )
-import Util.Player exposing (hasParty, hasRole)
+import Util.Player exposing (hasMarker, hasParty, hasRole)
 
 
 gameView : List (Html Action) -> State -> Html Action
@@ -145,7 +145,7 @@ addKillMarkerPlayerControl condition =
     { label = icon crosshairs
     , action = \player -> AddMarker player.id Kill
     , options = always [ Button.danger ]
-    , condition = condition
+    , condition = both condition (not << hasMarker Kill)
     }
 
 
