@@ -161,7 +161,12 @@ secretAgent =
     Step
         { abstractStep
             | name = roleToString SecretAgent
-            , mode = always Skip
+            , view =
+                gameView
+                    [ simpleAnnouncement "Der Agent darf aufwachen und (wenn er möchte) jemanden töten." ]
+            , mode = stepModeByRole SecretAgent
+            , isPlayerActive = always (hasRole SecretAgent)
+            , playerControls = [ addKillMarkerPlayerControl isAlive ]
         }
 
 
