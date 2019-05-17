@@ -137,7 +137,14 @@ playerList state =
             (getCurrentStep state).playerControls
 
         playerControlToButton player control =
-            Button.button ([ Button.onClick <| control.action player, Button.small ] ++ control.options player) [ control.label ]
+            Button.button
+                ([ Button.onClick <| control.action player
+                 , Button.small
+                 , Button.attrs [ Spacing.mr1 ]
+                 ]
+                    ++ control.options player
+                )
+                [ control.label ]
 
         playerTableRowOptions player =
             if not player.alive then

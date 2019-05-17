@@ -93,12 +93,12 @@ guardianAngel =
                     [ simpleAnnouncement "Der Schutzengel darf aufwachen und jemanden schützen." ]
             , mode = stepModeByRole GuardianAngel
             , isPlayerActive = always (hasRole GuardianAngel)
-            , playerControls = [ guardianAngelPlayerControl ]
+            , playerControls = [ addProtectedMarkerPlayerControl ]
         }
 
 
-guardianAngelPlayerControl : PlayerControl
-guardianAngelPlayerControl =
+addProtectedMarkerPlayerControl : PlayerControl
+addProtectedMarkerPlayerControl =
     { label = icon shieldAlt
     , action = \player -> AddMarker player.id Protected
     , options = always [ Button.success ]
@@ -193,7 +193,12 @@ witch =
     Step
         { abstractStep
             | name = roleToString Witch
-            , mode = always Skip
+            , view =
+                gameView
+                    [ simpleAnnouncement "Die Hexe darf aufwachen.", simpleInstruction "Zeige an, welche Spieler diese Nacht sterben werden." ]
+            , mode = stepModeByRole Witch
+            , isPlayerActive = always (hasRole Witch)
+            , playerControls = [ addKillMarkerPlayerControl isAlive, addProtectedMarkerPlayerControl ]
         }
 
 
