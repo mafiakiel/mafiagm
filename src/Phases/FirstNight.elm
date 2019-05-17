@@ -2,11 +2,13 @@ module Phases.FirstNight exposing (firstNight)
 
 import Data.Strings exposing (roleToString)
 import FontAwesome exposing (heart, icon)
+import Html exposing (Html)
+import List exposing (filter, length)
 import List.Extra exposing (notMember)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Phases.Common exposing (customCardsStep, gameView, mafiaStep, simpleAnnouncement)
-import Types exposing (Action(..), CustomCardStep(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), Step(..), StepMode(..))
-import Util.Phases exposing (stepModeByRole)
+import Phases.Common exposing (customCardsStep, gameView, mafiaStep, simpleAnnouncement, simpleInstruction)
+import Types exposing (Action(..), CustomCardStep(..), Marker(..), Party(..), Phase(..), PlayerControl, Role(..), State, Step(..), StepMode(..))
+import Util.Phases exposing (getCurrentStep, stepModeByRole)
 import Util.Player exposing (hasRole, isInChurch)
 
 
@@ -21,11 +23,23 @@ firstNight =
         }
 
 
+indicateGroupSize : State -> Html Action
+indicateGroupSize state =
+    let
+        currentStep =
+            getCurrentStep state
+
+        numberOfActivePlayers =
+            filter (currentStep.isPlayerActive state) state.players |> length |> String.fromInt
+    in
+    simpleInstruction ("Zeige die Anzahl der Spieler an, die jetzt wach sein sollten: " ++ numberOfActivePlayers)
+
+
 mafia : Step
 mafia =
     Step
         { mafiaStep
-            | view = gameView [ simpleAnnouncement "Die Mafia darf aufwachen und sich erkennen. 😏" ]
+            | view = \state -> gameView [ simpleAnnouncement "Die Mafia darf aufwachen und sich erkennen. 😏", indicateGroupSize state ] state
         }
 
 
@@ -34,7 +48,7 @@ church =
     Step
         { abstractStep
             | name = "Kirche"
-            , view = gameView [ simpleAnnouncement "Die Kirche darf aufwachen und sich erkennen. 😏" ]
+            , view = \state -> gameView [ simpleAnnouncement "Die Kirche darf aufwachen und sich erkennen. 😏", indicateGroupSize state ] state
             , isPlayerActive = always isInChurch
             , mode = always Skip
         }

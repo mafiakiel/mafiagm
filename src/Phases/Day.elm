@@ -5,13 +5,15 @@ import Bootstrap.Card as Card
 import Bootstrap.Card.Block as Block
 import Bootstrap.Utilities.Spacing as Spacing
 import FontAwesome exposing (award, clock, icon)
-import Html exposing (Html, div, text)
+import Html exposing (Html, div, li, ol, text)
 import Html.Attributes exposing (property)
 import Html.Events exposing (on)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
+import List exposing (filter, map, sortBy)
+import List.Extra exposing (find)
 import Phases.Abstract exposing (abstractPhase, abstractStep)
-import Phases.Common exposing (gameView, killPlayerControl, simpleAnnouncement, simpleInstruction)
+import Phases.Common exposing (gameView, information, killPlayerControl, simpleAnnouncement, simpleInstruction)
 import Types exposing (Action(..), Marker(..), Phase(..), PlayerControl, State, Step(..))
 import Util.Condition exposing (all, any, both)
 import Util.Marker exposing (isNominatedMarker)
@@ -46,6 +48,7 @@ nomination =
                     gameView
                         [ simpleAnnouncement "Alle wachen auf."
                         , simpleInstruction "Nimm Nominierungen entgegen."
+                        , nominatedPlayerList state
                         , nominationCountdown state
                         ]
                         state
@@ -62,6 +65,30 @@ nominatePlayerControl =
     , options = always [ Button.info ]
     , condition = both isAlive (not << isNominated)
     }
+
+
+nominatedPlayerList : State -> Html Action
+nominatedPlayerList state =
+    let
+        playerWithNominationPos player =
+            case find isNominatedMarker player.markers of
+                Just (Nominated position) ->
+                    ( player, position )
+
+                _ ->
+                    ( player, -1 )
+
+        nominatedPlayers =
+            state.players
+                |> map playerWithNominationPos
+                |> filter (\( _, pos ) -> pos > 0)
+                |> sortBy (\( _, pos ) -> pos)
+                |> map (\( player, _ ) -> li [] [ text player.name ])
+    in
+    information
+        [ text "Nominerte Spieler:"
+        , ol [ Spacing.mb0 ] nominatedPlayers
+        ]
 
 
 nominationCountdown : State -> Html Action

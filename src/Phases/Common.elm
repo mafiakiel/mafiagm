@@ -2,6 +2,7 @@ module Phases.Common exposing
     ( addKillMarkerPlayerControl
     , customCardsStep
     , gameView
+    , information
     , killPlayerControl
     , mafiaStep
     , silenceWarning
@@ -16,7 +17,7 @@ import Bootstrap.Button as Button
 import Bootstrap.ListGroup as ListGroup
 import Bootstrap.Utilities.Spacing as Spacing
 import Data.Strings exposing (partyToString)
-import FontAwesome exposing (bullhorn, crosshairs, exclamationTriangle, icon, skull, tasks)
+import FontAwesome exposing (bullhorn, crosshairs, exclamationTriangle, icon, infoCircle, skull, tasks)
 import Html exposing (Html, div, li, text, ul)
 import Html.Attributes exposing (id)
 import List exposing (filter, length, map, member, range)
@@ -113,6 +114,15 @@ instruction : List (Html Action) -> Html Action
 instruction content =
     Alert.simpleWarning []
         ([ Alert.h4 [] [ icon tasks, text " Aufgabe" ]
+         ]
+            ++ content
+        )
+
+
+information : List (Html Action) -> Html Action
+information content =
+    Alert.simpleInfo []
+        ([ Alert.h4 [] [ icon infoCircle, text " Info" ]
          ]
             ++ content
         )
