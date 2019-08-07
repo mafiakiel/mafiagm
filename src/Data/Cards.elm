@@ -40,7 +40,7 @@ cardCategories state =
                 """Amor darf in der ersten Nacht zwei Spieler verlieben. Sind diese beide Bürger passiert nichts, sollten sie aber unterschiedlicher Partei angehören eröffnen die beiden eine Neue. Sie sterben gleichzeitig."""
             , createCard Villagers
                 WildHilda
-                """Die Wilde Hilde sucht sich am Anfang der Nacht einen Spieler aus und teilt dessen Schicksal (Tod/Vampier/Mönch/Zombie usw.). Sie selbst kann in der Nacht allerdings nicht sterben (Sie ist ja nicht 'zu Hause')."""
+                """Die Wilde Hilde sucht sich am Anfang der Nacht einen Spieler aus und teilt dessen Schicksal (Tod/Vampir/Mönch/Zombie usw.). Sie selbst kann in der Nacht allerdings nicht sterben (Sie ist ja nicht 'zu Hause')."""
             , createCard Villagers
                 Witch
                 """Als Hexe hat man zwei Tränke zur Verfügung: Einer tötet einen belibiegen Spieler. Der andere kann zur Heilung eingesetzt werden, nachdem einem gezeigt wurde wer in der Nacht sterben wird."""
@@ -59,7 +59,7 @@ cardCategories state =
             , createCard Villagers
                 CrimeSceneCleaner
                 """Wenn der Tatortreiniger im Spiel ist wird von den Gestorbenen nur die Partei (wie vom Dedektiv gefunden) laut angesagt. Der Tatortreiniger kann ein mal aufdecken und dann werden alle Rollen angesagt."""
-            , createCard Villagers Orphan "Das Weisenkind sucht sich am Anfang des Spiels einen Mitspieler als Vorbild aus. Stirbt dieser Spieler am Tag wird das Waisenkind zum Mafioso."
+            , createCard Villagers Orphan "Das Waisenkind sucht sich am Anfang des Spiels einen Mitspieler als Vorbild aus. Stirbt dieser Spieler am Tag wird das Waisenkind zum Mafioso."
             , createCard Villagers Copier "Der Kopierer darf sich ein Mal im Spiel die Zusatzrolle von einem anderen Spieler kopieren und diese ab dann ausüben."
             ]
       }
@@ -142,7 +142,7 @@ cardCategories state =
                 """Als verliebter Mönch kennt man alle Mitmönche. Stirbt der andere verliebte Mönch, nimmt man sich selbst das Leben."""
             ]
       }
-    , { name = "Vampiere & Das Böse"
+    , { name = "Vampire & Das Böse"
       , cards =
             [ createCard TheEvil
                 Devil
